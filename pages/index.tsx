@@ -54,7 +54,7 @@ function saveGameStateToStorage(state: GameStateRows) {
   const storedState = JSON.parse(localStorage.getItem("gameState"));
   console.log({ storedState });
     if (storedState) {
-      if (storedState.gameId !== GAME_ID) {
+      if (storedState.gameId !== GAME_ID && storedState.gameId) {
         console.log("removing")
         localStorage.removeItem("gameState");
         return;
