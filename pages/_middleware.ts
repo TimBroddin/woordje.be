@@ -8,7 +8,6 @@ const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
 const firstDate = new Date(2022, 0, 10).valueOf();
 const secondDate = new Date().valueOf();
 
-;
 export default async function middleware(req : NextRequest) : Promise<NextResponse> {
     const GAME_ID = getGameId();
     const WORD = woorden[GAME_ID];
