@@ -22,26 +22,22 @@ async function check(word: string, opts: CheckOptions) {
 
 
 
-
-
 function readGameStateFromStorage() {
 
   let state = [];
   const GAME_ID = getGameId();
 
    try {
-    const storedState = JSON.parse(localStorage.getItem("gameState"));
+    const storedState = JSON.parse(localStorage.getItem(`gameState-${GAME_ID}`));
     if (storedState) {
       if (storedState.gameId === GAME_ID) {
         state = storedState.state;
-      } else {
-        localStorage.removeItem("gameState");
-      }
+      } 
     }
 
   } catch (err) {
     console.error("state restore error", err);
-    localStorage.removeItem("gameState");
+    localStorage.removeItem(`gameState-${GAME_ID}`);
   }
   return state;
 }
@@ -49,21 +45,10 @@ function readGameStateFromStorage() {
 
 function saveGameStateToStorage(state: GameStateRows) {
   const GAME_ID = getGameId();
-  try {
-  const storedState = JSON.parse(localStorage.getItem("gameState"));
-  console.log({ storedState });
-    if (storedState) {
-      if (storedState.gameId !== GAME_ID && storedState.gameId) {
-        localStorage.removeItem("gameState");
-        return;
-      }
-    }
-  } catch (err) {
-
-  }
+ 
   try {
    localStorage.setItem(
-      "gameState",
+      `gameState-${GAME_ID}`,
       JSON.stringify({
         gameId: GAME_ID,
         state: state,
