@@ -21,17 +21,21 @@ async function check(word: string, opts: CheckOptions) {
   return await res.json();
 }
 
-const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-const firstDate = new Date(2022, 0, 10).valueOf() - oneDay;
-const secondDate = new Date().valueOf();
 
-const GAME_ID = Math.round(Math.abs((firstDate - secondDate) / oneDay));
 
+function getGameId() {
+  const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+  const firstDate = new Date(2022, 0, 10).valueOf() - oneDay;
+  const secondDate = new Date().valueOf();
+  
+  return Math.round(Math.abs((firstDate - secondDate) / oneDay));
+  
+}
 
 function readGameStateFromStorage() {
 
   let state = [];
-  
+  const GAME_ID = getGameId();
 
    try {
     const storedState = JSON.parse(localStorage.getItem("gameState"));
@@ -52,6 +56,8 @@ function readGameStateFromStorage() {
 
 
 function saveGameStateToStorage(state: GameStateRows) {
+  const GAME_ID = getGameId();
+
   try {
    localStorage.setItem(
       "gameState",
@@ -118,6 +124,7 @@ export default function Home() {
   const [gameState, setGameState] = useState(null);
   const { width, height } = useWindowSize();
   const isGameOver = getIsGameOver(gameState);
+  const GAME_ID = getGameId();
 
   useEffect(() => {
     if(!randomWord) {
@@ -161,6 +168,7 @@ export default function Home() {
 
   function onClick(ev: MouseEvent) {
     ev.preventDefault();
+
     setGameState((gameState: GameState) => {
       if (gameState) {
         if (!getIsGameOver(gameState)) {
@@ -182,6 +190,7 @@ export default function Home() {
   }
 
   function getShareText(gameState: GameState, html = false) {
+
     const text = `${(html ? '<a href="https://woordje.be">Woordje.be</a>' : 'woordje.be')} #${GAME_ID-1} ${
       getIsVictory(gameState) ? gameState.state.length : "X"
     }/${BOARD_SIZE}
@@ -413,7 +422,7 @@ ${gameState.state
       <script defer data-domain="woordje.be" src="https://plausible.io/js/plausible.js"></script>
 
       <NextSeo
-      title="Woordje.be - nederlandstalige Wordle"
+      title={`Woordje.be #${GAME_ID} - nederlandstalige Wordle`}
       description="Een dagelijks woordspelletje."
       canonical="https://www.woordje.be/"
       openGraph={{
