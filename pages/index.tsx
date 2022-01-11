@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/router";
 import Head from "next/head";
 import settings from "../settings.json";
 import toast, { Toaster } from "react-hot-toast";
@@ -9,7 +8,7 @@ import copy from "copy-text-to-clipboard";
 import type { MouseEvent, FormEvent } from "react";
 import type { GameState, GameStateRow, GameStateRowItem, GameStateRows, ServerResponse } from "../types";
 import { NextSeo } from 'next-seo';
-
+import { getGameId } from "../lib/gameId";
 const {  BOARD_SIZE, WORD_LENGTH } = settings;
 
 type CheckOptions = {
@@ -23,14 +22,7 @@ async function check(word: string, opts: CheckOptions) {
 
 
 
-function getGameId() {
-  const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-  const firstDate = new Date(2022, 0, 10).valueOf() - oneDay;
-  const secondDate = new Date().valueOf();
-  
-  return Math.round(Math.abs((firstDate - secondDate) / oneDay));
-  
-}
+
 
 function readGameStateFromStorage() {
 
@@ -57,7 +49,17 @@ function readGameStateFromStorage() {
 
 function saveGameStateToStorage(state: GameStateRows) {
   const GAME_ID = getGameId();
+  try {
+  const storedState = JSON.parse(localStorage.getItem("gameState"));
+    if (storedState) {
+      if (storedState.gameId !== GAME_ID) {
+        localStorage.removeItem("gameState");
+        return;
+      }
+    }
+  } catch (err) {
 
+  }
   try {
    localStorage.setItem(
       "gameState",
@@ -124,7 +126,7 @@ export default function Home() {
   const [gameState, setGameState] = useState(null);
   const { width, height } = useWindowSize();
   const isGameOver = getIsGameOver(gameState);
-  const GAME_ID = getGameId();
+  const CORRECTED_GAME_ID = getGameId() - 1;
 
   useEffect(() => {
     if(!randomWord) {
@@ -145,7 +147,6 @@ export default function Home() {
 
       saveGameStateToStorage(gameState.state);
     } else {
-      console.log('was initial');
     }
   }, [gameState]);
 
@@ -191,7 +192,7 @@ export default function Home() {
 
   function getShareText(gameState: GameState, html = false) {
 
-    const text = `${(html ? '<a href="https://woordje.be">Woordje.be</a>' : 'woordje.be')} #${GAME_ID-1} ${
+    const text = `${(html ? '<a href="https://woordje.be">Woordje.be</a>' : 'woordje.be')} #${CORRECTED_GAME_ID} ${
       getIsVictory(gameState) ? gameState.state.length : "X"
     }/${BOARD_SIZE}
 
@@ -422,7 +423,7 @@ ${gameState.state
       <script defer data-domain="woordje.be" src="https://plausible.io/js/plausible.js"></script>
 
       <NextSeo
-      title={`Woordje.be #${GAME_ID} - nederlandstalige Wordle`}
+      title={`Woordje.be #${CORRECTED_GAME_ID} - nederlandstalige Wordle`}
       description="Een dagelijks woordspelletje."
       canonical="https://www.woordje.be/"
       openGraph={{
@@ -618,7 +619,7 @@ ${gameState.state
 
         .footer {
           color: #999;
-          font-size: 13px;
+          font-size: 13px; 
           text-align: center;
           padding: 3px 0;
         }

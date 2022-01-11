@@ -1,24 +1,26 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import woorden from "../data/woorden.json"
+import { getGameId } from "../lib/gameId";
 
 
 const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
 const firstDate = new Date(2022, 0, 10).valueOf();
 const secondDate = new Date().valueOf();
 
-const GAME_ID = Math.round(Math.abs((firstDate - secondDate) / oneDay)) + 1;
-const WORD = woorden[GAME_ID];
-console.log(WORD);
+;
 export default async function middleware(req : NextRequest) : Promise<NextResponse> {
+    const GAME_ID = getGameId();
+    const WORD = woorden[GAME_ID];
+
     if (req.nextUrl.pathname === "/random") {
         const idx = Math.floor(Math.random()*woorden.length);
         const word = woorden[idx];
         return NextResponse.json(word)
     }
-    if (req.nextUrl.pathname === "/datedebug") {
+    if (req.nextUrl.pathname === "/debug") {
 
-        return NextResponse.json({ firstDate, secondDate, GAME_ID, diff: Math.abs((firstDate - secondDate) / oneDay)})
+        return NextResponse.json({ firstDate, secondDate, WORD, GAME_ID, diff: Math.abs((firstDate - secondDate) / oneDay)})
     }
   if (req.nextUrl.pathname === "/check") {
     const word = req.nextUrl.searchParams
