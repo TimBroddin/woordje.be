@@ -49,13 +49,11 @@ function readGameStateFromStorage() {
 
 function saveGameStateToStorage(state: GameStateRows) {
   const GAME_ID = getGameId();
-  console.log({ GAME_ID, state });
   try {
   const storedState = JSON.parse(localStorage.getItem("gameState"));
   console.log({ storedState });
     if (storedState) {
       if (storedState.gameId !== GAME_ID && storedState.gameId) {
-        console.log("removing")
         localStorage.removeItem("gameState");
         return;
       }
@@ -163,7 +161,7 @@ export default function Home() {
   useEffect(() => {
     window.addEventListener('storage', (e) => {
       if (e.key === "gameState") {
-        setGameState({ state: readGameStateFromStorage(), initial: false });
+        //setGameState({ state: readGameStateFromStorage(), initial: false });
       }
     });
   }, []);
