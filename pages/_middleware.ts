@@ -20,7 +20,7 @@ export default async function middleware(req : NextRequest) : Promise<NextRespon
     }
     if (req.nextUrl.pathname === "/debug") {
 
-        return NextResponse.json({ firstDate, secondDate, WORD, GAME_ID, diff: Math.abs((firstDate - secondDate) / oneDay)})
+        return NextResponse.json({ firstDate, secondDate,  GAME_ID, diff: Math.abs((firstDate - secondDate) / oneDay)})
     }
   if (req.nextUrl.pathname === "/check") {
     const word = req.nextUrl.searchParams
