@@ -283,7 +283,7 @@ ${gameState.state
     });
   }
 
-  return WORD_LENGTH > 2 && WORD_LENGTH < 8 ? (
+  return WORD_LENGTH > 2 && WORD_LENGTH < 9 ? (
     <>
       <Main $initializing={!gameState} onClick={onClick}>
         <form onSubmit={onSubmit}>
@@ -356,6 +356,52 @@ ${gameState.state
         </Board>
 
         <Footer onClick={(e) => e.stopPropagation()}>
+          <h1>Help</h1>
+          <p>
+            Raad het {WORD_LENGTH}-letterwoord in {BOARD_SIZE} beurten, of
+            minder.
+          </p>
+          <p>
+            Op desktop kan je gewoon beginnen typen, enter om je woord in te
+            dienen. Op mobiel moet je eerst de vakjes aanraken.
+          </p>
+          <p>
+            🟩 = letter staat op de juiste plek
+            <br />
+            🟨 = letter komt voor in het woord, maar niet op de juiste plek.{" "}
+          </p>
+
+          <p>Elke dag een nieuwe opgave!</p>
+
+          <h1>Hulplijn</h1>
+          <p>
+            Hier is een willekeurig woord met {WORD_LENGTH} letters:{" "}
+            <Random
+              onClick={(e) =>
+                getRandomword(WORD_LENGTH).then((word) =>
+                  setRandomWord(JSON.parse(word))
+                )
+              }>
+              {randomWord}
+            </Random>
+          </p>
+          <h1>Te moeilijk/makkelijk?</h1>
+          <p>
+            Probeer ook eens met{" "}
+            {[3, 4, 5, 6, 7, 8]
+              .filter((x) => x !== WORD_LENGTH)
+              .map((x, i) => (
+                <span key={`link-${x}`}>
+                  <Link href={`/speel/${x}`}>
+                    <a>{x}</a>
+                  </Link>
+                  {i < 3 ? ", " : i < 4 ? " of " : ""}
+                </span>
+              ))}{" "}
+            letters
+          </p>
+
+          <h1>Credits</h1>
           <p>
             Gebaseerd op{" "}
             <a
@@ -375,47 +421,6 @@ ${gameState.state
             <a href="https://broddin.be/" rel="noreferrer" target="_blank">
               Tim Broddin
             </a>
-          </p>
-
-          <p>Elke dag een nieuwe opgave!</p>
-
-          <p>
-            <strong>Help:</strong> op desktop kan je gewoon beginnen typen,
-            enter om je woord in te dienen. Op mobiel moet je eerst de vakjes
-            aanraken.
-            <br />
-            🟩 = letter staat op de juiste plek, 🟨 = letter komt voor in het
-            woord, maar niet op de juiste plek.{" "}
-          </p>
-
-          <p>
-            Geen inspiratie? Hier is een willekeurig woord met {WORD_LENGTH}{" "}
-            letters:{" "}
-            <Random
-              onClick={(e) =>
-                getRandomword(WORD_LENGTH).then((word) =>
-                  setRandomWord(JSON.parse(word))
-                )
-              }>
-              {randomWord}
-            </Random>
-          </p>
-
-          <p>
-            Te moeilijk/makkelijk?
-            <br />
-            Probeer ook eens met{" "}
-            {[3, 4, 5, 6, 7]
-              .filter((x) => x !== WORD_LENGTH)
-              .map((x, i) => (
-                <span key={`link-${x}`}>
-                  <Link href={`/speel/${x}`}>
-                    <a>{x}</a>
-                  </Link>
-                  {i < 3 ? ", " : i < 3 ? " of " : ""}
-                </span>
-              ))}{" "}
-            letters
           </p>
         </Footer>
         <script
@@ -478,7 +483,7 @@ ${gameState.state
             </ShareText>
 
             <button onClick={onCopyToClipboard}>📋 Kopieer</button>
-            <p>Deel score:</p>
+            <h2>Deel score</h2>
             <div className="button">
               <a
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
@@ -516,6 +521,21 @@ ${gameState.state
                 🤵 LinkedIn
               </a>
             </div>
+
+            <p>
+              Probeer ook eens met{" "}
+              {[3, 4, 5, 6, 7]
+                .filter((x) => x !== WORD_LENGTH)
+                .map((x, i) => (
+                  <span key={`link-${x}`}>
+                    <Link href={`/speel/${x}`}>
+                      <a>{x}</a>
+                    </Link>
+                    {i < 3 ? ", " : i < 4 ? " of " : ""}
+                  </span>
+                ))}{" "}
+              letters
+            </p>
           </Summary>
         </ModalWrapper>
       ) : null}

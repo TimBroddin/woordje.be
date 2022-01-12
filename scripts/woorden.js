@@ -21,7 +21,7 @@ function shuffle(array) {
 }
 
 (async () => {
-  const levels = [3, 4, 5, 6, 7];
+  const levels = [3, 4, 5, 6, 7, 8];
   const files = ["gekeurd.txt", "ongekeurd.txt", "flexievormen.txt"];
 
   const output = {};

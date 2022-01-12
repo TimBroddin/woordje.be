@@ -31,16 +31,22 @@ export const ModalWrapper = styled.div`
 `;
 
 export const Summary = styled.div`
-  width: 250px;
+  width: 300px;
   background: rgba(0, 0, 0, 0.7);
   text-align: center;
   padding: 15px;
+  font-size: 12px;
   color: white;
 
   h1 {
     font-size: 16px;
     margin-top: 0;
     margin-bottom: 20px;
+  }
+
+  h2 {
+    text-transform: uppercase;
+    font-size: 14px;
   }
 
   button,
@@ -61,6 +67,10 @@ export const Summary = styled.div`
     margin-bottom: 5px;
     border-radius: 5px;
     font-size: 14px;
+  }
+
+  a {
+    text-decoration: underline;
   }
 `;
 
@@ -118,12 +128,24 @@ export const Footer = styled.footer`
   text-align: center;
   padding: 3px 0;
 
+  h1 {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 2px;
+  }
+
   span {
     color: #666;
   }
 
   a {
     text-decoration: underline;
+  }
+
+  p {
+    margin-top: 0;
   }
 
   @media (min-width: 768px) {
