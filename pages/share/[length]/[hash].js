@@ -33,7 +33,7 @@ const Facebook = ({ length, hash }) => {
               width: 1200,
               height: 630,
               alt: "Woordje.be",
-              type: "image/jpeg",
+              type: "image/png",
             },
           ],
           site_name: "Woordje.be",

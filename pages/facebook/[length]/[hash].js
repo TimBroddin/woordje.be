@@ -35,6 +35,7 @@ const Facebook = () => {
             min-height: 100vh;
             min-width: 100vw;
             align-items: center;
+            background: linear-gradient(#330d69, #30c4cb);
           }
 
           main > div {
@@ -51,8 +52,8 @@ const Facebook = () => {
           .square {
             width: 96px;
             height: 96px;
-            border: 1px solid black;
-            border-radius: 5px;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
           }
 
           .square.correct {
