@@ -44,7 +44,7 @@ export const Summary = styled.div`
   }
 
   button,
-  a {
+  a.share {
     padding: 5px;
     background: #fff;
     color: #000;
@@ -143,4 +143,16 @@ export const HiddenInput = styled.input`
   position: absolute;
   left: -100000px;
   font-size: 16px;
+`;
+
+export const CloseModal = styled.a`
+  display: inline-flex;
+  float: right;
+  border-radius: 50%;
+  background-color: white;
+  color: black;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
 `;

@@ -27,6 +27,7 @@ import {
   Footer,
   Random,
   HiddenInput,
+  CloseModal,
 } from "../../components/styled";
 
 async function check(word, WORD_LENGTH, opts) {
@@ -53,6 +54,7 @@ export default function Home({ WORD_LENGTH }) {
   const fetchControllerRef = useRef(null);
   const hiddenInputRef = useRef(null);
   const [gameState, setGameState] = useState(null);
+  const [modalClosed, setModalClosed] = useState(false);
   const { width, height } = useWindowSize();
   const isGameOver = getIsGameOver(gameState, BOARD_SIZE);
 
@@ -67,7 +69,16 @@ export default function Home({ WORD_LENGTH }) {
         initial: true,
       });
     }
-  }, [gameState, WORD_LENGTH]);
+  }, [gameState]);
+
+  useEffect(() => {
+    if (gameState) {
+      setGameState({
+        state: readGameStateFromStorage(WORD_LENGTH),
+        initial: true,
+      });
+    }
+  }, [WORD_LENGTH]);
 
   useEffect(() => {
     if (gameState && !gameState.initial) {
@@ -450,9 +461,17 @@ ${gameState.state
         ) : null}
       </Main>
 
-      {isGameOver ? (
+      {isGameOver && !modalClosed ? (
         <ModalWrapper>
           <Summary>
+            <CloseModal
+              href="#close"
+              onClick={(e) => {
+                e.preventDefault();
+                setModalClosed(true);
+              }}>
+              X
+            </CloseModal>
             <h1>Samenvatting</h1>
             <ShareText onClick={(e) => e.stopPropagation()}>
               {getShareText(gameState)}
@@ -466,7 +485,8 @@ ${gameState.state
                   getShareText(gameState)
                 )}`}
                 rel="noreferrer"
-                target="_blank">
+                target="_blank"
+                className="share">
                 🐦 Twitter
               </a>
             </div>
@@ -478,7 +498,8 @@ ${gameState.state
                   )}`
                 )}`}
                 rel="noreferrer"
-                target="_blank">
+                target="_blank"
+                className="share">
                 👍 Facebook
               </a>
             </div>
@@ -490,7 +511,8 @@ ${gameState.state
                   )}`
                 )}`}
                 rel="noreferrer"
-                target="_blank">
+                target="_blank"
+                className="share">
                 🤵 LinkedIn
               </a>
             </div>
