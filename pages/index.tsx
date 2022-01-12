@@ -430,7 +430,7 @@ ${gameState.state
       }}
       twitter={{
         handle: '@timbroddin',
-        cardType: 'summary_large_image',
+        cardType: 'summary',
       }}
     />
 <Head>
