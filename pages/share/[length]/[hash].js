@@ -24,9 +24,7 @@ const Facebook = ({ length, hash }) => {
       <NextSeo
         title={`Woordje.be #${CORRECTED_GAME_ID} - ${tries}/6`}
         description="Een dagelijks woordspelletje."
-        canonical="https://www.woordje.be/"
         openGraph={{
-          url: "https://www.woordje.be/",
           title: "Woordje.be",
           description: "Een dagelijks woordspelletje gebaseerd op Worlde.",
           images: [
