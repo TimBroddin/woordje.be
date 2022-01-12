@@ -418,7 +418,7 @@ ${gameState.state
         description: 'Een dagelijks woordspelletje gebaseerd op Worlde.',
         images: [
           {
-            url: 'https://www.woordje.be/og.png',
+            url: 'https://www.woordje.be/twitter.png',
             width: 1200,
             height: 630,
             alt: 'Woordje.be',
