@@ -1,10 +1,11 @@
+import { useEffect } from "react";
 import { NextSeo } from "next-seo";
 import { getGameId } from "../../../lib/gameId";
 import { useRouter } from "next/router";
 
 const Facebook = ({ length, hash }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
-
+  const router = useRouter();
   const lines = hash.match(new RegExp(`.{1,${length}}`, "g"));
   const tries =
     lines[lines.length - 1] ===
@@ -13,6 +14,10 @@ const Facebook = ({ length, hash }) => {
       .join("")
       ? lines.length
       : "X";
+
+  useEffect(() => {
+    router.push("/");
+  }, [router]);
 
   return (
     <>

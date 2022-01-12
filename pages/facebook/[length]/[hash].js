@@ -13,12 +13,17 @@ const Facebook = () => {
           <div>
             {rows.map((row, idx) => (
               <div className="row" key={idx}>
-                {row
-                  .split("")
-                  .map((char) =>
-                    char === "V" ? "🟩" : char === "X" ? "🟨" : "⬛️"
-                  )
-                  .join("")}
+                {row.split("").map((char, cidx) => (
+                  <div
+                    className={`square ${
+                      char === "V"
+                        ? "correct"
+                        : char === "X"
+                        ? "off"
+                        : "incorrect"
+                    }`}
+                    key={`${idx}-${cidx}`}></div>
+                ))}
               </div>
             ))}
           </div>
@@ -38,6 +43,28 @@ const Facebook = () => {
           .row {
             font-size: 96px;
             line-height: 96px;
+            display: flex;
+            gap: 5px;
+            margin-bottom: 5px;
+          }
+
+          .square {
+            width: 96px;
+            height: 96px;
+            border: 1px solid black;
+            border-radius: 5px;
+          }
+
+          .square.correct {
+            background-color: green;
+          }
+
+          .square.incorrect {
+            background-color: black;
+          }
+
+          .square.off {
+            background-color: yellow;
           }
         `}</style>
       </>
