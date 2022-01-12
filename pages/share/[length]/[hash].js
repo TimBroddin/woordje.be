@@ -22,10 +22,14 @@ const Facebook = ({ length, hash }) => {
   return (
     <>
       <NextSeo
-        title={`Woordje.be #${CORRECTED_GAME_ID} - ${tries}/6`}
+        title={`Woordje.be #${CORRECTED_GAME_ID} ${
+          length !== 6 ? `(${length} tekens)` : ""
+        } - ${tries}/${length + 1}`}
         description="Een dagelijks woordspelletje."
         openGraph={{
-          title: `Woordje.be #${CORRECTED_GAME_ID} - ${tries}/6`,
+          title: `Woordje.be #${CORRECTED_GAME_ID} ${
+            length !== 6 ? `(${length} tekens)` : ""
+          } - ${tries}/${length + 1}`,
           description: "Een dagelijks woordspelletje gebaseerd op Worlde.",
           images: [
             {
