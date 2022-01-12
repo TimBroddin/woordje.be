@@ -177,4 +177,6 @@ export const CloseModal = styled.a`
   height: 20px;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+  font-weight: bold;
 `;
