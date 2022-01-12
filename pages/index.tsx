@@ -465,8 +465,10 @@ ${gameState.state
                 </div>
   
                 <button onClick={onCopyToClipboard}>📋 Kopieer</button>
-                <div className="button"><a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(getShareText(gameState))}`}  rel="noreferrer" target="_blank">🐦 Tweet</a></div>
+                <p>Deel score:</p>
+                <div className="button"><a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(getShareText(gameState))}`}  rel="noreferrer" target="_blank">🐦 Twitter</a></div>
                 <div className="button"><a href={`https://www.facebook.com/share.php?u=${encodeURIComponent(`https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(gameState)}`)}`}  rel="noreferrer" target="_blank">👍 Facebook</a></div>
+                <div className="button"><a href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(`https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(gameState)}`)}`}  rel="noreferrer" target="_blank">🤵 LinkedIn</a></div>
 
               </div>
             </div>
