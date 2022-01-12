@@ -67,6 +67,7 @@ export const Summary = styled.div`
     margin-bottom: 5px;
     border-radius: 5px;
     font-size: 14px;
+    text-decoration: none;
   }
 
   a {
