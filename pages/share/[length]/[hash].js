@@ -25,7 +25,7 @@ const Facebook = ({ length, hash }) => {
         title={`Woordje.be #${CORRECTED_GAME_ID} - ${tries}/6`}
         description="Een dagelijks woordspelletje."
         openGraph={{
-          title: "Woordje.be",
+          title: `Woordje.be #${CORRECTED_GAME_ID} - ${tries}/6`,
           description: "Een dagelijks woordspelletje gebaseerd op Worlde.",
           images: [
             {
