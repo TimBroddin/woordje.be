@@ -202,6 +202,13 @@ ${gameState.state
     }
   }
 
+  function getEncodedState(gameState) {
+   let output = '' 
+
+   return gameState.state.map(line => line.map(item => item.score === "good" ? "V" : item.score === "off" ? "X" : "0").join("")).join("")
+
+  }
+
   function onCopyToClipboard(e: MouseEvent) {
     e.stopPropagation();
     e.preventDefault();
@@ -458,8 +465,9 @@ ${gameState.state
                 </div>
   
                 <button onClick={onCopyToClipboard}>📋 Kopieer</button>
-                <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(getShareText(gameState))}`}  rel="noreferrer" target="_blank">🐦 Tweet</a>
-                
+                <div className="button"><a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(getShareText(gameState))}`}  rel="noreferrer" target="_blank">🐦 Tweet</a></div>
+                <div className="button hidden"><a href={`https://www.facebook.com/share.php?u=${encodeURIComponent(`https://www.woordje.be/fb/${WORD_LENGTH}/${getEncodedState(gameState)}`)}`}  rel="noreferrer" target="_blank">🔗 Facebook</a></div>
+
               </div>
             </div>
           ) : null}
@@ -546,7 +554,7 @@ ${gameState.state
           border: 3px solid #000;
         }
 
-        .summary button {
+        .summary button, .summary .button {
           padding: 5px;
           background: #fff;
           color: #000;
@@ -560,6 +568,9 @@ ${gameState.state
           font-weight: bold;
           text-transform: uppercase;
           background: cyan;
+          margin-bottom: 5px;
+          border-radius: 5px;
+          font-size: 14px;
         }
 
         .summary button:active {
@@ -623,6 +634,10 @@ ${gameState.state
           cursor: pointer;
           text-decoration: dotted underline;
           color: white;
+        }
+
+        .hidden {
+          display: none !important;
         }
       `}</style>
           </>
