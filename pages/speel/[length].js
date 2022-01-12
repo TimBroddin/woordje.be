@@ -283,7 +283,7 @@ ${gameState.state
     });
   }
 
-  return WORD_LENGTH > 2 && WORD_LENGTH < 9 ? (
+  return WORD_LENGTH > 2 && WORD_LENGTH < 10 ? (
     <>
       <Main $initializing={!gameState} onClick={onClick}>
         <form onSubmit={onSubmit}>
@@ -388,14 +388,14 @@ ${gameState.state
           <h1>Te moeilijk/makkelijk?</h1>
           <p>
             Probeer ook eens met{" "}
-            {[3, 4, 5, 6, 7, 8]
+            {[3, 4, 5, 6, 7, 8, 9]
               .filter((x) => x !== WORD_LENGTH)
               .map((x, i) => (
                 <span key={`link-${x}`}>
                   <Link href={`/speel/${x}`}>
                     <a>{x}</a>
                   </Link>
-                  {i < 3 ? ", " : i < 4 ? " of " : ""}
+                  {i < 4 ? ", " : i < 5 ? " of " : ""}
                 </span>
               ))}{" "}
             letters
@@ -524,14 +524,14 @@ ${gameState.state
 
             <p>
               Probeer ook eens met{" "}
-              {[3, 4, 5, 6, 7]
+              {[3, 4, 5, 6, 7, 8, 9]
                 .filter((x) => x !== WORD_LENGTH)
                 .map((x, i) => (
                   <span key={`link-${x}`}>
                     <Link href={`/speel/${x}`}>
                       <a>{x}</a>
                     </Link>
-                    {i < 3 ? ", " : i < 4 ? " of " : ""}
+                    {i < 4 ? ", " : i < 5 ? " of " : ""}
                   </span>
                 ))}{" "}
               letters
@@ -711,7 +711,12 @@ ${gameState.state
       `}</style>
     </>
   ) : (
-    <p>302</p>
+    <Main>
+      <img
+        src="https://media.giphy.com/media/9Tq8GKRP4nwl2/giphy.gif"
+        alt="Computer says no"
+      />
+    </Main>
   );
 }
 

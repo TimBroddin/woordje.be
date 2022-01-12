@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import woorden from "../data/woorden2.json";
+import woorden from "../data/woorden.json";
 
 import { getGameId } from "../lib/gameId";
 

@@ -21,7 +21,7 @@ function shuffle(array) {
 }
 
 (async () => {
-  const levels = [3, 4, 5, 6, 7, 8];
+  const levels = [3, 4, 5, 6, 7, 8, 9];
   const files = ["gekeurd.txt", "ongekeurd.txt", "flexievormen.txt"];
 
   const output = {};
@@ -41,5 +41,5 @@ function shuffle(array) {
     output[length] = shuffle(words);
   }
 
-  await fs.writeFile(`../data/woorden2.json`, JSON.stringify(output));
+  await fs.writeFile(`../data/woorden.json`, JSON.stringify(output));
 })();
