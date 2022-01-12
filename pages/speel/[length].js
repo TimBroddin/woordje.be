@@ -43,6 +43,8 @@ async function getRandomword(length) {
 }
 
 export default function Home({ WORD_LENGTH }) {
+  const CORRECTED_GAME_ID = getGameId() - 1;
+  const BOARD_SIZE = WORD_LENGTH + 1;
   const [inputText, setInputText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,9 +54,7 @@ export default function Home({ WORD_LENGTH }) {
   const hiddenInputRef = useRef(null);
   const [gameState, setGameState] = useState(null);
   const { width, height } = useWindowSize();
-  const isGameOver = getIsGameOver(gameState);
-  const CORRECTED_GAME_ID = getGameId() - 1;
-  const BOARD_SIZE = WORD_LENGTH + 1;
+  const isGameOver = getIsGameOver(gameState, BOARD_SIZE);
 
   useEffect(() => {
     getRandomword(WORD_LENGTH).then((word) => setRandomWord(JSON.parse(word)));
@@ -121,7 +121,7 @@ export default function Home({ WORD_LENGTH }) {
     const text = `${
       html ? '<a href="https://woordje.be">Woordje.be</a>' : "woordje.be"
     } #${CORRECTED_GAME_ID} ${
-      WORD_LENGTH !== 6 ? `${WORD_LENGTH} (tekens)` : ""
+      WORD_LENGTH !== 6 ? `(${WORD_LENGTH} tekens)` : ""
     } ${getIsVictory(gameState) ? gameState.state.length : "X"}/${BOARD_SIZE}
 
 ${gameState.state
@@ -322,7 +322,7 @@ ${gameState.state
                                     WORD_LENGTH - 1
                                   )
                               }
-                              key={index}>
+                              key={`letter-${i}-${index}`}>
                               {letter === "?" ? null : letter}
                             </Letter>
                           ))}
@@ -332,7 +332,9 @@ ${gameState.state
                     return (
                       <Row key={`row_${i}`}>
                         {Array.from({ length: WORD_LENGTH }, (_, j) => (
-                          <Letter $disabled={true} key={`${i}-${j}`}></Letter>
+                          <Letter
+                            $disabled={true}
+                            key={`disabled-${i}-${j}`}></Letter>
                         ))}
                       </Row>
                     );
@@ -395,12 +397,12 @@ ${gameState.state
             {[3, 4, 5, 6, 7]
               .filter((x) => x !== WORD_LENGTH)
               .map((x, i) => (
-                <>
-                  <Link href={`/speel/${x}`} key={`link-${x}`}>
+                <span key={`link-${x}`}>
+                  <Link href={`/speel/${x}`}>
                     <a>{x}</a>
                   </Link>
                   {i < 3 ? ", " : i < 3 ? " of " : ""}
-                </>
+                </span>
               ))}{" "}
             letters
           </p>
