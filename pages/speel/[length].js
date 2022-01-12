@@ -57,12 +57,8 @@ export default function Home({ WORD_LENGTH }) {
   const BOARD_SIZE = WORD_LENGTH + 1;
 
   useEffect(() => {
-    if (!randomWord) {
-      getRandomword(WORD_LENGTH).then((word) =>
-        setRandomWord(JSON.parse(word))
-      );
-    }
-  }, [randomWord, WORD_LENGTH]);
+    getRandomword(WORD_LENGTH).then((word) => setRandomWord(JSON.parse(word)));
+  }, [WORD_LENGTH]);
 
   useEffect(() => {
     if (gameState == null) {
