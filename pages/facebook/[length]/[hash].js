@@ -26,6 +26,17 @@ const Facebook = () => {
                 ))}
               </div>
             ))}
+            {Array.from({ length: parseInt(length) + 1 - rows.length }).map(
+              (_, idx) => (
+                <div className="row" key={`empty-idx`}>
+                  {Array.from({ length: parseInt(length) }).map((_, cidx) => (
+                    <div
+                      className={`square incorrect`}
+                      key={`empty-${idx}-${cidx}`}></div>
+                  ))}
+                </div>
+              )
+            )}
           </div>
         </main>
         <style jsx>{`
@@ -42,16 +53,14 @@ const Facebook = () => {
           }
 
           .row {
-            font-size: 96px;
-            line-height: 96px;
             display: flex;
             gap: 5px;
             margin-bottom: 5px;
           }
 
           .square {
-            width: 96px;
-            height: 96px;
+            width: ${80 - parseInt(length) * 4}px;
+            height: ${80 - parseInt(length) * 4}px;
             border: 3px solid rgba(255, 255, 255, 0.5);
             border-radius: 8px;
           }
