@@ -69,29 +69,20 @@ export default function Home({ WORD_LENGTH }) {
   }, [WORD_LENGTH]);
 
   useEffect(() => {
-    if (gameState == null) {
-      setGameState({
-        state: readGameStateFromStorage(WORD_LENGTH),
-        initial: true,
-      });
-    }
-  }, [gameState]);
-
-  useEffect(() => {
-    if (gameState) {
-      setGameState({
-        state: readGameStateFromStorage(WORD_LENGTH),
-        initial: true,
-      });
-    }
+    console.log(`Loading state for ${WORD_LENGTH}`);
+    setGameState({
+      state: readGameStateFromStorage(WORD_LENGTH),
+      initial: true,
+    });
   }, [WORD_LENGTH]);
 
   useEffect(() => {
     if (gameState && !gameState.initial) {
+      console.log(`Saving state for ${WORD_LENGTH}`);
       saveGameStateToStorage(gameState.state, WORD_LENGTH);
     } else {
     }
-  }, [gameState, WORD_LENGTH]);
+  }, [gameState]);
 
   useEffect(() => {
     if (fetchControllerRef.current) {
@@ -99,14 +90,6 @@ export default function Home({ WORD_LENGTH }) {
     }
     toast.dismiss("toast");
   }, [inputText]);
-
-  useEffect(() => {
-    window.addEventListener("storage", (e) => {
-      if (e.key === "gameState") {
-        //setGameState({ state: readGameStateFromStorage(), initial: false });
-      }
-    });
-  }, []);
 
   function onClick(ev) {
     ev.preventDefault();
@@ -283,6 +266,7 @@ ${gameState.state
           return val;
         });
       }
+      return gameState;
     });
   }
 
