@@ -232,7 +232,10 @@ ${gameState.state
       if (!match.some((i) => i.score !== "good")) {
         setShowConfetti(true);
         plausible("win", {
-          props: { length: WORD_LENGTH, tries: gameState.state.length + 1 },
+          props: {
+            length: WORD_LENGTH,
+            tries: `${gameState.state.length + 1}/${BOARD_SIZE}`,
+          },
         });
         // increment streak
       } else if (gameState.state.length + 1 === BOARD_SIZE) {
