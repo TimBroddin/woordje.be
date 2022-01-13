@@ -56,8 +56,6 @@ const Keyboard = ({ gameState, onPress, onBackspace, onSubmit }) => {
   }
 
   useEffect(() => {
-    console.log("add handler");
-
     const handler = (e) => {
       if (e.metaKey || e.altKey || e.ctrlKey) return;
 
@@ -67,7 +65,7 @@ const Keyboard = ({ gameState, onPress, onBackspace, onSubmit }) => {
         onSubmit();
       } else if (e.key.length === 1) {
         const key = e.key.toLowerCase();
-        if (key.match(/[a-z]/g) && used[key] !== "bad") {
+        if (key.match(/[a-z]/g)) {
           onPress(key);
         }
       }
@@ -89,7 +87,7 @@ const Keyboard = ({ gameState, onPress, onBackspace, onSubmit }) => {
             return (
               <Letter
                 key={`keyboard.${rowIdx}.${l}`}
-                onClick={() => used[l] !== "bad" && onPress(l)}
+                onClick={() => onPress(l)}
                 $score={used[l]}
                 $disabled={used[l] === "bad"}>
                 {l}
