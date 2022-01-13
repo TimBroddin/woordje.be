@@ -16,6 +16,7 @@ export const Main = styled.main`
     justify-content: center;
     align-items: center;
     gap: 30px;
+    flex-wrap: wrap;
   }
 `;
 
