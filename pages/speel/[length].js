@@ -308,7 +308,7 @@ ${gameState.state
         openGraph={{
           url: "https://www.woordje.be/",
           title: "Woordje.be",
-          description: "Een dagelijks woordspelletje gebaseerd op Worlde.",
+          description: "Een dagelijks woordspelletje gebaseerd op Wordle.",
           images: [
             {
               url: "https://www.woordje.be/twitter.png",
