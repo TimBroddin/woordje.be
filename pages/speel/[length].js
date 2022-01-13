@@ -235,12 +235,16 @@ ${gameState.state
           props: {
             length: WORD_LENGTH,
             tries: `${gameState.state.length + 1}/${BOARD_SIZE}`,
+            game: `${CORRECTED_GAME_ID}x${BOARD_SIZE}`,
           },
         });
         // increment streak
       } else if (gameState.state.length + 1 === BOARD_SIZE) {
         plausible("lose", {
-          props: { length: WORD_LENGTH },
+          props: {
+            length: WORD_LENGTH,
+            game: `${CORRECTED_GAME_ID}x${BOARD_SIZE}`,
+          },
         });
       }
       setGameState((state) => {
