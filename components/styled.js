@@ -16,6 +16,16 @@ export const Main = styled.main`
     justify-content: center;
     align-items: center;
     gap: 30px;
+    flex-wrap: wrap;
+  }
+`;
+
+export const InnerWrapper = styled.div`
+  @media (min-width: 768px) {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 `;
 
