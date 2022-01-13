@@ -67,6 +67,7 @@ export const Summary = styled.div`
     margin-bottom: 5px;
     border-radius: 5px;
     font-size: 14px;
+    text-decoration: none;
   }
 
   a {
@@ -177,4 +178,6 @@ export const CloseModal = styled.a`
   height: 20px;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+  font-weight: bold;
 `;

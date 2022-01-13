@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
@@ -159,8 +160,6 @@ ${gameState.state
   }
 
   function getEncodedState(gameState) {
-    let output = "";
-
     return gameState.state
       .map((line) =>
         line
@@ -235,12 +234,16 @@ ${gameState.state
           props: {
             length: WORD_LENGTH,
             tries: `${gameState.state.length + 1}/${BOARD_SIZE}`,
+            game: `${CORRECTED_GAME_ID}x${WORD_LENGTH}`,
           },
         });
         // increment streak
       } else if (gameState.state.length + 1 === BOARD_SIZE) {
         plausible("lose", {
-          props: { length: WORD_LENGTH },
+          props: {
+            length: WORD_LENGTH,
+            game: `${CORRECTED_GAME_ID}x${WORD_LENGTH}`,
+          },
         });
       }
       setGameState((state) => {
@@ -547,182 +550,14 @@ ${gameState.state
           </Summary>
         </ModalWrapper>
       ) : null}
-
-      <style jsx>{`
-        main {
-          color: #fff;
-          width: 100vw;
-          height: 100vh;
-          height: -webkit-fill-available;
-          user-select: none;
-          transition: all 0.2s ease-in-out;
-        }
-
-        main.initializing {
-          opacity: 0;
-        }
-
-        .hidden-input {
-          background: #fff;
-          color: #000;
-          position: absolute;
-          left: -100000px;
-          font-size: 16px; /* prevent zoom on ios safari */
-        }
-
-        .board {
-          transition: all 0.2s ease-in-out;
-          position: relative;
-        }
-
-        .summary-wrapper {
-          position: absolute;
-          top: 0;
-          height: 100%;
-          margin: auto;
-          width: 100vw;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .summary {
-          width: 250px;
-          background: rgba(0, 0, 0, 0.7);
-          text-align: center;
-          padding: 15px;
-          color: white;
-        }
-
-        .summary.animate {
-          opacity: 0;
-          transform: translateY(-30px);
-          animation: appear 200ms ease-out forwards;
-          animation-delay: 700ms;
-        }
-
-        @keyframes appear {
-          from {
-            opacity: 0;
-            transform: translateY(-30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .summary h1 {
-          font-size: 16px;
-          margin-top: 0;
-          margin-bottom: 20px;
-        }
-
-        .summary .share-text {
-          margin-bottom: 20px;
-          font-size: 14px;
-          background: #fff;
-          color: #000;
-          user-select: all;
-          padding: 10px;
-          white-space: pre-wrap;
-          line-height: 14px;
-          border: 3px solid #000;
-        }
-
-        .summary button,
-        .summary .button {
-          padding: 5px;
-          background: #fff;
-          color: #000;
-          border: 1px solid #000;
-          cursor: pointer;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-          font-weight: bold;
-          text-transform: uppercase;
-          background: cyan;
-          margin-bottom: 5px;
-          border-radius: 5px;
-          font-size: 14px;
-        }
-
-        .summary button:active {
-          background-color: #00b5b5;
-        }
-
-        .board.loading {
-          filter: blur(5px);
-          cursor: progress;
-        }
-
-        .row,
-        .letter {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .letter {
-          width: 55px;
-          height: 53px;
-          background-color: #ccc;
-          font-size: 34px;
-          font-weight: bold;
-          text-transform: uppercase;
-          margin: 3px;
-          color: #000;
-        }
-        .letter.bad {
-          background-color: #ccc;
-        }
-        .letter.good {
-          background-color: #0f0;
-        }
-        .letter.off {
-          background-color: yellow;
-        }
-        .letter.focus {
-          box-shadow: 0 0 3px 3px cyan;
-        }
-        .row.disabled .letter {
-          background-color: #666;
-        }
-
-        .footer {
-          color: #999;
-          font-size: 13px;
-          text-align: center;
-          padding: 3px 0;
-        }
-        .footer span {
-          color: #666;
-        }
-        .footer a {
-          text-decoration: underline;
-        }
-        .footer a:hover {
-          color: #ccc;
-        }
-
-        .random {
-          cursor: pointer;
-          text-decoration: dotted underline;
-          color: white;
-        }
-
-        .hidden {
-          display: none !important;
-        }
-      `}</style>
     </>
   ) : (
     <Main>
-      <img
+      <Image
         src="https://media.giphy.com/media/9Tq8GKRP4nwl2/giphy.gif"
         alt="Computer says no"
+        width={320}
+        height={240}
       />
     </Main>
   );
