@@ -33,6 +33,8 @@ import {
   CloseModal,
 } from "../../components/styled";
 
+import Keyboard from "../../components/keyboard";
+
 async function check(word, WORD_LENGTH, opts) {
   const res = await fetch(
     `/check?word=${encodeURIComponent(word)}&l=${WORD_LENGTH}`,
@@ -308,7 +310,7 @@ ${gameState.state
         openGraph={{
           url: "https://www.woordje.be/",
           title: "Woordje.be",
-          description: "Een dagelijks woordspelletje gebaseerd op Worlde.",
+          description: "Een dagelijks woordspelletje gebaseerd op Wordle.",
           images: [
             {
               url: "https://www.woordje.be/twitter.png",
@@ -406,6 +408,7 @@ ${gameState.state
               )
             : null}
         </Board>
+        <Keyboard gameState={gameState} onPress={(l) => {}} />
 
         <Footer onClick={(e) => e.stopPropagation()}>
           <h1>Help</h1>
