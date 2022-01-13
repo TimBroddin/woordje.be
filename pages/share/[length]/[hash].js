@@ -30,7 +30,7 @@ const Facebook = ({ length, hash }) => {
           title: `Woordje.be #${CORRECTED_GAME_ID} ${
             length !== 6 ? `(${length} tekens)` : ""
           } - ${tries}/${length + 1}`,
-          description: "Een dagelijks woordspelletje gebaseerd op Worlde.",
+          description: "Een dagelijks woordspelletje gebaseerd op Wordle.",
           images: [
             {
               url: `https://www.woordje.be/api/fb?length=${length}&hash=${hash}`,
