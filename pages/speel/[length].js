@@ -331,6 +331,7 @@ ${gameState.state
             autoCapitalize="none"
             spellCheck="false"
             enterKeyHint="go"
+            autoCorrect="off"
             onInput={onInput}
           />
         </form>
