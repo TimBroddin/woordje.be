@@ -21,6 +21,7 @@ import {
 
 import {
   Main,
+  InnerWrapper,
   ModalWrapper,
   Summary,
   ShareText,
@@ -266,152 +267,156 @@ ${gameState.state
         />
       ) : null}
       <Main $initializing={!gameState}>
-        <Board $loading={isLoading}>
-          {gameState &&
-            gameState.state.map((match, i) => (
-              <Row key={`gs_row${i}`}>
-                {match.map((item, i) => {
-                  return (
-                    <Letter key={`letter-${i}`} $score={item.score}>
-                      {item.letter}
-                    </Letter>
-                  );
-                })}
-              </Row>
-            ))}
-
-          {gameState && gameState.state.length < BOARD_SIZE
-            ? Array.from(
-                { length: BOARD_SIZE - gameState.state.length },
-                (_, i) => {
-                  if (i === 0 && !isGameOver) {
+        <InnerWrapper>
+          <Board $loading={isLoading}>
+            {gameState &&
+              gameState.state.map((match, i) => (
+                <Row key={`gs_row${i}`}>
+                  {match.map((item, i) => {
                     return (
-                      <Row key="row_input">
-                        {inputText
-                          .padEnd(WORD_LENGTH, "?")
-                          .split("")
-                          .map((letter, index) => (
+                      <Letter key={`letter-${i}`} $score={item.score}>
+                        {item.letter}
+                      </Letter>
+                    );
+                  })}
+                </Row>
+              ))}
+
+            {gameState && gameState.state.length < BOARD_SIZE
+              ? Array.from(
+                  { length: BOARD_SIZE - gameState.state.length },
+                  (_, i) => {
+                    if (i === 0 && !isGameOver) {
+                      return (
+                        <Row key="row_input">
+                          {inputText
+                            .padEnd(WORD_LENGTH, "?")
+                            .split("")
+                            .map((letter, index) => (
+                              <Letter
+                                $focus={
+                                  isFocused &&
+                                  index ===
+                                    Math.min(
+                                      Math.max(0, inputText.length),
+                                      WORD_LENGTH - 1
+                                    )
+                                }
+                                key={`letter-${i}-${index}`}>
+                                {letter === "?" ? null : letter}
+                              </Letter>
+                            ))}
+                        </Row>
+                      );
+                    } else {
+                      return (
+                        <Row key={`row_${i}`}>
+                          {Array.from({ length: WORD_LENGTH }, (_, j) => (
                             <Letter
-                              $focus={
-                                isFocused &&
-                                index ===
-                                  Math.min(
-                                    Math.max(0, inputText.length),
-                                    WORD_LENGTH - 1
-                                  )
-                              }
-                              key={`letter-${i}-${index}`}>
-                              {letter === "?" ? null : letter}
-                            </Letter>
+                              $disabled={true}
+                              key={`disabled-${i}-${j}`}></Letter>
                           ))}
-                      </Row>
-                    );
-                  } else {
-                    return (
-                      <Row key={`row_${i}`}>
-                        {Array.from({ length: WORD_LENGTH }, (_, j) => (
-                          <Letter
-                            $disabled={true}
-                            key={`disabled-${i}-${j}`}></Letter>
-                        ))}
-                      </Row>
-                    );
+                        </Row>
+                      );
+                    }
                   }
-                }
-              )
-            : null}
-        </Board>
-        <Keyboard
-          gameState={gameState}
-          onPress={(l) => {
-            setInputText((text) =>
-              `${text}${l}`
-                .toLowerCase()
-                .replace(/[^a-z]+/g, "")
-                .slice(0, WORD_LENGTH)
-            );
-          }}
-          onBackspace={() => {
-            setInputText((text) => text.slice(0, -1));
-          }}
-          onSubmit={onSubmit}
-        />
-
-        <Footer onClick={(e) => e.stopPropagation()}>
-          <h1>Help</h1>
-          <p>
-            Raad het {WORD_LENGTH}-letterwoord in {BOARD_SIZE} beurten, of
-            minder.
-          </p>
-          <p>
-            Op desktop kan je gewoon beginnen typen, enter om je woord in te
-            dienen. Op mobiel moet je eerst de vakjes aanraken.
-          </p>
-          <p>
-            🟩 = letter staat op de juiste plek
-            <br />
-            🟨 = letter komt voor in het woord, maar niet op de juiste plek.{" "}
-          </p>
-
-          <p>Elke dag een nieuwe opgave!</p>
-
-          <h1>Hulplijn</h1>
-          <p>
-            Hier is een willekeurig woord met {WORD_LENGTH} letters:{" "}
-            <Random
-              onClick={(e) =>
-                getRandomword(WORD_LENGTH).then((word) =>
-                  setRandomWord(JSON.parse(word))
                 )
-              }>
-              {randomWord}
-            </Random>
-          </p>
-          <h1>Te moeilijk/makkelijk?</h1>
-          <p>
-            Probeer ook eens met{" "}
-            {[3, 4, 5, 6, 7, 8]
-              .filter((x) => x !== WORD_LENGTH)
-              .map((x, i) => (
-                <span key={`link-${x}`}>
-                  <Link href={`/speel/${x}`}>
-                    <a>{x}</a>
-                  </Link>
-                  {i < 3 ? ", " : i < 4 ? " of " : ""}
-                </span>
-              ))}{" "}
-            letters
-          </p>
+              : null}
+          </Board>
+          <Keyboard
+            gameState={gameState}
+            onPress={(l) => {
+              setInputText((text) =>
+                `${text}${l}`
+                  .toLowerCase()
+                  .replace(/[^a-z]+/g, "")
+                  .slice(0, WORD_LENGTH)
+              );
+            }}
+            onBackspace={() => {
+              setInputText((text) => text.slice(0, -1));
+            }}
+            onSubmit={onSubmit}
+          />
 
-          <h1>
-            Cr
-            <span
-              onDoubleClick={() => setGameState({ state: [], initial: true })}>
-              e
-            </span>
-            dits
-          </h1>
-          <p>
-            Gebaseerd op{" "}
-            <a
-              href="https://www.powerlanguage.co.uk/wordle/"
-              rel="noreferrer"
-              target="_blank">
-              Wordle
-            </a>{" "}
-            en{" "}
-            <a
-              href="https://github.com/rauchg/wordledge"
-              rel="noreferrer"
-              target="_blank">
-              Wordledge
-            </a>
-            . Tussen de 🥣 en de 🥔 gemaakt door{" "}
-            <a href="https://broddin.be/" rel="noreferrer" target="_blank">
-              Tim Broddin
-            </a>
-          </p>
-        </Footer>
+          <Footer onClick={(e) => e.stopPropagation()}>
+            <h1>Help</h1>
+            <p>
+              Raad het {WORD_LENGTH}-letterwoord in {BOARD_SIZE} beurten, of
+              minder.
+            </p>
+            <p>
+              Op desktop kan je gewoon beginnen typen, enter om je woord in te
+              dienen. Op mobiel moet je eerst de vakjes aanraken.
+            </p>
+            <p>
+              🟩 = letter staat op de juiste plek
+              <br />
+              🟨 = letter komt voor in het woord, maar niet op de juiste plek.{" "}
+            </p>
+
+            <p>Elke dag een nieuwe opgave!</p>
+
+            <h1>Hulplijn</h1>
+            <p>
+              Hier is een willekeurig woord met {WORD_LENGTH} letters:{" "}
+              <Random
+                onClick={(e) =>
+                  getRandomword(WORD_LENGTH).then((word) =>
+                    setRandomWord(JSON.parse(word))
+                  )
+                }>
+                {randomWord}
+              </Random>
+            </p>
+            <h1>Te moeilijk/makkelijk?</h1>
+            <p>
+              Probeer ook eens met{" "}
+              {[3, 4, 5, 6, 7, 8]
+                .filter((x) => x !== WORD_LENGTH)
+                .map((x, i) => (
+                  <span key={`link-${x}`}>
+                    <Link href={`/speel/${x}`}>
+                      <a>{x}</a>
+                    </Link>
+                    {i < 3 ? ", " : i < 4 ? " of " : ""}
+                  </span>
+                ))}{" "}
+              letters
+            </p>
+
+            <h1>
+              Cr
+              <span
+                onDoubleClick={() =>
+                  setGameState({ state: [], initial: true })
+                }>
+                e
+              </span>
+              dits
+            </h1>
+            <p>
+              Gebaseerd op{" "}
+              <a
+                href="https://www.powerlanguage.co.uk/wordle/"
+                rel="noreferrer"
+                target="_blank">
+                Wordle
+              </a>{" "}
+              en{" "}
+              <a
+                href="https://github.com/rauchg/wordledge"
+                rel="noreferrer"
+                target="_blank">
+                Wordledge
+              </a>
+              . Tussen de 🥣 en de 🥔 gemaakt door{" "}
+              <a href="https://broddin.be/" rel="noreferrer" target="_blank">
+                Tim Broddin
+              </a>
+            </p>
+          </Footer>
+        </InnerWrapper>
       </Main>
 
       {isGameOver && !modalClosed ? (

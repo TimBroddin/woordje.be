@@ -20,6 +20,15 @@ export const Main = styled.main`
   }
 `;
 
+export const InnerWrapper = styled.div`
+  @media (min-width: 768px) {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+`;
+
 export const ModalWrapper = styled.div`
   position: absolute;
   top: 0;
