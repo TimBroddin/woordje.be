@@ -1,11 +1,12 @@
 import styled from "styled-components";
+import { useEffect } from "react";
 
 const Wrapper = styled.div`
   min-width: 100vw;
   margin: 20px 5px;
 
   @media (min-width: 768px) {
-    padding: 0 20vw;
+    padding: 0 30vw;
     order: 3;
   }
 `;
@@ -32,12 +33,10 @@ const Letter = styled.div`
       : "white"};
 `;
 
-const Keyboard = ({ gameState, onPress }) => {
+const Keyboard = ({ gameState, onPress, onBackspace, onSubmit }) => {
   const letterRows = ["azertyuiop", "qsdfghjklm", "wxcvbn"].map((row) =>
     row.split("")
   );
-
-  console.log(gameState);
 
   const used = {};
   if (gameState && gameState.state) {
@@ -55,7 +54,20 @@ const Keyboard = ({ gameState, onPress }) => {
     });
   }
 
-  console.log(used);
+  useEffect(() => {
+    document.addEventListener("keypress", (e) => {
+      if (e.key === "Backspace") {
+        onBackspace();
+      } else if (e.key === "Enter") {
+        onSubmit();
+      } else {
+        const key = e.key.toLowerCase();
+        if (key.match(/[a-z]/g)) {
+          onPress(key);
+        }
+      }
+    });
+  }, []);
 
   return (
     <Wrapper>
@@ -75,8 +87,8 @@ const Keyboard = ({ gameState, onPress }) => {
               </Letter>
             );
           })}
-          {rowIdx === 1 && <Letter onClick={() => onPress(" ")}>⌫</Letter>}
-          {rowIdx === 2 && <Letter onClick={() => onPress(" ")}>ENTER</Letter>}
+          {rowIdx === 1 && <Letter onClick={() => onBackspace()}>⌫</Letter>}
+          {rowIdx === 2 && <Letter onClick={() => onSubmit()}>ENTER</Letter>}
         </Row>
       ))}
     </Wrapper>

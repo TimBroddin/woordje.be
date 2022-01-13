@@ -91,32 +91,6 @@ export default function Home({ WORD_LENGTH }) {
     toast.dismiss("toast");
   }, [inputText]);
 
-  function onClick(ev) {
-    ev.preventDefault();
-
-    setGameState((gameState) => {
-      if (gameState) {
-        if (!getIsGameOver(gameState)) {
-          if (
-            hiddenInputRef.current &&
-            hiddenInputRef.current != document.activeElement
-          ) {
-            hiddenInputRef.current.focus();
-          }
-        }
-      }
-      return gameState;
-    });
-  }
-
-  function onInputFocus() {
-    setIsFocused(true);
-  }
-
-  function onInputBlur() {
-    setIsFocused(false);
-  }
-
   function getShareText(gameState, html = false) {
     const text = `${
       html ? '<a href="https://woordje.be">Woordje.be</a>' : "woordje.be"
@@ -210,68 +184,36 @@ ${gameState.state
     } else {
       toast.dismiss("toast");
 
-      hiddenInputRef.current.value = "";
       setInputText("");
+      setGameState((gameState) => {
+        if (!match.some((i) => i.score !== "good")) {
+          setShowConfetti(true);
+          plausible("win", {
+            props: {
+              length: WORD_LENGTH,
+              tries: `${gameState.state.length + 1}/${BOARD_SIZE}`,
+              game: `${CORRECTED_GAME_ID}x${WORD_LENGTH}`,
+            },
+          });
 
-      if (!match.some((i) => i.score !== "good")) {
-        setShowConfetti(true);
-        plausible("win", {
-          props: {
-            length: WORD_LENGTH,
-            tries: `${gameState.state.length + 1}/${BOARD_SIZE}`,
-            game: `${CORRECTED_GAME_ID}x${WORD_LENGTH}`,
-          },
-        });
-        // increment streak
-      } else if (gameState.state.length + 1 === BOARD_SIZE) {
-        plausible("lose", {
-          props: {
-            length: WORD_LENGTH,
-            game: `${CORRECTED_GAME_ID}x${WORD_LENGTH}`,
-          },
-        });
-      }
-      setGameState((state) => {
+          // increment streak
+        } else if (gameState.state.length + 1 === BOARD_SIZE) {
+          plausible("lose", {
+            props: {
+              length: WORD_LENGTH,
+              game: `${CORRECTED_GAME_ID}x${WORD_LENGTH}`,
+            },
+          });
+        }
         return {
-          state: state.state.concat([match]),
+          state: gameState.state.concat([match]),
           initial: false,
         };
       });
     }
   }
 
-  useEffect(() => {
-    function handleKeyDown(ev) {
-      if (fetchControllerRef.current || isGameOver) return;
-      if (ev.metaKey || ev.altKey || ev.ctrlKey) return;
-      hiddenInputRef.current.focus();
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isGameOver]);
-
-  function onInput(ev) {
-    const nativeEvent = ev.nativeEvent;
-    setGameState((gameState) => {
-      if (gameState && !getIsGameOver(gameState)) {
-        const val = nativeEvent.target.value
-          .toLowerCase()
-          .replace(/[^a-z]+/g, "")
-          .slice(0, WORD_LENGTH);
-        setInputText(() => {
-          nativeEvent.target.value = val;
-          return val;
-        });
-      }
-      return gameState;
-    });
-  }
-
-  function onSubmit(ev) {
-    ev.preventDefault();
+  function onSubmit() {
     setInputText((text) => {
       setGameState((gameState) => {
         if (gameState && !getIsGameOver(gameState)) {
@@ -323,20 +265,7 @@ ${gameState.state
           height={height}
         />
       ) : null}
-      <Main $initializing={!gameState} onClick={onClick}>
-        <form onSubmit={onSubmit}>
-          <HiddenInput
-            onFocus={onInputFocus}
-            onBlur={onInputBlur}
-            ref={hiddenInputRef}
-            autoComplete="off"
-            autoCapitalize="none"
-            spellCheck="false"
-            enterKeyHint="go"
-            onInput={onInput}
-          />
-        </form>
-
+      <Main $initializing={!gameState}>
         <Board $loading={isLoading}>
           {gameState &&
             gameState.state.map((match, i) => (
@@ -392,7 +321,21 @@ ${gameState.state
               )
             : null}
         </Board>
-        <Keyboard gameState={gameState} onPress={(l) => {}} />
+        <Keyboard
+          gameState={gameState}
+          onPress={(l) => {
+            setInputText((text) =>
+              `${text}${l}`
+                .toLowerCase()
+                .replace(/[^a-z]+/g, "")
+                .slice(0, WORD_LENGTH)
+            );
+          }}
+          onBackspace={() => {
+            setInputText((text) => text.slice(0, -1));
+          }}
+          onSubmit={onSubmit}
+        />
 
         <Footer onClick={(e) => e.stopPropagation()}>
           <h1>Help</h1>
