@@ -31,6 +31,7 @@ const Letter = styled.div`
       : props.$score === "off"
       ? "yellow"
       : "white"};
+  cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
 `;
 
 const Keyboard = ({ gameState, onPress, onBackspace, onSubmit }) => {
@@ -55,34 +56,42 @@ const Keyboard = ({ gameState, onPress, onBackspace, onSubmit }) => {
   }
 
   useEffect(() => {
-    document.addEventListener("keypress", (e) => {
+    console.log("add handler");
+
+    const handler = (e) => {
+      if (e.metaKey || e.altKey || e.ctrlKey) return;
+
       if (e.key === "Backspace") {
         onBackspace();
       } else if (e.key === "Enter") {
         onSubmit();
-      } else {
+      } else if (e.key.length === 1) {
         const key = e.key.toLowerCase();
-        if (key.match(/[a-z]/g)) {
+        if (key.match(/[a-z]/g) && used[key] !== "bad") {
           onPress(key);
         }
       }
-    });
-  }, []);
+    };
+
+    document.addEventListener("keydown", handler);
+
+    return () => {
+      console.log("remove handler", handler);
+      document.removeEventListener("keydown", handler);
+    };
+  }, [used]);
 
   return (
     <Wrapper>
       {letterRows.map((row, rowIdx) => (
         <Row key={`keyboard.${rowIdx}`}>
           {row.map((l) => {
-            const isUsed = false;
-            const isDisabled = isUsed || l === " ";
-            const score = isUsed ? "off" : "good";
             return (
               <Letter
                 key={`keyboard.${rowIdx}.${l}`}
-                onClick={() => onPress(l)}
+                onClick={() => used[l] !== "bad" && onPress(l)}
                 $score={used[l]}
-                $focus={isUsed}>
+                $disabled={used[l] === "bad"}>
                 {l}
               </Letter>
             );

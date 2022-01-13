@@ -383,7 +383,14 @@ ${gameState.state
             letters
           </p>
 
-          <h1>Credits</h1>
+          <h1>
+            Cr
+            <span
+              onDoubleClick={() => setGameState({ state: [], initial: true })}>
+              e
+            </span>
+            dits
+          </h1>
           <p>
             Gebaseerd op{" "}
             <a
