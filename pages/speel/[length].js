@@ -5,6 +5,8 @@ import toast, { Toaster } from "react-hot-toast";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import { NextSeo } from "next-seo";
+import { usePlausible } from "next-plausible";
+
 import { getGameId } from "../../lib/gameId";
 import {
   readGameStateFromStorage,
@@ -57,6 +59,7 @@ export default function Home({ WORD_LENGTH }) {
   const [modalClosed, setModalClosed] = useState(false);
   const { width, height } = useWindowSize();
   const isGameOver = getIsGameOver(gameState, BOARD_SIZE);
+  const plausible = usePlausible();
 
   useEffect(() => {
     getRandomword(WORD_LENGTH).then((word) => setRandomWord(JSON.parse(word)));
@@ -228,7 +231,14 @@ ${gameState.state
 
       if (!match.some((i) => i.score !== "good")) {
         setShowConfetti(true);
+        plausible("win", {
+          props: { length: WORD_LENGTH, tries: gameState.state.length + 1 },
+        });
         // increment streak
+      } else if (gameState.state.length + 1 === BOARD_SIZE) {
+        plausible("lose", {
+          props: { length: WORD_LENGTH },
+        });
       }
       setGameState((state) => {
         return {
@@ -285,6 +295,42 @@ ${gameState.state
 
   return WORD_LENGTH > 2 && WORD_LENGTH < 9 ? (
     <>
+      <NextSeo
+        title={`Woordje.be #${CORRECTED_GAME_ID} - nederlandstalige Wordle`}
+        description="Een dagelijks woordspelletje."
+        canonical="https://www.woordje.be/"
+        openGraph={{
+          url: "https://www.woordje.be/",
+          title: "Woordje.be",
+          description: "Een dagelijks woordspelletje gebaseerd op Worlde.",
+          images: [
+            {
+              url: "https://www.woordje.be/twitter.png",
+              width: 1200,
+              height: 630,
+              alt: "Woordje.be",
+              type: "image/png",
+            },
+          ],
+          site_name: "Woordje.be",
+        }}
+        twitter={{
+          handle: "@timbroddin",
+          cardType: "summary",
+        }}
+      />
+      <Head>
+        <link rel="icon" type="image/png" href="/favicon.png" />
+      </Head>
+      <Toaster />
+      {showConfetti ? (
+        <Confetti
+          numberOfPieces={300}
+          recycle={false}
+          width={width}
+          height={height}
+        />
+      ) : null}
       <Main $initializing={!gameState} onClick={onClick}>
         <form onSubmit={onSubmit}>
           <HiddenInput
@@ -423,47 +469,6 @@ ${gameState.state
             </a>
           </p>
         </Footer>
-        <script
-          defer
-          data-domain="woordje.be"
-          src="https://plausible.io/js/plausible.js"></script>
-
-        <NextSeo
-          title={`Woordje.be #${CORRECTED_GAME_ID} - nederlandstalige Wordle`}
-          description="Een dagelijks woordspelletje."
-          canonical="https://www.woordje.be/"
-          openGraph={{
-            url: "https://www.woordje.be/",
-            title: "Woordje.be",
-            description: "Een dagelijks woordspelletje gebaseerd op Worlde.",
-            images: [
-              {
-                url: "https://www.woordje.be/twitter.png",
-                width: 1200,
-                height: 630,
-                alt: "Woordje.be",
-                type: "image/png",
-              },
-            ],
-            site_name: "Woordje.be",
-          }}
-          twitter={{
-            handle: "@timbroddin",
-            cardType: "summary",
-          }}
-        />
-        <Head>
-          <link rel="icon" type="image/png" href="/favicon.png" />
-        </Head>
-        <Toaster />
-        {showConfetti ? (
-          <Confetti
-            numberOfPieces={300}
-            recycle={false}
-            width={width}
-            height={height}
-          />
-        ) : null}
       </Main>
 
       {isGameOver && !modalClosed ? (
