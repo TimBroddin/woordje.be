@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import { copyToClipboard, getIsVictory } from "../lib/helpers";
 import { getGameId } from "../lib/gameId";
-import { useGameSettings } from "../data/context";
+import { useGameSettings, useGameState } from "../data/context";
 
 const ModalWrapper = styled.div`
   position: absolute;
@@ -89,9 +89,10 @@ const CloseModal = styled.a`
   font-weight: bold;
 `;
 
-const Results = ({ solutions, gameState, close }) => {
+const Results = ({ solutions, close }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
   const [{ WORD_LENGTH, BOARD_SIZE }] = useGameSettings();
+  const [gameState] = useGameState();
 
   function getShareText(gameState, html = false) {
     const text = `${

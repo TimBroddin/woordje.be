@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import styled from "styled-components";
-import { useGameSettings } from "../data/context";
+import { useGameSettings, useGameState } from "../data/context";
 
 async function getRandomword(length) {
   const res = await fetch(`/api/random?l=${length}`);
@@ -49,9 +49,12 @@ const Random = styled.span`
 const Footer = () => {
   const [randomWord, setRandomWord] = useState(null);
   const [{ WORD_LENGTH, BOARD_SIZE }] = useGameSettings();
+  const [_, setGameState] = useGameState();
 
   useEffect(() => {
-    getRandomword(WORD_LENGTH).then((word) => setRandomWord(word));
+    if (WORD_LENGTH) {
+      getRandomword(WORD_LENGTH).then((word) => setRandomWord(word));
+    }
   }, [WORD_LENGTH]);
 
   return (

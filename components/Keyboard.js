@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useEffect } from "react";
+import { useGameState } from "../data/context";
 
 const Wrapper = styled.div`
   min-width: 100vw;
@@ -40,7 +41,9 @@ const Letter = styled.div`
   align-items: center;
 `;
 
-const Keyboard = ({ gameState, onPress, onBackspace, onSubmit }) => {
+const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
+  const [gameState] = useGameState();
+
   const letterRows = ["azertyuiop", "qsdfghjklm", "wxcvbn"].map((row) =>
     row.split("")
   );

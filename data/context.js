@@ -4,8 +4,11 @@ const GameContext = React.createContext([false, () => {}]);
 
 const GameContextProvider = (props) => {
   const [settings, setSettings] = useState({ WORD_SIZE: 6, BOARD_SIZE: 7 });
+  const [gameState, setGameState] = useState(null);
+
   return (
-    <GameContext.Provider value={[settings, setSettings]}>
+    <GameContext.Provider
+      value={[settings, setSettings, gameState, setGameState]}>
       {props.children}
     </GameContext.Provider>
   );
@@ -17,4 +20,9 @@ const useGameSettings = () => {
   return [settings, setSettings];
 };
 
-export { GameContext, GameContextProvider, useGameSettings };
+const useGameState = () => {
+  const [_, __, gameState, setGameState] = useContext(GameContext);
+  return [gameState, setGameState];
+};
+
+export { GameContext, GameContextProvider, useGameSettings, useGameState };

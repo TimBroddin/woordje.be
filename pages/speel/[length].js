@@ -15,7 +15,7 @@ import {
   cleanStorage,
 } from "../../lib/state";
 import { getIsGameOver } from "../../lib/helpers";
-import { useGameSettings } from "../../data/context";
+import { useGameSettings, useGameState } from "../../data/context";
 
 import {
   Main,
@@ -53,7 +53,7 @@ export default function Home({ WORD_LENGTH }) {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(null);
   const fetchControllerRef = useRef(null);
-  const [gameState, setGameState] = useState(null);
+  const [gameState, setGameState] = useGameState();
   const [modalClosed, setModalClosed] = useState(false);
   const [solutions, setSolutions] = useState([]);
   const { width, height } = useWindowSize();
@@ -66,7 +66,6 @@ export default function Home({ WORD_LENGTH }) {
   }, []);
 
   useEffect(() => {
-    console.log(`Loading state for ${WORD_LENGTH}`);
     setGameState({
       state: readGameStateFromStorage(WORD_LENGTH),
       initial: true,
@@ -76,7 +75,6 @@ export default function Home({ WORD_LENGTH }) {
 
   useEffect(() => {
     if (gameState && !gameState.initial) {
-      console.log(`Saving state for ${WORD_LENGTH}`);
       saveGameStateToStorage(gameState.state, WORD_LENGTH);
     } else {
     }
