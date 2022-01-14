@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import { copyToClipboard, getIsVictory } from "../lib/helpers";
 import { getGameId } from "../lib/gameId";
+import { useGameSettings } from "../data/context";
 
 const ModalWrapper = styled.div`
   position: absolute;
@@ -88,9 +89,9 @@ const CloseModal = styled.a`
   font-weight: bold;
 `;
 
-const Results = ({ solutions, gameState, WORD_LENGTH, close }) => {
+const Results = ({ solutions, gameState, close }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
-  const BOARD_SIZE = WORD_LENGTH + 1;
+  const [{ WORD_LENGTH, BOARD_SIZE }] = useGameSettings();
 
   function getShareText(gameState, html = false) {
     const text = `${
@@ -99,19 +100,19 @@ const Results = ({ solutions, gameState, WORD_LENGTH, close }) => {
       WORD_LENGTH !== 6 ? `(${WORD_LENGTH} tekens)` : ""
     } ${getIsVictory(gameState) ? gameState.state.length : "X"}/${BOARD_SIZE}
   
-  ${gameState.state
-    .map((line) => {
-      return line
-        .map((item) => {
-          return item.score === "good"
-            ? "🟩"
-            : item.score === "off"
-            ? "🟨"
-            : "⬛️";
-        })
-        .join("");
-    })
-    .join("\n")}`;
+${gameState.state
+  .map((line) => {
+    return line
+      .map((item) => {
+        return item.score === "good"
+          ? "🟩"
+          : item.score === "off"
+          ? "🟨"
+          : "⬛️";
+      })
+      .join("");
+  })
+  .join("\n")}`;
     if (html) {
       return text.replace(/\n/g, "<br>");
     } else {

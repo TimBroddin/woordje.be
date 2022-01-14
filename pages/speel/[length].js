@@ -15,6 +15,7 @@ import {
   cleanStorage,
 } from "../../lib/state";
 import { getIsGameOver } from "../../lib/helpers";
+import { useGameSettings } from "../../data/context";
 
 import {
   Main,
@@ -44,13 +45,14 @@ async function getSolutions() {
 export default function Home({ WORD_LENGTH }) {
   const CORRECTED_GAME_ID = getGameId() - 1;
   const BOARD_SIZE = WORD_LENGTH + 1;
+
+  const [_, setGameSettings] = useGameSettings();
+
   const [inputText, setInputText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(null);
-  const [randomWord, setRandomWord] = useState(null);
   const fetchControllerRef = useRef(null);
-  const hiddenInputRef = useRef(null);
   const [gameState, setGameState] = useState(null);
   const [modalClosed, setModalClosed] = useState(false);
   const [solutions, setSolutions] = useState([]);
@@ -69,6 +71,7 @@ export default function Home({ WORD_LENGTH }) {
       state: readGameStateFromStorage(WORD_LENGTH),
       initial: true,
     });
+    setGameSettings({ WORD_LENGTH, BOARD_SIZE });
   }, [WORD_LENGTH]);
 
   useEffect(() => {
