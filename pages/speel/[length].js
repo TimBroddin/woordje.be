@@ -12,6 +12,7 @@ import { getGameId } from "../../lib/gameId";
 import {
   readGameStateFromStorage,
   saveGameStateToStorage,
+  cleanStorage,
 } from "../../lib/state";
 import {
   copyToClipboard,
@@ -72,6 +73,7 @@ export default function Home({ WORD_LENGTH }) {
   const plausible = usePlausible();
 
   useEffect(() => {
+    cleanStorage();
     getSolutions().then((solutions) => setSolutions(solutions));
   }, []);
 
