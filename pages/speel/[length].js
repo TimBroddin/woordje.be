@@ -22,12 +22,11 @@ import {
   Board,
   Row,
   Letter,
-  Footer,
-  Random,
 } from "../../components/styled";
 
 import Keyboard from "../../components/Keyboard";
 import Results from "../../components/Results";
+import Footer from "../../components/Footer";
 
 async function check(word, WORD_LENGTH, opts) {
   const res = await fetch(
@@ -35,11 +34,6 @@ async function check(word, WORD_LENGTH, opts) {
     opts
   );
   return await res.json();
-}
-
-async function getRandomword(length) {
-  const res = await fetch(`/api/random?l=${length}`);
-  return await res.text();
 }
 
 async function getSolutions() {
@@ -68,10 +62,6 @@ export default function Home({ WORD_LENGTH }) {
     cleanStorage();
     getSolutions().then((solutions) => setSolutions(solutions));
   }, []);
-
-  useEffect(() => {
-    getRandomword(WORD_LENGTH).then((word) => setRandomWord(JSON.parse(word)));
-  }, [WORD_LENGTH]);
 
   useEffect(() => {
     console.log(`Loading state for ${WORD_LENGTH}`);
@@ -284,83 +274,7 @@ export default function Home({ WORD_LENGTH }) {
             onSubmit={onSubmit}
           />
 
-          <Footer onClick={(e) => e.stopPropagation()}>
-            <h1>Help</h1>
-            <p>
-              Raad het {WORD_LENGTH}-letterwoord in {BOARD_SIZE} beurten, of
-              minder.
-            </p>
-            <p>
-              Op desktop kan je gewoon beginnen typen, enter om je woord in te
-              dienen. Op mobiel moet je eerst de vakjes aanraken.
-            </p>
-            <p>
-              🟩 = letter staat op de juiste plek
-              <br />
-              🟨 = letter komt voor in het woord, maar niet op de juiste plek.{" "}
-            </p>
-
-            <p>Elke dag een nieuwe opgave!</p>
-
-            <h1>Hulplijn</h1>
-            <p>
-              Hier is een willekeurig woord met {WORD_LENGTH} letters:{" "}
-              <Random
-                onClick={(e) =>
-                  getRandomword(WORD_LENGTH).then((word) =>
-                    setRandomWord(JSON.parse(word))
-                  )
-                }>
-                {randomWord}
-              </Random>
-            </p>
-            <h1>Te moeilijk/makkelijk?</h1>
-            <p>
-              Probeer ook eens met{" "}
-              {[3, 4, 5, 6, 7, 8]
-                .filter((x) => x !== WORD_LENGTH)
-                .map((x, i) => (
-                  <span key={`link-${x}`}>
-                    <Link href={`/speel/${x}`}>
-                      <a>{x}</a>
-                    </Link>
-                    {i < 3 ? ", " : i < 4 ? " of " : ""}
-                  </span>
-                ))}{" "}
-              letters
-            </p>
-
-            <h1>
-              Cr
-              <span
-                onDoubleClick={() =>
-                  setGameState({ state: [], initial: true })
-                }>
-                e
-              </span>
-              dits
-            </h1>
-            <p>
-              Gebaseerd op{" "}
-              <a
-                href="https://www.powerlanguage.co.uk/wordle/"
-                rel="noreferrer"
-                target="_blank">
-                Wordle
-              </a>{" "}
-              en{" "}
-              <a
-                href="https://github.com/rauchg/wordledge"
-                rel="noreferrer"
-                target="_blank">
-                Wordledge
-              </a>
-              . Tussen de 🥣 en de 🥔 gemaakt door{" "}
-              <a href="https://broddin.be/" rel="noreferrer" target="_blank">
-                Tim Broddin
-              </a>
-            </p>
-          </Footer>
+          <Footer WORD_LENGTH={WORD_LENGTH} BOARD_SIZE={BOARD_SIZE} />
         </InnerWrapper>
       </Main>
 
