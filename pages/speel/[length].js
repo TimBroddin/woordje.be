@@ -440,7 +440,7 @@ ${gameState.state
               }}>
               X
             </CloseModal>
-            <h1>Het woord was "{solutions[WORD_LENGTH - 3]}"</h1>
+            <h1>Het woord was &ldquo;{solutions[WORD_LENGTH - 3]}&rdquo;</h1>
             <ShareText onClick={(e) => e.stopPropagation()}>
               {getShareText(gameState)}
             </ShareText>
