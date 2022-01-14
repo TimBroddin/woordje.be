@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import styled from "styled-components";
-import { useGameSettings, useGameState } from "../data/context";
+import { useGameSettings, useGameState, useRandomWord } from "../data/context";
 
 async function getRandomword(length) {
   const res = await fetch(`/api/random?l=${length}`);
@@ -47,15 +47,9 @@ const Random = styled.span`
 `;
 
 const Footer = () => {
-  const [randomWord, setRandomWord] = useState(null);
+  const [randomWord, fetchRandomWord] = useRandomWord();
   const [{ WORD_LENGTH, BOARD_SIZE }] = useGameSettings();
   const [_, setGameState] = useGameState();
-
-  useEffect(() => {
-    if (WORD_LENGTH) {
-      getRandomword(WORD_LENGTH).then((word) => setRandomWord(word));
-    }
-  }, [WORD_LENGTH]);
 
   return (
     <FooterWrapper>
@@ -78,12 +72,7 @@ const Footer = () => {
       <h1>Hulplijn</h1>
       <p>
         Hier is een willekeurig woord met {WORD_LENGTH} letters:{" "}
-        <Random
-          onClick={(e) =>
-            getRandomword(WORD_LENGTH).then((word) => setRandomWord(word))
-          }>
-          {randomWord}
-        </Random>
+        <Random onClick={(e) => fetchRandomWord()}>{randomWord}</Random>
       </p>
       <h1>Te moeilijk/makkelijk?</h1>
       <p>

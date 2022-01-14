@@ -15,7 +15,11 @@ import {
   cleanStorage,
 } from "../../lib/state";
 import { getIsGameOver } from "../../lib/helpers";
-import { useGameSettings, useGameState } from "../../data/context";
+import {
+  useGameSettings,
+  useGameState,
+  useRandomWord,
+} from "../../data/context";
 
 import {
   Main,
@@ -47,6 +51,7 @@ export default function Home({ WORD_LENGTH }) {
   const BOARD_SIZE = WORD_LENGTH + 1;
 
   const [_, setGameSettings] = useGameSettings();
+  const [randomWord, fetchRandomWord] = useRandomWord();
 
   const [inputText, setInputText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -94,6 +99,10 @@ export default function Home({ WORD_LENGTH }) {
 
     setIsLoading(true);
     toast.loading("Controleren...", { id: "toast", duration: Infinity });
+    console.log(text, randomWord);
+    if (text === randomWord) {
+      fetchRandomWord();
+    }
 
     let serverResponse;
     try {
