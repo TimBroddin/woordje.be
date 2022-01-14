@@ -12,6 +12,7 @@ import { getGameId } from "../../lib/gameId";
 import {
   readGameStateFromStorage,
   saveGameStateToStorage,
+  cleanStorage,
 } from "../../lib/state";
 import {
   copyToClipboard,
@@ -38,15 +39,20 @@ import Keyboard from "../../components/keyboard";
 
 async function check(word, WORD_LENGTH, opts) {
   const res = await fetch(
-    `/check?word=${encodeURIComponent(word)}&l=${WORD_LENGTH}`,
+    `/api/check?word=${encodeURIComponent(word)}&l=${WORD_LENGTH}`,
     opts
   );
   return await res.json();
 }
 
 async function getRandomword(length) {
-  const res = await fetch(`/random?l=${length}`);
+  const res = await fetch(`/api/random?l=${length}`);
   return await res.text();
+}
+
+async function getSolutions() {
+  const res = await fetch(`/api/solutions`);
+  return await res.json();
 }
 
 export default function Home({ WORD_LENGTH }) {
@@ -61,9 +67,15 @@ export default function Home({ WORD_LENGTH }) {
   const hiddenInputRef = useRef(null);
   const [gameState, setGameState] = useState(null);
   const [modalClosed, setModalClosed] = useState(false);
+  const [solutions, setSolutions] = useState([]);
   const { width, height } = useWindowSize();
   const isGameOver = getIsGameOver(gameState, BOARD_SIZE);
   const plausible = usePlausible();
+
+  useEffect(() => {
+    cleanStorage();
+    getSolutions().then((solutions) => setSolutions(solutions));
+  }, []);
 
   useEffect(() => {
     getRandomword(WORD_LENGTH).then((word) => setRandomWord(JSON.parse(word)));
@@ -430,7 +442,7 @@ ${gameState.state
               }}>
               X
             </CloseModal>
-            <h1>Samenvatting</h1>
+            <h1>Het woord was &ldquo;{solutions[WORD_LENGTH - 3]}&rdquo;</h1>
             <ShareText onClick={(e) => e.stopPropagation()}>
               {getShareText(gameState)}
             </ShareText>
