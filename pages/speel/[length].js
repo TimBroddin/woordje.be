@@ -14,25 +14,16 @@ import {
   saveGameStateToStorage,
   cleanStorage,
 } from "../../lib/state";
-import {
-  copyToClipboard,
-  getIsVictory,
-  getIsGameOver,
-} from "../../lib/helpers";
+import { getIsGameOver } from "../../lib/helpers";
 
 import {
   Main,
   InnerWrapper,
-  ModalWrapper,
-  Summary,
-  ShareText,
   Board,
   Row,
   Letter,
   Footer,
   Random,
-  HiddenInput,
-  CloseModal,
 } from "../../components/styled";
 
 import Keyboard from "../../components/Keyboard";
@@ -378,6 +369,7 @@ export default function Home({ WORD_LENGTH }) {
           WORD_LENGTH={WORD_LENGTH}
           gameState={gameState}
           solutions={solutions}
+          close={() => setModalClosed(true)}
         />
       ) : null}
     </>

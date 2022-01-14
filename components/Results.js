@@ -88,7 +88,7 @@ const CloseModal = styled.a`
   font-weight: bold;
 `;
 
-const Results = ({ solutions, gameState, WORD_LENGTH }) => {
+const Results = ({ solutions, gameState, WORD_LENGTH, close }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
   const BOARD_SIZE = WORD_LENGTH + 1;
 
@@ -158,7 +158,7 @@ const Results = ({ solutions, gameState, WORD_LENGTH }) => {
           href="#close"
           onClick={(e) => {
             e.preventDefault();
-            setModalClosed(true);
+            close();
           }}>
           X
         </CloseModal>
