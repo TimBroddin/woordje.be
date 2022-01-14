@@ -54,7 +54,7 @@ const Facebook = ({ length, hash }) => {
 export async function getServerSideProps(context) {
   return {
     props: {
-      length: context.query.length,
+      length: parseInt(context.query.length),
       hash: context.query.hash,
     }, // will be passed to the page component as props
   };

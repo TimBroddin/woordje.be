@@ -29,74 +29,6 @@ export const InnerWrapper = styled.div`
   }
 `;
 
-export const ModalWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  height: 100%;
-  margin: auto;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const Summary = styled.div`
-  width: 300px;
-  background: rgba(0, 0, 0, 0.7);
-  text-align: center;
-  padding: 15px;
-  font-size: 12px;
-  color: white;
-
-  h1 {
-    font-size: 16px;
-    margin-top: 0;
-    margin-bottom: 20px;
-  }
-
-  h2 {
-    text-transform: uppercase;
-    font-size: 14px;
-  }
-
-  button,
-  a.share {
-    padding: 5px;
-    background: #fff;
-    color: #000;
-    border: 1px solid #000;
-    cursor: pointer;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    font-weight: bold;
-    text-transform: uppercase;
-    background: cyan;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    font-size: 14px;
-    text-decoration: none;
-  }
-
-  a {
-    text-decoration: underline;
-  }
-`;
-
-export const ShareText = styled.div`
-  margin-bottom: 20px;
-  font-size: 14px;
-  background: #fff;
-  color: #000;
-  user-select: all;
-  padding: 10px;
-  white-space: pre-wrap;
-  line-height: 14px;
-  border: 3px solid #000;
-`;
-
 export const Board = styled.div`
   transition: all 0.2s ease-in-out;
   position: relative;
@@ -176,18 +108,4 @@ export const HiddenInput = styled.input`
   position: absolute;
   left: -100000px;
   font-size: 16px;
-`;
-
-export const CloseModal = styled.a`
-  display: inline-flex;
-  float: right;
-  border-radius: 50%;
-  background-color: white;
-  color: black;
-  width: 20px;
-  height: 20px;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  font-weight: bold;
 `;
