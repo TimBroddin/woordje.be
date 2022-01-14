@@ -18,13 +18,14 @@ const ModalWrapper = styled.div`
 
 const Summary = styled.div`
   width: 300px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(5px);
   text-align: center;
-  padding: 15px;
+  padding: 25px 15px;
   font-size: 12px;
-  color: white;
-  border-radius: 5px;
+  color: black;
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 
   h1 {
     font-size: 16px;
@@ -41,7 +42,7 @@ const Summary = styled.div`
   a.share {
     padding: 5px;
     background: #fff;
-    color: #000;
+    color: white;
     border: 1px solid #000;
     cursor: pointer;
     height: 40px;
@@ -51,7 +52,7 @@ const Summary = styled.div`
     width: 100%;
     font-weight: bold;
     text-transform: uppercase;
-    background: cyan;
+    background: #2980b9;
     margin-bottom: 5px;
     border-radius: 5px;
     font-size: 14px;
@@ -79,13 +80,13 @@ const CloseModal = styled.a`
   display: inline-flex;
   float: right;
   border-radius: 50%;
-  background-color: white;
-  color: black;
+  background-color: black;
+  color: white;
   width: 20px;
   height: 20px;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
+  text-decoration: none !important;
   font-weight: bold;
 `;
 
@@ -164,7 +165,7 @@ ${gameState.state
           }}>
           X
         </CloseModal>
-        <h1>Het woord was &ldquo;{solutions[WORD_LENGTH - 3]}&rdquo;</h1>
+        <h1>Het woordje was &ldquo;{solutions[WORD_LENGTH - 3]}&rdquo;</h1>
         <ShareText onClick={(e) => e.stopPropagation()}>
           {getShareText(gameState)}
         </ShareText>
