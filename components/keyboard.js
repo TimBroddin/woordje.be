@@ -3,7 +3,8 @@ import { useEffect } from "react";
 
 const Wrapper = styled.div`
   min-width: 100vw;
-  margin: 20px 5px;
+  margin: 20px 0px;
+  padding: 0px 5px;
 
   @media (min-width: 768px) {
     padding: 0 30vw;
@@ -13,25 +14,30 @@ const Wrapper = styled.div`
 const Row = styled.div`
   display: flex;
   justify-content: center;
-  gap: 3px;
-  margin-bottom: 3px;
+  gap: 5px;
+  margin-bottom: 10px;
 `;
 const Letter = styled.div`
   color: black;
   padding: 5px;
   border: 1px solid #ccc;
-  border-radius: 3px;
+  border-radius: 10px;
   flex: 1;
   text-align: center;
+  height: 50px;
+  max-width: ${(props) => (props.$isBigger ? "60px" : "40px")};
   background-color: ${(props) =>
     props.$score === "good"
       ? "#0f0"
       : props.$score === "bad"
-      ? "#ccc"
+      ? "#666"
       : props.$score === "off"
       ? "yellow"
-      : "white"};
+      : "#ccc"};
   cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Keyboard = ({ gameState, onPress, onBackspace, onSubmit }) => {
@@ -74,7 +80,6 @@ const Keyboard = ({ gameState, onPress, onBackspace, onSubmit }) => {
     document.addEventListener("keydown", handler);
 
     return () => {
-      console.log("remove handler", handler);
       document.removeEventListener("keydown", handler);
     };
   }, [used]);
@@ -94,8 +99,16 @@ const Keyboard = ({ gameState, onPress, onBackspace, onSubmit }) => {
               </Letter>
             );
           })}
-          {rowIdx === 1 && <Letter onClick={() => onBackspace()}>⌫</Letter>}
-          {rowIdx === 2 && <Letter onClick={() => onSubmit()}>ENTER</Letter>}
+          {rowIdx === 1 && (
+            <Letter onClick={() => onBackspace()} $isBigger={true}>
+              ⌫
+            </Letter>
+          )}
+          {rowIdx === 2 && (
+            <Letter onClick={() => onSubmit()} $isBigger={true}>
+              ENTER
+            </Letter>
+          )}
         </Row>
       ))}
     </Wrapper>

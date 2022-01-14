@@ -10,14 +10,19 @@ const secondDate = new Date().valueOf();
 export default async function middleware(req) {
   const GAME_ID = getGameId();
 
-  if (req.nextUrl.pathname === "/random") {
+  if (req.nextUrl.pathname === "/api/random") {
     const WORD_LENGTH = parseInt(req.nextUrl.searchParams.get("l"));
 
     const idx = Math.floor(Math.random() * woorden[WORD_LENGTH].length);
     const word = woorden[WORD_LENGTH][idx];
     return NextResponse.json(word);
   }
-  if (req.nextUrl.pathname === "/debug") {
+  if (req.nextUrl.pathname === "/api/solutions") {
+    return NextResponse.json(
+      [3, 4, 5, 6, 7, 8].map((idx) => woorden[idx][GAME_ID])
+    );
+  }
+  if (req.nextUrl.pathname === "/api/debug") {
     const WORD_LENGTH = parseInt(req.nextUrl.searchParams.get("l"));
 
     const WORD = woorden[WORD_LENGTH][GAME_ID];
@@ -30,7 +35,7 @@ export default async function middleware(req) {
       WORD,
     });
   }
-  if (req.nextUrl.pathname === "/check") {
+  if (req.nextUrl.pathname === "/api/check") {
     const WORD_LENGTH = parseInt(req.nextUrl.searchParams.get("l"));
 
     const WORD = woorden[WORD_LENGTH][GAME_ID];
