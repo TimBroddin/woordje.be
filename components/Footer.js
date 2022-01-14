@@ -80,9 +80,7 @@ const Footer = () => {
         Hier is een willekeurig woord met {WORD_LENGTH} letters:{" "}
         <Random
           onClick={(e) =>
-            getRandomword(WORD_LENGTH).then((word) =>
-              setRandomWord(JSON.parse(word))
-            )
+            getRandomword(WORD_LENGTH).then((word) => setRandomWord(word))
           }>
           {randomWord}
         </Random>
