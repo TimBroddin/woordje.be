@@ -15,31 +15,35 @@ const Wrapper = styled.div`
 const Row = styled.div`
   display: flex;
   justify-content: center;
-  gap: 5px;
   margin-bottom: 10px;
 `;
 const Letter = styled.a`
-  color: black;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  flex: 1;
-  text-align: center;
-  height: 50px;
-  max-width: ${(props) => (props.$isBigger ? "60px" : "40px")};
-  background-color: ${(props) =>
-    props.$score === "good"
-      ? "#0f0"
-      : props.$score === "bad"
-      ? "#666"
-      : props.$score === "off"
-      ? "yellow"
-      : "#ccc"};
-  cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  touch-action: manipulation;
+  padding: 5px 2px;
+  flex-grow: 1;
+
+  > span {
+    display: block;
+    color: black;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    flex: 1;
+    text-align: center;
+    height: 50px;
+    background-color: ${(props) =>
+      props.$score === "good"
+        ? "#0f0"
+        : props.$score === "bad"
+        ? "#666"
+        : props.$score === "off"
+        ? "yellow"
+        : "#ccc"};
+    cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    touch-action: manipulation;
+  }
 `;
 
 const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
@@ -103,7 +107,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
                 href={`#${l}`}
                 $score={used[l]}
                 $disabled={used[l] === "bad"}>
-                {l}
+                <span>{l}</span>
               </Letter>
             );
           })}
@@ -115,7 +119,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
               }}
               $isBigger={true}
               href="#backspace">
-              ⌫
+              <span>⌫</span>
             </Letter>
           )}
           {rowIdx === 2 && (
@@ -126,7 +130,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
               }}
               href="#enter"
               $isBigger={true}>
-              ENTER
+              <span>ENTER</span>
             </Letter>
           )}
         </Row>
