@@ -21,6 +21,7 @@ const Letter = styled.a`
   padding: 5px 2px;
   flex-grow: 1;
   flex-basis: 0;
+  max-width: ${(props) => (props.$isBigger ? "calc(20% + 10px)" : "10%")};
 
   > span {
     display: block;
