@@ -23,6 +23,7 @@ const Letter = styled.a`
   flex-basis: 0;
   max-width: ${(props) => (props.$isBigger ? "calc(20% + 10px)" : "10%")};
   -webkit-touch-callout: none;
+  user-select: none;
 
   > span {
     display: block;
@@ -46,6 +47,8 @@ const Letter = styled.a`
     justify-content: center;
     align-items: center;
     touch-action: manipulation;
+    -webkit-touch-callout: none;
+    user-select: none;
   }
 `;
 
