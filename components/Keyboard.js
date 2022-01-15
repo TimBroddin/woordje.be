@@ -80,7 +80,6 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
         }
       }
     };
-
     document.addEventListener("keydown", handler);
 
     return () => {
