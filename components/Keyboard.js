@@ -20,6 +20,7 @@ const Row = styled.div`
 const Letter = styled.a`
   padding: 5px 2px;
   flex-grow: 1;
+  flex-basis: 0;
 
   > span {
     display: block;
