@@ -39,6 +39,7 @@ const Letter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 `;
 
 const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
