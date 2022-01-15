@@ -17,6 +17,7 @@ const ModalWrapper = styled.div`
 `;
 
 const Summary = styled.div`
+  position: relative;
   width: 300px;
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(5px);
