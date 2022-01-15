@@ -29,8 +29,13 @@ const Summary = styled.div`
 
   h1 {
     font-size: 16px;
-    margin-top: 0;
+    margin-top: 10px;
     margin-bottom: 20px;
+    text-align: center;
+    line-height: 1.4;
+    small {
+      font-size: 9px;
+    }
   }
 
   h2 {
@@ -77,8 +82,10 @@ const ShareText = styled.div`
 `;
 
 const CloseModal = styled.a`
+  position: absolute;
+  right: 10px;
+  top: 10px;
   display: inline-flex;
-  float: right;
   border-radius: 50%;
   background-color: black;
   color: white;
@@ -90,10 +97,24 @@ const CloseModal = styled.a`
   font-weight: bold;
 `;
 
+const Redact = styled.span`
+  background-color: black;
+  color: white;
+  padding: 3px 2px;
+  cursor: pointer;
+  font-size: 22px;
+
+  strong {
+    filter: blur(${(props) => (props.redacted ? "6px" : "0px")});
+    transition: 1s all;
+  }
+`;
+
 const Results = ({ solutions, close }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
   const [{ WORD_LENGTH, BOARD_SIZE }] = useGameSettings();
-  const [gameState] = useGameState();
+  const [gameState, setGameState] = useGameState();
+  const [redacted, setRedacted] = useState(true);
 
   function getShareText(gameState, html = false) {
     const text = `${
@@ -165,7 +186,15 @@ ${gameState.state
           }}>
           X
         </CloseModal>
-        <h1>Het woordje was &ldquo;{solutions[WORD_LENGTH - 3]}&rdquo;</h1>
+        <h1>
+          Het woordje van de dag is
+          <br />
+          <Redact redacted={redacted} onClick={(s) => setRedacted((s) => !s)}>
+            <strong>{solutions[WORD_LENGTH - 3]}</strong>
+          </Redact>
+          <br />
+          <small>(klik om te zien)</small>
+        </h1>
         <ShareText onClick={(e) => e.stopPropagation()}>
           {getShareText(gameState)}
         </ShareText>
@@ -222,7 +251,17 @@ ${gameState.state
                 {i < 3 ? ", " : i < 4 ? " of " : ""}
               </span>
             ))}{" "}
-          letters
+          letters.
+          <br />
+          Of{" "}
+          <a
+            href="#"
+            onClick={(e) => {
+              setGameState({ state: [] });
+            }}>
+            probeer opnieuw
+          </a>
+          .
         </p>
       </Summary>
     </ModalWrapper>

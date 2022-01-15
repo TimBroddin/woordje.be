@@ -14,7 +14,7 @@ import {
   saveGameStateToStorage,
   cleanStorage,
 } from "../../lib/state";
-import { getIsGameOver } from "../../lib/helpers";
+import { useIsGameOver } from "../../lib/helpers";
 import {
   useGameSettings,
   useGameState,
@@ -62,7 +62,7 @@ export default function Home({ WORD_LENGTH }) {
   const [modalClosed, setModalClosed] = useState(false);
   const [solutions, setSolutions] = useState([]);
   const { width, height } = useWindowSize();
-  const isGameOver = getIsGameOver(gameState, BOARD_SIZE);
+  const isGameOver = useIsGameOver();
   const plausible = usePlausible();
 
   useEffect(() => {
@@ -162,7 +162,7 @@ export default function Home({ WORD_LENGTH }) {
   function onSubmit() {
     setInputText((text) => {
       setGameState((gameState) => {
-        if (gameState && !getIsGameOver(gameState)) {
+        if (gameState && !isGameOver) {
           if (!fetchControllerRef.current && text.length === WORD_LENGTH) {
             submit(text);
           }
