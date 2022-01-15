@@ -96,7 +96,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
             return (
               <Letter
                 key={`keyboard.${rowIdx}.${l}`}
-                onClick={() => onPress(l)}
+                onPointerDown={() => onPress(l)}
                 $score={used[l]}
                 $disabled={used[l] === "bad"}>
                 {l}
@@ -104,12 +104,12 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
             );
           })}
           {rowIdx === 1 && (
-            <Letter onClick={() => onBackspace()} $isBigger={true}>
+            <Letter onPointerDown={() => onBackspace()} $isBigger={true}>
               ⌫
             </Letter>
           )}
           {rowIdx === 2 && (
-            <Letter onClick={() => onSubmit()} $isBigger={true}>
+            <Letter onPointerDown={() => onSubmit()} $isBigger={true}>
               ENTER
             </Letter>
           )}
