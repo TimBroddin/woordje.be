@@ -93,7 +93,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
     return () => {
       document.removeEventListener("keydown", handler);
     };
-  }, [used]);
+  }, [onBackspace, onPress, onSubmit]);
 
   return (
     <Wrapper>
