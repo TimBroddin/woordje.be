@@ -187,7 +187,7 @@ ${gameState.state
           X
         </CloseModal>
         <h1>
-          Het woordje van de dag is
+          Het woordje was
           <br />
           <Redact redacted={redacted} onClick={(s) => setRedacted((s) => !s)}>
             <strong>{solutions[WORD_LENGTH - 3]}</strong>
