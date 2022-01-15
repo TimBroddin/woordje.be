@@ -66,6 +66,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
 
   useEffect(() => {
     const handler = (e) => {
+      e.stopPropagation();
       if (e.metaKey || e.altKey || e.ctrlKey) return;
 
       if (e.key === "Backspace") {
