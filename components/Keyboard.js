@@ -18,7 +18,7 @@ const Row = styled.div`
   gap: 5px;
   margin-bottom: 10px;
 `;
-const Letter = styled.div`
+const Letter = styled.a`
   color: black;
   padding: 5px;
   border: 1px solid #ccc;
@@ -96,7 +96,11 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
             return (
               <Letter
                 key={`keyboard.${rowIdx}.${l}`}
-                onPointerDown={() => onPress(l)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onPress(l);
+                }}
+                href={`#${l}`}
                 $score={used[l]}
                 $disabled={used[l] === "bad"}>
                 {l}
@@ -104,12 +108,24 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
             );
           })}
           {rowIdx === 1 && (
-            <Letter onPointerDown={() => onBackspace()} $isBigger={true}>
+            <Letter
+              onClick={(e) => {
+                e.preventDefault();
+                onBackspace();
+              }}
+              $isBigger={true}
+              href="#backspace">
               ⌫
             </Letter>
           )}
           {rowIdx === 2 && (
-            <Letter onPointerDown={() => onSubmit()} $isBigger={true}>
+            <Letter
+              onClick={(e) => {
+                e.preventDefault();
+                onSubmit();
+              }}
+              href="#enter"
+              $isBigger={true}>
               ENTER
             </Letter>
           )}
