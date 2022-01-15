@@ -22,6 +22,7 @@ const Letter = styled.a`
   flex-grow: 1;
   flex-basis: 0;
   max-width: ${(props) => (props.$isBigger ? "calc(20% + 10px)" : "10%")};
+  -webkit-touch-callout: none;
 
   > span {
     display: block;
@@ -109,7 +110,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
                 href={`#${l}`}
                 $score={used[l]}
                 $disabled={used[l] === "bad"}>
-                <span>{l}</span>
+                <span>{l.toUpperCase()}</span>
               </Letter>
             );
           })}
