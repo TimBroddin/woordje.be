@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
@@ -9,17 +10,11 @@ import { NextSeo } from "next-seo";
 import { usePlausible } from "next-plausible";
 
 import { getGameId } from "../../lib/gameId";
-import {
-  readGameStateFromStorage,
-  saveGameStateToStorage,
-  cleanStorage,
-} from "../../lib/state";
 import { useIsGameOver } from "../../lib/helpers";
-import {
-  useGameSettings,
-  useGameState,
-  useRandomWord,
-} from "../../data/context";
+import { useGameState } from "../../lib/hooks";
+
+import { setSettings } from "../../redux/features/settings";
+import { getRandomWord } from "../../redux/features/randomWord";
 
 import {
   Main,
@@ -47,11 +42,12 @@ async function getSolutions() {
 }
 
 export default function Home({ WORD_LENGTH }) {
+  const dispatch = useDispatch();
+
   const CORRECTED_GAME_ID = getGameId() - 1;
   const BOARD_SIZE = WORD_LENGTH + 1;
 
-  const [_, setGameSettings] = useGameSettings();
-  const [randomWord, fetchRandomWord] = useRandomWord();
+  const randomWord = useSelector((state) => state.randomWord);
 
   const [inputText, setInputText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -66,24 +62,16 @@ export default function Home({ WORD_LENGTH }) {
   const plausible = usePlausible();
 
   useEffect(() => {
-    cleanStorage();
     getSolutions().then((solutions) => setSolutions(solutions));
   }, []);
 
   useEffect(() => {
-    setGameState({
-      state: readGameStateFromStorage(WORD_LENGTH),
-      initial: true,
-    });
-    setGameSettings({ WORD_LENGTH, BOARD_SIZE });
-  }, [WORD_LENGTH]);
+    dispatch(getRandomWord(WORD_LENGTH));
+  }, [dispatch, WORD_LENGTH]);
 
   useEffect(() => {
-    if (gameState && !gameState.initial) {
-      saveGameStateToStorage(gameState.state, WORD_LENGTH);
-    } else {
-    }
-  }, [gameState]);
+    dispatch(setSettings({ WORD_LENGTH, BOARD_SIZE }));
+  }, [WORD_LENGTH, BOARD_SIZE, dispatch]);
 
   useEffect(() => {
     if (fetchControllerRef.current) {
@@ -92,58 +80,59 @@ export default function Home({ WORD_LENGTH }) {
     toast.dismiss("toast");
   }, [inputText]);
 
-  async function submit(text) {
-    if (fetchControllerRef.current) fetchControllerRef.current.abort();
-    const controller = new AbortController();
-    fetchControllerRef.current = controller;
+  const submit = useCallback(
+    async (text) => {
+      if (fetchControllerRef.current) fetchControllerRef.current.abort();
+      const controller = new AbortController();
+      fetchControllerRef.current = controller;
 
-    setIsLoading(true);
-    toast.loading("Controleren...", { id: "toast", duration: Infinity });
-    console.log(text, randomWord);
-    if (text === randomWord) {
-      fetchRandomWord();
-    }
+      setIsLoading(true);
+      toast.loading("Controleren...", { id: "toast", duration: Infinity });
+      console.log(text, randomWord);
+      if (text === randomWord) {
+        //   fetchRandomWord();
+      }
 
-    let serverResponse;
-    try {
-      serverResponse = await check(text, WORD_LENGTH, {
-        signal: controller.signal,
-      });
-    } catch (err) {
-      if (err.name === "AbortError") {
-        toast.dismiss("toast");
+      let serverResponse;
+      try {
+        serverResponse = await check(text, WORD_LENGTH, {
+          signal: controller.signal,
+        });
+      } catch (err) {
+        if (err.name === "AbortError") {
+          toast.dismiss("toast");
+        } else {
+          toast.error("Unknown error", { id: "toast" });
+        }
+        return;
+      } finally {
+        setIsLoading(false);
+        fetchControllerRef.current = null;
+      }
+
+      let { error, match } = serverResponse;
+
+      if (error) {
+        if (error === "unknown_word") {
+          toast.error("Ongeldig woord", { id: "toast", duration: 1000 });
+        }
       } else {
-        toast.error("Unknown error", { id: "toast" });
-      }
-      return;
-    } finally {
-      setIsLoading(false);
-      fetchControllerRef.current = null;
-    }
+        toast.dismiss("toast");
 
-    let { error, match } = serverResponse;
+        setInputText("");
 
-    if (error) {
-      if (error === "unknown_word") {
-        toast.error("Ongeldig woord", { id: "toast", duration: 1000 });
-      }
-    } else {
-      toast.dismiss("toast");
-
-      setInputText("");
-      setGameState((gameState) => {
         if (!match.some((i) => i.score !== "good")) {
           setShowConfetti(true);
           plausible("win", {
             props: {
               length: WORD_LENGTH,
-              tries: `${gameState.state.length + 1}/${BOARD_SIZE}`,
+              tries: `${gameState.guesses.length + 1}/${BOARD_SIZE}`,
               game: `${CORRECTED_GAME_ID}x${WORD_LENGTH}`,
             },
           });
 
           // increment streak
-        } else if (gameState.state.length + 1 === BOARD_SIZE) {
+        } else if (gameState.guesses.length + 1 === BOARD_SIZE) {
           plausible("lose", {
             props: {
               length: WORD_LENGTH,
@@ -151,27 +140,39 @@ export default function Home({ WORD_LENGTH }) {
             },
           });
         }
-        return {
-          state: gameState.state.concat([match]),
-          initial: false,
-        };
-      });
-    }
-  }
 
-  function onSubmit() {
-    setInputText((text) => {
-      setGameState((gameState) => {
-        if (gameState && !isGameOver) {
-          if (!fetchControllerRef.current && text.length === WORD_LENGTH) {
-            submit(text);
-          }
-        }
-        return gameState;
-      });
-      return text;
-    });
-  }
+        setGameState({
+          gameId: getGameId(),
+          WORD_LENGTH,
+          guesses: gameState.guesses.concat([match]),
+        });
+      }
+    },
+    [
+      BOARD_SIZE,
+      CORRECTED_GAME_ID,
+      WORD_LENGTH,
+      gameState.guesses,
+      plausible,
+      randomWord,
+      setGameState,
+    ]
+  );
+
+  const onSubmit = useCallback(() => {
+    if (gameState && !isGameOver) {
+      if (!fetchControllerRef.current && inputText.length === WORD_LENGTH) {
+        submit(inputText);
+      }
+    }
+  }, [
+    inputText,
+    WORD_LENGTH,
+    fetchControllerRef,
+    isGameOver,
+    submit,
+    gameState,
+  ]);
 
   return WORD_LENGTH > 2 && WORD_LENGTH < 9 ? (
     <>
@@ -215,7 +216,7 @@ export default function Home({ WORD_LENGTH }) {
         <InnerWrapper>
           <Board $loading={isLoading}>
             {gameState &&
-              gameState.state.map((match, i) => (
+              gameState.guesses.map((match, i) => (
                 <Row key={`gs_row${i}`}>
                   {match.map((item, i) => {
                     return (
@@ -227,9 +228,9 @@ export default function Home({ WORD_LENGTH }) {
                 </Row>
               ))}
 
-            {gameState && gameState.state.length < BOARD_SIZE
+            {gameState && gameState.guesses.length < BOARD_SIZE
               ? Array.from(
-                  { length: BOARD_SIZE - gameState.state.length },
+                  { length: BOARD_SIZE - gameState.guesses.length },
                   (_, i) => {
                     if (i === 0 && !isGameOver) {
                       return (

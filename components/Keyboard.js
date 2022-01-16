@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useEffect } from "react";
-import { useGameState } from "../data/context";
+import { useGameState } from "../lib/hooks";
 
 const Wrapper = styled.div`
   min-width: 100vw;
@@ -60,8 +60,8 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
   );
 
   const used = {};
-  if (gameState && gameState.state) {
-    gameState.state.forEach((row) => {
+  if (gameState && gameState.guesses) {
+    gameState.guesses.forEach((row) => {
       row.forEach((r) => {
         used[r.letter] =
           used[r.letter] === "good"

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
 import styled from "styled-components";
 import Link from "next/link";
 import { copyToClipboard, getIsVictory } from "../lib/helpers";
 import { getGameId } from "../lib/gameId";
-import { useGameSettings, useGameState } from "../data/context";
+import { useGameState } from "../lib/hooks";
 
 const ModalWrapper = styled.div`
   position: absolute;
@@ -113,7 +115,7 @@ const Redact = styled.span`
 
 const Results = ({ solutions, close }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
-  const [{ WORD_LENGTH, BOARD_SIZE }] = useGameSettings();
+  const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
   const [gameState, setGameState] = useGameState();
   const [redacted, setRedacted] = useState(true);
 
@@ -122,9 +124,9 @@ const Results = ({ solutions, close }) => {
       html ? '<a href="https://woordje.be">Woordje.be</a>' : "woordje.be"
     } #${CORRECTED_GAME_ID} ${
       WORD_LENGTH !== 6 ? `(${WORD_LENGTH} tekens)` : ""
-    } ${getIsVictory(gameState) ? gameState.state.length : "X"}/${BOARD_SIZE}
+    } ${getIsVictory(gameState) ? gameState.guesses.length : "X"}/${BOARD_SIZE}
   
-${gameState.state
+${gameState.guesses
   .map((line) => {
     return line
       .map((item) => {
@@ -145,7 +147,7 @@ ${gameState.state
   }
 
   function getEncodedState(gameState) {
-    return gameState.state
+    return gameState.guesses
       .map((line) =>
         line
           .map((item) =>
