@@ -8,6 +8,7 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage for
 import gameState from "./features/gameState";
 import settings from "./features/settings";
 import randomWord from "./features/randomWord";
+import statistics from "./features/statistics";
 
 const persistConfig = {
   key: "root",
@@ -18,6 +19,7 @@ const reducers = combineReducers({
   gameState,
   settings,
   randomWord,
+  statistics,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

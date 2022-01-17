@@ -15,6 +15,7 @@ import { useGameState } from "../../lib/hooks";
 
 import { setSettings } from "../../redux/features/settings";
 import { getRandomWord } from "../../redux/features/randomWord";
+import { addWin, addLoss } from "../../redux/features/statistics";
 
 import {
   Main,
@@ -130,6 +131,13 @@ export default function Home({ WORD_LENGTH }) {
               game: `${CORRECTED_GAME_ID}x${WORD_LENGTH}`,
             },
           });
+          dispatch(
+            addWin({
+              gameId: getGameId(),
+              WORD_LENGTH,
+              guesses: gameState.guesses.length + 1,
+            })
+          );
 
           // increment streak
         } else if (gameState.guesses.length + 1 === BOARD_SIZE) {
@@ -139,6 +147,7 @@ export default function Home({ WORD_LENGTH }) {
               game: `${CORRECTED_GAME_ID}x${WORD_LENGTH}`,
             },
           });
+          dispatch(addLoss({ gameId: getGameId(), WORD_LENGTH }));
         }
 
         setGameState({
@@ -156,6 +165,8 @@ export default function Home({ WORD_LENGTH }) {
       plausible,
       randomWord,
       setGameState,
+      addWin,
+      addLoss,
       dispatch,
     ]
   );
