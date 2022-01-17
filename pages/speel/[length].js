@@ -220,6 +220,7 @@ export default function Home({ WORD_LENGTH }) {
           recycle={false}
           width={width}
           height={height}
+          initialVelocityY={-25}
         />
       ) : null}
       <Main $initializing={!gameState}>

@@ -265,6 +265,7 @@ ${gameState.guesses
           <a
             href="#"
             onClick={(e) => {
+              e.preventDefault();
               setGameState({ guesses: [] });
             }}>
             probeer opnieuw
