@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useEffect } from "react";
-import { useGameState } from "../data/context";
+import { useGameState } from "../lib/hooks";
 
 const Wrapper = styled.div`
   min-width: 100vw;
@@ -60,8 +60,8 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
   );
 
   const used = {};
-  if (gameState && gameState.state) {
-    gameState.state.forEach((row) => {
+  if (gameState && gameState.guesses) {
+    gameState.guesses.forEach((row) => {
       row.forEach((r) => {
         used[r.letter] =
           used[r.letter] === "good"
@@ -106,8 +106,9 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
             return (
               <Letter
                 key={`keyboard.${rowIdx}.${l}`}
-                onClick={(e) => {
+                onPointerDown={(e) => {
                   e.preventDefault();
+                  e.nativeEvent.stopImmediatePropagation();
                   onPress(l);
                 }}
                 href={`#${l}`}
@@ -119,7 +120,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
           })}
           {rowIdx === 1 && (
             <Letter
-              onClick={(e) => {
+              onPointerDown={(e) => {
                 e.preventDefault();
                 onBackspace();
               }}
@@ -130,7 +131,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
           )}
           {rowIdx === 2 && (
             <Letter
-              onClick={(e) => {
+              onPointerDown={(e) => {
                 e.preventDefault();
                 onSubmit();
               }}

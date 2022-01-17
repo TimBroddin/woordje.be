@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { useSelector } from "react-redux";
+
 import styled from "styled-components";
 import Link from "next/link";
 import { copyToClipboard, getIsVictory } from "../lib/helpers";
 import { getGameId } from "../lib/gameId";
-import { useGameSettings, useGameState } from "../data/context";
+import { useGameState } from "../lib/hooks";
 
 const ModalWrapper = styled.div`
   position: absolute;
@@ -111,20 +113,23 @@ const Redact = styled.span`
   }
 `;
 
-const Results = ({ solutions, close }) => {
+const Results = ({ solutions, close, toast }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
-  const [{ WORD_LENGTH, BOARD_SIZE }] = useGameSettings();
+  const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
   const [gameState, setGameState] = useGameState();
   const [redacted, setRedacted] = useState(true);
 
-  function getShareText(gameState, html = false) {
-    const text = `${
-      html ? '<a href="https://woordje.be">Woordje.be</a>' : "woordje.be"
-    } #${CORRECTED_GAME_ID} ${
-      WORD_LENGTH !== 6 ? `(${WORD_LENGTH} tekens)` : ""
-    } ${getIsVictory(gameState) ? gameState.state.length : "X"}/${BOARD_SIZE}
-  
-${gameState.state
+  const getShareText = useCallback(
+    (html = false) => {
+      const text = `${
+        html ? '<a href="https://woordje.be">Woordje.be</a>' : "woordje.be"
+      } #${CORRECTED_GAME_ID} ${
+        WORD_LENGTH !== 6 ? `(${WORD_LENGTH} tekens)` : ""
+      } ${
+        getIsVictory(gameState) ? gameState.guesses.length : "X"
+      }/${BOARD_SIZE}
+        
+${gameState.guesses
   .map((line) => {
     return line
       .map((item) => {
@@ -137,15 +142,17 @@ ${gameState.state
       .join("");
   })
   .join("\n")}`;
-    if (html) {
-      return text.replace(/\n/g, "<br>");
-    } else {
-      return text;
-    }
-  }
+      if (html) {
+        return text.replace(/\n/g, "<br>");
+      } else {
+        return text;
+      }
+    },
+    [BOARD_SIZE, CORRECTED_GAME_ID, WORD_LENGTH, gameState]
+  );
 
-  function getEncodedState(gameState) {
-    return gameState.state
+  const getEncodedState = useCallback(() => {
+    return gameState.guesses
       .map((line) =>
         line
           .map((item) =>
@@ -154,16 +161,16 @@ ${gameState.state
           .join("")
       )
       .join("");
-  }
+  }, [gameState]);
 
-  function onCopyToClipboard(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    setGameState((gameState) => {
+  const onCopyToClipboard = useCallback(
+    (e) => {
+      e.stopPropagation();
+      e.preventDefault();
       if (gameState) {
         copyToClipboard({
-          "text/plain": getShareText(gameState),
-          "text/html": getShareText(gameState, true),
+          "text/plain": getShareText(),
+          "text/html": getShareText(true),
         }).then((ok) => {
           if (ok) {
             toast.success("Gekopieerd!", { id: "clipboard" });
@@ -172,9 +179,9 @@ ${gameState.state
           }
         });
       }
-      return gameState;
-    });
-  }
+    },
+    [gameState, getShareText, toast]
+  );
 
   return (
     <ModalWrapper>
@@ -197,7 +204,7 @@ ${gameState.state
           <small>(klik om te zien)</small>
         </h1>
         <ShareText onClick={(e) => e.stopPropagation()}>
-          {getShareText(gameState)}
+          {getShareText()}
         </ShareText>
 
         <button onClick={onCopyToClipboard}>📋 Kopieer</button>
@@ -205,7 +212,7 @@ ${gameState.state
         <div className="button">
           <a
             href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-              getShareText(gameState)
+              getShareText()
             )}`}
             rel="noreferrer"
             target="_blank"
@@ -258,7 +265,7 @@ ${gameState.state
           <a
             href="#"
             onClick={(e) => {
-              setGameState({ state: [] });
+              setGameState({ guesses: [] });
             }}>
             probeer opnieuw
           </a>
