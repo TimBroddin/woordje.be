@@ -67,6 +67,7 @@ export default function Home({ WORD_LENGTH }) {
 
   useEffect(() => {
     setShowConfetti(false);
+    setModalClosed(false);
     dispatch(setSettings({ WORD_LENGTH, BOARD_SIZE }));
   }, [WORD_LENGTH, BOARD_SIZE, dispatch]);
 
