@@ -25,7 +25,7 @@ const reducers = combineReducers({
 const persistedReducer = persistReducer(persistConfig, reducers);
 let store = configureStore({
   reducer: persistedReducer,
-  devTools: process.env.NODE_ENV !== "production",
+  devTools: true,
   middleware: [thunk],
 });
 

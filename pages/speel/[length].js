@@ -165,8 +165,6 @@ export default function Home({ WORD_LENGTH }) {
       plausible,
       randomWord,
       setGameState,
-      addWin,
-      addLoss,
       dispatch,
     ]
   );
