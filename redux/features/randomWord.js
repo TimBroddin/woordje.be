@@ -9,9 +9,11 @@ export const randomWordSlice = createSlice({
   initialState,
   reducers: {
     getRandomWord: async (state, action) => {
-      const res = await fetch(`/api/random?l=${action.payload}}`);
-      const json = await res.json();
-      state.value = json;
+      return async (dispatch, getState) => {
+        const res = await fetch(`/api/random?l=${action.payload}`);
+        const json = await res.json();
+        state.value = json;
+      };
     },
   },
 });

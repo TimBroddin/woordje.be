@@ -106,8 +106,9 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
             return (
               <Letter
                 key={`keyboard.${rowIdx}.${l}`}
-                onClick={(e) => {
+                onPointerDown={(e) => {
                   e.preventDefault();
+                  e.nativeEvent.stopImmediatePropagation();
                   onPress(l);
                 }}
                 href={`#${l}`}
@@ -119,7 +120,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
           })}
           {rowIdx === 1 && (
             <Letter
-              onClick={(e) => {
+              onPointerDown={(e) => {
                 e.preventDefault();
                 onBackspace();
               }}
@@ -130,7 +131,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
           )}
           {rowIdx === 2 && (
             <Letter
-              onClick={(e) => {
+              onPointerDown={(e) => {
                 e.preventDefault();
                 onSubmit();
               }}
