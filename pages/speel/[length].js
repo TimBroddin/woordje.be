@@ -10,7 +10,7 @@ import { NextSeo } from "next-seo";
 import { usePlausible } from "next-plausible";
 
 import { getGameId } from "../../lib/gameId";
-import { useIsGameOver } from "../../lib/helpers";
+import { useIsGameOver, getIsGameOver } from "../../lib/helpers";
 import { useGameState } from "../../lib/hooks";
 
 import { setSettings } from "../../redux/features/settings";
@@ -58,7 +58,7 @@ export default function Home({ WORD_LENGTH }) {
   const [modalClosed, setModalClosed] = useState(false);
   const [solutions, setSolutions] = useState([]);
   const { width, height } = useWindowSize();
-  const isGameOver = useIsGameOver();
+  const isGameOver = useSelector(getIsGameOver);
   const plausible = usePlausible();
 
   useEffect(() => {
@@ -66,12 +66,13 @@ export default function Home({ WORD_LENGTH }) {
   }, []);
 
   useEffect(() => {
-    dispatch(getRandomWord(WORD_LENGTH));
-  }, [dispatch, WORD_LENGTH]);
-
-  useEffect(() => {
+    setShowConfetti(false);
     dispatch(setSettings({ WORD_LENGTH, BOARD_SIZE }));
   }, [WORD_LENGTH, BOARD_SIZE, dispatch]);
+
+  useEffect(() => {
+    dispatch(getRandomWord());
+  }, [dispatch, WORD_LENGTH]);
 
   useEffect(() => {
     if (fetchControllerRef.current) {
@@ -88,9 +89,8 @@ export default function Home({ WORD_LENGTH }) {
 
       setIsLoading(true);
       toast.loading("Controleren...", { id: "toast", duration: Infinity });
-      console.log(text, randomWord);
-      if (text === randomWord) {
-        //   fetchRandomWord();
+      if (text === randomWord.value) {
+        dispatch(getRandomWord());
       }
 
       let serverResponse;
@@ -120,7 +120,6 @@ export default function Home({ WORD_LENGTH }) {
         toast.dismiss("toast");
 
         setInputText("");
-
         if (!match.some((i) => i.score !== "good")) {
           setShowConfetti(true);
           plausible("win", {
@@ -156,6 +155,7 @@ export default function Home({ WORD_LENGTH }) {
       plausible,
       randomWord,
       setGameState,
+      dispatch,
     ]
   );
 
@@ -295,6 +295,7 @@ export default function Home({ WORD_LENGTH }) {
           gameState={gameState}
           solutions={solutions}
           close={() => setModalClosed(true)}
+          toast={toast}
         />
       ) : null}
     </>

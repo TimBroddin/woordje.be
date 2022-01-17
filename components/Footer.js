@@ -46,10 +46,6 @@ const Random = styled.span`
 const Footer = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getRandomWord());
-  }, [WORD_LENGTH, dispatch]);
-
   const randomWord = useSelector((state) => state.randomWord);
   const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
   const [_, setGameState] = useGameState();
