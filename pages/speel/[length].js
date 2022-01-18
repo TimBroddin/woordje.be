@@ -16,6 +16,11 @@ import { useGameState } from "../../lib/hooks";
 import { setSettings } from "../../redux/features/settings";
 import { getRandomWord } from "../../redux/features/randomWord";
 import { addWin, addLoss } from "../../redux/features/statistics";
+import { setInputText } from "../../redux/features/inputText";
+import {
+  stop as stopTimer,
+  reset as resetTimer,
+} from "../../redux/features/timer";
 
 import {
   Main,
@@ -50,7 +55,8 @@ export default function Home({ WORD_LENGTH }) {
 
   const randomWord = useSelector((state) => state.randomWord);
 
-  const [inputText, setInputText] = useState("");
+  const inputText = useSelector((state) => state.inputText).value;
+  console.log({ inputText });
   const [isFocused, setIsFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(null);
@@ -70,6 +76,7 @@ export default function Home({ WORD_LENGTH }) {
     setShowConfetti(false);
     setModalClosed(false);
     dispatch(setSettings({ WORD_LENGTH, BOARD_SIZE }));
+    dispatch(resetTimer());
   }, [WORD_LENGTH, BOARD_SIZE, dispatch]);
 
   useEffect(() => {
@@ -121,7 +128,7 @@ export default function Home({ WORD_LENGTH }) {
       } else {
         toast.dismiss("toast");
 
-        setInputText("");
+        dispatch(setInputText(""));
         if (!match.some((i) => i.score !== "good")) {
           setShowConfetti(true);
           plausible("win", {
@@ -131,6 +138,7 @@ export default function Home({ WORD_LENGTH }) {
               game: `${CORRECTED_GAME_ID}x${WORD_LENGTH}`,
             },
           });
+          dispatch(stopTimer());
           dispatch(
             addWin({
               gameId: getGameId(),
@@ -141,6 +149,8 @@ export default function Home({ WORD_LENGTH }) {
 
           // increment streak
         } else if (gameState.guesses.length + 1 === BOARD_SIZE) {
+          dispatch(stopTimer());
+
           plausible("lose", {
             props: {
               length: WORD_LENGTH,
@@ -285,15 +295,17 @@ export default function Home({ WORD_LENGTH }) {
           <Keyboard
             gameState={gameState}
             onPress={(l) => {
-              setInputText((text) =>
-                `${text}${l}`
-                  .toLowerCase()
-                  .replace(/[^a-z]+/g, "")
-                  .slice(0, WORD_LENGTH)
+              dispatch(
+                setInputText(
+                  `${inputText}${l}`
+                    .toLowerCase()
+                    .replace(/[^a-z]+/g, "")
+                    .slice(0, WORD_LENGTH)
+                )
               );
             }}
             onBackspace={() => {
-              setInputText((text) => text.slice(0, -1));
+              dispatch(setInputText(inputText.slice(0, -1)));
             }}
             onSubmit={onSubmit}
           />
