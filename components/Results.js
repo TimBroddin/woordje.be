@@ -137,7 +137,7 @@ const Results = ({ solutions, close, toast }) => {
         }/${BOARD_SIZE}`
       );
 
-      if (timer?.value && getIsVictory(gameState)) {
+      if (timer?.start && timer?.value && getIsVictory(gameState)) {
         header.push(`${(timer.value / 1000).toFixed(1)}s`);
       }
 
