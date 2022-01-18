@@ -56,7 +56,6 @@ export default function Home({ WORD_LENGTH }) {
   const randomWord = useSelector((state) => state.randomWord);
 
   const inputText = useSelector((state) => state.inputText).value;
-  console.log({ inputText });
   const [isFocused, setIsFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(null);

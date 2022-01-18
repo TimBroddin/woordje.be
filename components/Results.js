@@ -1,11 +1,14 @@
 import { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+import { motion } from "framer-motion";
+
 import Link from "next/link";
 import { copyToClipboard, getIsVictory } from "../lib/helpers";
 import { getGameId } from "../lib/gameId";
 import { useGameState } from "../lib/hooks";
+import { getStreak } from "../lib/helpers";
 
 const ModalWrapper = styled.div`
   position: absolute;
@@ -33,7 +36,7 @@ const Summary = styled.div`
   h1 {
     font-size: 16px;
     margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     text-align: center;
     line-height: 1.4;
     small {
@@ -113,14 +116,20 @@ const Redact = styled.span`
   }
 `;
 
+const Streak = styled(motion.h4)`
+  font-size: 22px;
+  margin: 0;
+  margin-bottom: 10px;
+`;
+
 const Results = ({ solutions, close, toast }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
   const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
+  const streak = useSelector(getStreak);
   const timer = useSelector((state) => state.timer);
   const [gameState, setGameState] = useGameState();
   const [redacted, setRedacted] = useState(true);
 
-  console.log(timer.value);
   const getShareText = useCallback(
     (html = false, addHashtag = false) => {
       const header = [
@@ -129,19 +138,28 @@ const Results = ({ solutions, close, toast }) => {
         } #${CORRECTED_GAME_ID}`,
       ];
       if (WORD_LENGTH != 6) {
-        header.push(`${WORD_LENGTH} letters`);
+        header.push(`(${WORD_LENGTH} letters)`);
       }
       header.push(
-        `${
+        `💡 ${
           getIsVictory(gameState) ? gameState.guesses.length : "X"
         }/${BOARD_SIZE}`
       );
-
-      if (timer?.start && timer?.value && getIsVictory(gameState)) {
-        header.push(`${(timer.value / 1000).toFixed(1)}s`);
+      if (streak > 1) {
+        header.push(`🎳 ${streak}`);
       }
 
-      const text = `${header.join(" - ")}
+      if (timer?.start && timer?.value && getIsVictory(gameState)) {
+        header.push(
+          `🕑 ${
+            timer.value / 1000 > 3
+              ? Math.round(timer.value / 1000)
+              : (timer.value / 1000).toFixed(2)
+          }s`
+        );
+      }
+
+      const text = `${header.join(" ▪️ ")}
         
 ${gameState.guesses
   .map((line) => {
@@ -217,6 +235,17 @@ ${gameState.guesses
           <br />
           <small>(klik om te zien)</small>
         </h1>
+        {streak > 1 ? (
+          <Streak
+            initial={{ opacity: 0, scale: 0, rotate: 0 }}
+            animate={{ opacity: 1, scale: 1, rotate: 720 }}
+            transition={{
+              delay: 0.5,
+              rotate: { type: "spring", stiffness: 100 },
+            }}>
+            STREAK: <span>{streak}</span>
+          </Streak>
+        ) : null}
         <ShareText onClick={(e) => e.stopPropagation()}>
           {getShareText()}
         </ShareText>
