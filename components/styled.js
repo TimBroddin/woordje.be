@@ -41,10 +41,12 @@ export const Row = styled.div`
 `;
 
 export const Letter = styled(Row)`
-  width: 55px;
-  height: 53px;
+  width: calc(55px - ((var(--word-length, 6) - 6) * var(--shrink-size, 5px)));
+  height: calc(53px - ((var(--word-length, 6) - 6) * var(--shrink-size, 5px)));
   background-color: #ccc;
-  font-size: 34px;
+  font-size: calc(
+    34px - ((var(--word-length, 6) - 6) * var(--shrink-size, 5px))
+  );
   font-weight: bold;
   text-transform: uppercase;
   margin: 3px;

@@ -4,7 +4,7 @@ import { useGameState } from "../lib/hooks";
 
 const Wrapper = styled.div`
   min-width: 100vw;
-  margin: 20px 0px;
+  margin: 10px 0px;
   padding: 0px 5px;
 
   @media (min-width: 768px) {
@@ -15,16 +15,18 @@ const Wrapper = styled.div`
 const Row = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 2px;
 `;
-const Letter = styled.a`
+const Letter = styled.div`
   padding: 5px 2px;
   flex-grow: 1;
   flex-basis: 0;
   max-width: ${(props) => (props.$isBigger ? "calc(20% + 10px)" : "10%")};
+  touch-action: manipulation;
   -webkit-touch-callout: none;
-  user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
+  user-select: none;
   > span {
     display: block;
     color: black;
@@ -48,6 +50,8 @@ const Letter = styled.a`
     align-items: center;
     touch-action: manipulation;
     -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
     user-select: none;
   }
 `;
@@ -108,10 +112,9 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
                 key={`keyboard.${rowIdx}.${l}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  e.nativeEvent.stopImmediatePropagation();
                   onPress(l);
+                  return false;
                 }}
-                href={`#${l}`}
                 $score={used[l]}
                 $disabled={used[l] === "bad"}>
                 <span>{l.toUpperCase()}</span>
@@ -122,10 +125,12 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
             <Letter
               onClick={(e) => {
                 e.preventDefault();
+                e.nativeEvent.stopImmediatePropagation();
                 onBackspace();
+
+                return false;
               }}
-              $isBigger={true}
-              href="#backspace">
+              $isBigger={true}>
               <span>⌫</span>
             </Letter>
           )}
@@ -133,9 +138,11 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
             <Letter
               onClick={(e) => {
                 e.preventDefault();
+                e.nativeEvent.stopImmediatePropagation();
                 onSubmit();
+
+                return false;
               }}
-              href="#enter"
               $isBigger={true}>
               <span>ENTER</span>
             </Letter>
