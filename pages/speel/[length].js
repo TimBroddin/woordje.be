@@ -227,7 +227,7 @@ export default function Home({ WORD_LENGTH }) {
         <InnerWrapper>
           <Board
             $loading={isLoading}
-            style={{ "--word-length": WORD_LENGTH, "--shrink-size": "7px" }}>
+            style={{ "--word-length": WORD_LENGTH, "--shrink-size": "4px" }}>
             {gameState &&
               gameState.guesses.map((match, i) => (
                 <Row key={`gs_row${i}`}>
