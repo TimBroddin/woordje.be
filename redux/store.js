@@ -9,10 +9,13 @@ import gameState from "./features/gameState";
 import settings from "./features/settings";
 import randomWord from "./features/randomWord";
 import statistics from "./features/statistics";
+import timer from "./features/timer";
+import inputText from "./features/inputText";
 
 const persistConfig = {
   key: "root",
   storage,
+  blacklist: ["randomWord", "timer"],
 };
 
 const reducers = combineReducers({
@@ -20,6 +23,8 @@ const reducers = combineReducers({
   settings,
   randomWord,
   statistics,
+  timer,
+  inputText,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

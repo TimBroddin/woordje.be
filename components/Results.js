@@ -116,18 +116,32 @@ const Redact = styled.span`
 const Results = ({ solutions, close, toast }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
   const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
+  const timer = useSelector((state) => state.timer);
   const [gameState, setGameState] = useGameState();
   const [redacted, setRedacted] = useState(true);
 
+  console.log(timer.value);
   const getShareText = useCallback(
     (html = false, addHashtag = false) => {
-      const text = `${
-        html ? '<a href="https://woordje.be">Woordje.be</a>' : "woordje.be"
-      } #${CORRECTED_GAME_ID} ${
-        WORD_LENGTH !== 6 ? `(${WORD_LENGTH} tekens)` : ""
-      } ${
-        getIsVictory(gameState) ? gameState.guesses.length : "X"
-      }/${BOARD_SIZE}
+      const header = [
+        `${
+          html ? '<a href="https://woordje.be">Woordje.be</a>' : "woordje.be"
+        } #${CORRECTED_GAME_ID}`,
+      ];
+      if (WORD_LENGTH != 6) {
+        header.push(`${WORD_LENGTH} letters`);
+      }
+      header.push(
+        `${
+          getIsVictory(gameState) ? gameState.guesses.length : "X"
+        }/${BOARD_SIZE}`
+      );
+
+      if (timer?.start && timer?.value && getIsVictory(gameState)) {
+        header.push(`${(timer.value / 1000).toFixed(1)}s`);
+      }
+
+      const text = `${header.join(" - ")}
         
 ${gameState.guesses
   .map((line) => {
