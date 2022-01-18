@@ -120,7 +120,7 @@ const Results = ({ solutions, close, toast }) => {
   const [redacted, setRedacted] = useState(true);
 
   const getShareText = useCallback(
-    (html = false) => {
+    (html = false, addHashtag = false) => {
       const text = `${
         html ? '<a href="https://woordje.be">Woordje.be</a>' : "woordje.be"
       } #${CORRECTED_GAME_ID} ${
@@ -145,7 +145,7 @@ ${gameState.guesses
       if (html) {
         return text.replace(/\n/g, "<br>");
       } else {
-        return text;
+        return `${text}${addHashtag ? "\n#woordje" : ""}`;
       }
     },
     [BOARD_SIZE, CORRECTED_GAME_ID, WORD_LENGTH, gameState]
@@ -212,7 +212,7 @@ ${gameState.guesses
         <div className="button">
           <a
             href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-              getShareText()
+              getShareText(false, true)
             )}`}
             rel="noreferrer"
             target="_blank"

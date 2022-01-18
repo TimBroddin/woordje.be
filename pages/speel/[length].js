@@ -10,7 +10,7 @@ import { NextSeo } from "next-seo";
 import { usePlausible } from "next-plausible";
 
 import { getGameId } from "../../lib/gameId";
-import { useIsGameOver, getIsGameOver } from "../../lib/helpers";
+import { getIsGameOver } from "../../lib/helpers";
 import { useGameState } from "../../lib/hooks";
 
 import { setSettings } from "../../redux/features/settings";
