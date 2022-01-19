@@ -10,6 +10,9 @@ import { getGameId } from "../lib/gameId";
 import { useGameState } from "../lib/hooks";
 import { getStreak } from "../lib/helpers";
 
+import Statistics from "./Statistics";
+import { usePlausible } from "next-plausible";
+
 const ModalWrapper = styled.div`
   position: absolute;
   top: 0;
@@ -24,14 +27,6 @@ const ModalWrapper = styled.div`
 const Summary = styled.div`
   position: relative;
   width: 300px;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(5px);
-  text-align: center;
-  padding: 25px 15px;
-  font-size: 12px;
-  color: black;
-  border-radius: 15px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 
   h1 {
     font-size: 16px;
@@ -75,13 +70,45 @@ const Summary = styled.div`
   }
 `;
 
+const Inner = styled(motion.div)`
+  position: relative;
+
+  text-align: center;
+  transform-style: preserve-3d;
+`;
+
+const Face = styled.div`
+  background: rgba(255, 255, 255);
+  text-align: center;
+  padding: 25px 15px;
+  font-size: 12px;
+  color: black;
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+
+  position: relative;
+
+  top: 0;
+  backface-visibility: hidden;
+`;
+
+const Front = styled(Face)``;
+
+const Back = styled(Face)`
+  transform: rotateY(180deg);
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`;
+
 const ShareText = styled.div`
   margin-bottom: 20px;
-  font-size: 14px;
+  font-size: 13px;
   background: #fff;
   color: #000;
   user-select: all;
-  padding: 10px;
+  padding: 5px;
   white-space: pre-wrap;
   line-height: 14px;
   border: 3px solid #000;
@@ -129,6 +156,8 @@ const Results = ({ solutions, close, toast }) => {
   const timer = useSelector((state) => state.timer);
   const [gameState, setGameState] = useGameState();
   const [redacted, setRedacted] = useState(true);
+  const [showStats, setShowStats] = useState(false);
+  const plausible = usePlausible();
 
   const getShareText = useCallback(
     (html = false, addHashtag = false) => {
@@ -218,103 +247,131 @@ ${gameState.guesses
   return (
     <ModalWrapper>
       <Summary>
-        <CloseModal
-          href="#close"
-          onClick={(e) => {
-            e.preventDefault();
-            close();
-          }}>
-          X
-        </CloseModal>
-        <h1>
-          Het woordje was
-          <br />
-          <Redact redacted={redacted} onClick={(s) => setRedacted((s) => !s)}>
-            <strong>{solutions[WORD_LENGTH - 3]}</strong>
-          </Redact>
-          <br />
-          <small>(klik om te zien)</small>
-        </h1>
-        {streak > 1 ? (
-          <Streak
-            initial={{ opacity: 0, scale: 0, rotate: 0 }}
-            animate={{ opacity: 1, scale: 1, rotate: 720 }}
-            transition={{
-              delay: 0.5,
-              rotate: { type: "spring", stiffness: 100 },
-            }}>
-            STREAK: <span>{streak}</span>
-          </Streak>
-        ) : null}
-        <ShareText onClick={(e) => e.stopPropagation()}>
-          {getShareText()}
-        </ShareText>
+        <Inner
+          initial={{ rotateY: 0 }}
+          animate={{ rotateY: showStats ? 180 : 0 }}
+          transition={{ type: "spring", duration: 0.8 }}>
+          <Front>
+            <CloseModal
+              href="#close"
+              onClick={(e) => {
+                e.preventDefault();
+                close();
+              }}>
+              X
+            </CloseModal>
+            <h1>
+              Het woordje was
+              <br />
+              <Redact
+                redacted={redacted}
+                onClick={(s) => setRedacted((s) => !s)}>
+                <strong>{solutions[WORD_LENGTH - 3]}</strong>
+              </Redact>
+              <br />
+              <small>(klik om te zien)</small>
+            </h1>
+            {streak > 1 ? (
+              <Streak
+                initial={{ opacity: 0, scale: 0, rotate: 0 }}
+                animate={{ opacity: 1, scale: 1, rotate: 720 }}
+                transition={{
+                  delay: 0.5,
+                  rotate: { type: "spring", stiffness: 100 },
+                }}>
+                STREAK: <span>{streak}</span>
+              </Streak>
+            ) : null}
+            <ShareText onClick={(e) => e.stopPropagation()}>
+              {getShareText()}
+            </ShareText>
 
-        <button onClick={onCopyToClipboard}>📋 Kopieer</button>
-        <h2>Deel score</h2>
-        <div className="button">
-          <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-              getShareText(false, true)
-            )}`}
-            rel="noreferrer"
-            target="_blank"
-            className="share">
-            🐦 Twitter
-          </a>
-        </div>
-        <div className="button">
-          <a
-            href={`https://www.facebook.com/share.php?u=${encodeURIComponent(
-              `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
-                gameState
-              )}`
-            )}`}
-            rel="noreferrer"
-            target="_blank"
-            className="share">
-            👍 Facebook
-          </a>
-        </div>
-        <div className="button">
-          <a
-            href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-              `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
-                gameState
-              )}`
-            )}`}
-            rel="noreferrer"
-            target="_blank"
-            className="share">
-            🤵 LinkedIn
-          </a>
-        </div>
+            <button onClick={onCopyToClipboard}>📋 Kopieer</button>
 
-        <p>
-          Probeer ook eens met{" "}
-          {[3, 4, 5, 6, 7, 8]
-            .filter((x) => x !== WORD_LENGTH)
-            .map((x, i) => (
-              <span key={`link-${x}`}>
-                <Link href={`/speel/${x}`}>
-                  <a>{x}</a>
-                </Link>
-                {i < 3 ? ", " : i < 4 ? " of " : ""}
-              </span>
-            ))}{" "}
-          letters.
-          <br />
-          Of{" "}
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              setGameState({ guesses: [] });
-            }}>
-            probeer opnieuw
-          </a>
-          .
-        </p>
+            <button
+              onClick={() => {
+                plausible("Statistics");
+                setShowStats(true);
+              }}>
+              📈 Toon statistieken
+            </button>
+            <h2>Deel score</h2>
+            <div className="button">
+              <a
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                  getShareText(false, true)
+                )}`}
+                rel="noreferrer"
+                target="_blank"
+                className="share">
+                🐦 Twitter
+              </a>
+            </div>
+            <div className="button">
+              <a
+                href={`https://www.facebook.com/share.php?u=${encodeURIComponent(
+                  `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
+                    gameState
+                  )}`
+                )}`}
+                rel="noreferrer"
+                target="_blank"
+                className="share">
+                👍 Facebook
+              </a>
+            </div>
+            <div className="button">
+              <a
+                href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+                  `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
+                    gameState
+                  )}`
+                )}`}
+                rel="noreferrer"
+                target="_blank"
+                className="share">
+                🤵 LinkedIn
+              </a>
+            </div>
+
+            <p>
+              Probeer ook eens met{" "}
+              {[3, 4, 5, 6, 7, 8]
+                .filter((x) => x !== WORD_LENGTH)
+                .map((x, i) => (
+                  <span key={`link-${x}`}>
+                    <Link href={`/speel/${x}`}>
+                      <a>{x}</a>
+                    </Link>
+                    {i < 3 ? ", " : i < 4 ? " of " : ""}
+                  </span>
+                ))}{" "}
+              letters.
+              <br />
+              Of{" "}
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setGameState({ guesses: [] });
+                }}>
+                probeer opnieuw
+              </a>
+              .
+            </p>
+          </Front>
+          <Back>
+            <CloseModal
+              href="#close"
+              onClick={(e) => {
+                e.preventDefault();
+                close();
+              }}>
+              X
+            </CloseModal>
+            <Statistics close={(e) => setShowStats(false)} />
+          </Back>
+        </Inner>
       </Summary>
     </ModalWrapper>
   );
