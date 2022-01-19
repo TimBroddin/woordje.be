@@ -59,14 +59,14 @@ const DistributionValue = styled.div`
 
 const DistributionRow = styled.div`
   display: grid;
-  grid-template-columns: auto 5fr;
+  grid-template-columns: 1fr 5fr;
   grid-auto-rows: 20px;
   grid-gap: 5px;
   align-items: center;
 `;
 
 const DistributionLabel = styled.div`
-  text-align: right;
+  text-align: center;
 `;
 
 const DistributionBarWrapper = styled.div``;
