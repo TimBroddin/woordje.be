@@ -97,7 +97,7 @@ const Statistics = ({ close }) => {
     }
   );
 
-  distributionValues.push({
+  distributionValues.unshift({
     amount: "💀",
     value: distribution[-1] || 0,
     pct: distribution[-1] ? (distribution[-1] / maxDistributionValue) * 100 : 0,
