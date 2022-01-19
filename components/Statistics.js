@@ -37,12 +37,12 @@ const Value = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px;
-  font-size: 32px;
-  line-height: 32px;
+  height: 50px;
+  font-size: 28px;
+  line-height: 9px;
 
   small {
-    font-size: 14px;
+    font-size: 9px;
   }
 `;
 
@@ -59,7 +59,7 @@ const DistributionValue = styled.div`
 const DistributionRow = styled.div`
   display: grid;
   grid-template-columns: auto 5fr;
-  grid-auto-rows: 25px;
+  grid-auto-rows: 20px;
   grid-gap: 5px;
   align-items: center;
 `;
@@ -73,7 +73,7 @@ const DistributionBarWrapper = styled.div``;
 const DistributionBar = styled.div`
   background: #d35400;
   color: white;
-  padding: 3px;
+  padding: 1px;
 `;
 
 const Statistics = ({ close }) => {
