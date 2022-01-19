@@ -32,6 +32,7 @@ const Property = styled.div`
   text-tansform: uppercase;
   color: white;
   background-color: var(--headerColor, #000);
+  padding: 2px 0px;
 `;
 const Value = styled.div`
   display: flex;
