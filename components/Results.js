@@ -8,9 +8,10 @@ import Link from "next/link";
 import { copyToClipboard, getIsVictory } from "../lib/helpers";
 import { getGameId } from "../lib/gameId";
 import { useGameState } from "../lib/hooks";
-import { getStreak, getAllStatistics, getStatistics } from "../lib/helpers";
+import { getStreak } from "../lib/helpers";
 
 import Statistics from "./Statistics";
+import { usePlausible } from "next-plausible";
 
 const ModalWrapper = styled.div`
   position: absolute;
@@ -152,13 +153,11 @@ const Results = ({ solutions, close, toast }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
   const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
   const streak = useSelector(getStreak);
-  const statistics = useSelector(getStatistics);
   const timer = useSelector((state) => state.timer);
   const [gameState, setGameState] = useGameState();
   const [redacted, setRedacted] = useState(true);
   const [showStats, setShowStats] = useState(false);
-
-  console.log(statistics);
+  const plausible = usePlausible();
 
   const getShareText = useCallback(
     (html = false, addHashtag = false) => {
@@ -291,6 +290,7 @@ ${gameState.guesses
 
             <button
               onClick={() => {
+                plausible("Statistics");
                 setShowStats(true);
               }}>
               📈 Toon statistieken
