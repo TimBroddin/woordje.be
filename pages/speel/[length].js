@@ -315,7 +315,7 @@ export default function Home({ WORD_LENGTH }) {
           <Footer WORD_LENGTH={WORD_LENGTH} BOARD_SIZE={BOARD_SIZE} />
         </InnerWrapper>
       </Main>
-      {showSplash && !isGameOver ? <Splash /> : null}
+      {showSplash && (!isGameOver || modalClosed) ? <Splash /> : null}
 
       {isGameOver && !modalClosed ? (
         <Results
