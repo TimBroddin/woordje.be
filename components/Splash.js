@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import { ModalWrapper, Summary, Inner, Face, CloseModal } from "./styled";
+import { ModalWrapper, Summary, CloseModal } from "./styled";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 
@@ -30,6 +30,16 @@ const Letter = styled(Row)`
   transform-style: preserve-3d;
 `;
 
+const Inner = styled(motion.div)`
+  background: rgba(255, 255, 255);
+  text-align: center;
+  padding: 25px 15px;
+  font-size: 12px;
+  color: black;
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+`;
+
 export const LetterFace = styled.div`
   width: calc(36px - ((var(--word-length, 6) - 6) * var(--shrink-size, 5px)));
   height: calc(34px - ((var(--word-length, 6) - 6) * var(--shrink-size, 5px)));
@@ -57,7 +67,7 @@ export const LetterFace = styled.div`
 const Front = styled(LetterFace)``;
 
 const Back = styled(LetterFace)`
-  transform: rotateX(180deg);
+  transform: rotateY(180deg);
   position: absolute;
   left: 0;
   right: 0;
@@ -96,8 +106,8 @@ const Examples = ({ words }) => {
   };
 
   const item = {
-    visible: { rotateX: 180 },
-    hidden: { rotateX: 0 },
+    visible: { rotateY: 180 },
+    hidden: { rotateY: 0 },
   };
 
   if (words && words.length) {
@@ -163,35 +173,33 @@ const Splash = ({}) => {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", duration: 0.8 }}>
-          <Face>
-            <CloseModal
-              href="#close"
-              onClick={(e) => {
-                e.preventDefault();
-                dispatch(hideSplash());
-              }}>
-              X
-            </CloseModal>
-            <Title>Woordje</Title>
-            <p>
-              Raad het {WORD_LENGTH}-letterwoord in {BOARD_SIZE} beurten, of
-              minder.
-            </p>
+          <CloseModal
+            href="#close"
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(hideSplash());
+            }}>
+            X
+          </CloseModal>
+          <Title>Woordje</Title>
+          <p>
+            Raad het {WORD_LENGTH}-letterwoord in {BOARD_SIZE} beurten, of
+            minder.
+          </p>
 
-            <p>
-              Elke gok moet een geldig woord zijn. Gebruik enter om je woord in
-              te dienen.
-            </p>
+          <p>
+            Elke gok moet een geldig woord zijn. Gebruik enter om je woord in te
+            dienen.
+          </p>
 
-            <h2>Voorbeelden</h2>
-            <Examples words={words} />
+          <h2>Voorbeelden</h2>
+          <Examples words={words} />
 
-            <p>Elke dag verschijnt er een nieuwe opgave!</p>
+          <p>Elke dag verschijnt er een nieuwe opgave!</p>
 
-            <button onClick={() => dispatch(hideSplash())}>
-              Gaan met die 🍌
-            </button>
-          </Face>
+          <button onClick={() => dispatch(hideSplash())}>
+            Gaan met die 🍌
+          </button>
         </Inner>
       </Summary>
     </ModalWrapper>
