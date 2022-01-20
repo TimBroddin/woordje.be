@@ -11,6 +11,7 @@ import randomWord from "./features/randomWord";
 import statistics from "./features/statistics";
 import timer from "./features/timer";
 import inputText from "./features/inputText";
+import splash from "./features/splash";
 
 const persistConfig = {
   key: "root",
@@ -25,6 +26,7 @@ const reducers = combineReducers({
   statistics,
   timer,
   inputText,
+  splash,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

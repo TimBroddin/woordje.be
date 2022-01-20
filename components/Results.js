@@ -12,85 +12,7 @@ import { getStreak } from "../lib/helpers";
 
 import Statistics from "./Statistics";
 import { usePlausible } from "next-plausible";
-
-const ModalWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  height: 100%;
-  margin: auto;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Summary = styled.div`
-  position: relative;
-  width: 300px;
-
-  h1 {
-    font-size: 16px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    text-align: center;
-    line-height: 1.4;
-    small {
-      font-size: 9px;
-    }
-  }
-
-  h2 {
-    text-transform: uppercase;
-    font-size: 14px;
-  }
-
-  button,
-  a.share {
-    padding: 5px;
-    background: #fff;
-    color: white;
-    border: 1px solid #000;
-    cursor: pointer;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    font-weight: bold;
-    text-transform: uppercase;
-    background: #2980b9;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    font-size: 14px;
-    text-decoration: none;
-  }
-
-  a {
-    text-decoration: underline;
-  }
-`;
-
-const Inner = styled(motion.div)`
-  position: relative;
-
-  text-align: center;
-  transform-style: preserve-3d;
-`;
-
-const Face = styled.div`
-  background: rgba(255, 255, 255);
-  text-align: center;
-  padding: 25px 15px;
-  font-size: 12px;
-  color: black;
-  border-radius: 15px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-
-  position: relative;
-
-  top: 0;
-  backface-visibility: hidden;
-`;
+import { ModalWrapper, Summary, Inner, Face, CloseModal } from "./styled";
 
 const Front = styled(Face)``;
 
@@ -112,22 +34,6 @@ const ShareText = styled.div`
   white-space: pre-wrap;
   line-height: 14px;
   border: 3px solid #000;
-`;
-
-const CloseModal = styled.a`
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  display: inline-flex;
-  border-radius: 50%;
-  background-color: black;
-  color: white;
-  width: 20px;
-  height: 20px;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none !important;
-  font-weight: bold;
 `;
 
 const Redact = styled.span`

@@ -17,6 +17,23 @@ export default async function middleware(req) {
     const word = woorden[WORD_LENGTH][idx];
     return NextResponse.json(word);
   }
+
+  if (req.nextUrl.pathname === "/api/demo") {
+    const WORD_LENGTH = parseInt(req.nextUrl.searchParams.get("l"));
+
+    const words = [];
+
+    for (let i = 0; i < 3; i++) {
+      words.push(
+        woorden[WORD_LENGTH][
+          Math.floor(Math.random() * woorden[WORD_LENGTH].length)
+        ]
+      );
+    }
+
+    return NextResponse.json(words);
+  }
+
   if (req.nextUrl.pathname === "/api/solutions") {
     return NextResponse.json(
       [3, 4, 5, 6, 7, 8].map((idx) => woorden[idx][GAME_ID])

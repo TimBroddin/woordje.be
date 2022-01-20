@@ -33,6 +33,7 @@ import {
 import Keyboard from "../../components/Keyboard";
 import Results from "../../components/Results";
 import Footer from "../../components/Footer";
+import Splash from "../../components/Splash";
 
 async function check(word, WORD_LENGTH, opts) {
   const res = await fetch(
@@ -65,6 +66,8 @@ export default function Home({ WORD_LENGTH }) {
   const [solutions, setSolutions] = useState([]);
   const { width, height } = useWindowSize();
   const isGameOver = useSelector(getIsGameOver);
+  const { visible: showSplash } = useSelector((state) => state.splash);
+
   const plausible = usePlausible();
 
   useEffect(() => {
@@ -312,6 +315,7 @@ export default function Home({ WORD_LENGTH }) {
           <Footer WORD_LENGTH={WORD_LENGTH} BOARD_SIZE={BOARD_SIZE} />
         </InnerWrapper>
       </Main>
+      {showSplash && !isGameOver ? <Splash /> : null}
 
       {isGameOver && !modalClosed ? (
         <Results

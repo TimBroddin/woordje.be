@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useGameState } from "../lib/hooks";
 import { useSelector, useDispatch } from "react-redux";
 import { getRandomWord } from "../redux/features/randomWord";
+import { show as showSplash } from "../redux/features/splash";
 
 const FooterWrapper = styled.footer`
   color: #999;
@@ -25,6 +26,7 @@ const FooterWrapper = styled.footer`
 
   a {
     text-decoration: underline;
+    color: #666;
   }
 
   p {
@@ -56,14 +58,17 @@ const Footer = () => {
       <p>
         Raad het {WORD_LENGTH}-letterwoord in {BOARD_SIZE} beurten, of minder.
       </p>
+
       <p>
-        Op desktop kan je gewoon beginnen typen, enter om je woord in te dienen.
-        Op mobiel moet je eerst de vakjes aanraken.
-      </p>
-      <p>
-        🟩 = letter staat op de juiste plek
-        <br />
-        🟨 = letter komt voor in het woord, maar niet op de juiste plek.{" "}
+        💁🏼{" "}
+        <a
+          href="#help"
+          onClick={(e) => {
+            e.preventDefault();
+            dispatch(showSplash());
+          }}>
+          Extra uitleg
+        </a>
       </p>
 
       <p>Elke dag een nieuwe opgave!</p>
