@@ -83,6 +83,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
     const handler = (e) => {
       e.stopPropagation();
       if (e.metaKey || e.altKey || e.ctrlKey) return;
+      e.preventDefault();
 
       if (e.key === "Backspace") {
         onBackspace();
