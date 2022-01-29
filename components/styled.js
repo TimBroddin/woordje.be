@@ -132,11 +132,11 @@ export const Inner = styled(motion.div)`
 `;
 
 export const Face = styled.div`
-  background: rgba(255, 255, 255);
+  background: var(--modal-background);
   text-align: center;
   padding: 25px 15px;
   font-size: 12px;
-  color: black;
+  color: var(--text-primary);
   border-radius: 15px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 
@@ -152,8 +152,8 @@ export const CloseModal = styled.a`
   top: 10px;
   display: inline-flex;
   border-radius: 50%;
-  background-color: black;
-  color: white;
+  background-color: var(--text-primary);
+  color: var(--text-primary-inverse);
   width: 20px;
   height: 20px;
   align-items: center;

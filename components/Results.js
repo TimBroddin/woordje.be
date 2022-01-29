@@ -37,8 +37,8 @@ const ShareText = styled.div`
 `;
 
 const Redact = styled.span`
-  background-color: black;
-  color: white;
+  background-color: var(--text-primary);
+  color: var(--text-primary-inverse);
   padding: 3px 2px;
   cursor: pointer;
   font-size: 22px;

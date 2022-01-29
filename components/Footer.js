@@ -7,7 +7,7 @@ import { getRandomWord } from "../redux/features/randomWord";
 import { show as showSplash } from "../redux/features/splash";
 
 const FooterWrapper = styled.footer`
-  color: #999;
+  color: var(--text-secondary);
   font-size: 13px;
   text-align: center;
   padding: 3px 0;
@@ -16,17 +16,17 @@ const FooterWrapper = styled.footer`
     font-size: 16px;
     font-weight: bold;
     text-transform: uppercase;
-    color: #666;
+    color: var(--text-tertiary);
     margin-bottom: 2px;
   }
 
   span {
-    color: #666;
+    color: var(--text-tertiary);
   }
 
   a {
     text-decoration: underline;
-    color: #666;
+    color: var(--text-tertiary);
   }
 
   p {
@@ -96,13 +96,7 @@ const Footer = () => {
         letters
       </p>
 
-      <h1>
-        Cr
-        <span onDoubleClick={() => setGameState({ state: [], initial: true })}>
-          e
-        </span>
-        dits
-      </h1>
+      <h1>Credits</h1>
       <p>
         Gebaseerd op{" "}
         <a

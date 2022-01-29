@@ -29,7 +29,7 @@ const Letter = styled.div`
   user-select: none;
   > span {
     display: block;
-    color: black;
+    color: var(--text-primary);
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 10px;

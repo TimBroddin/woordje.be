@@ -31,11 +31,11 @@ const Letter = styled(Row)`
 `;
 
 const Inner = styled(motion.div)`
-  background: rgba(255, 255, 255);
+  background: var(--modal-background);
   text-align: center;
   padding: 25px 15px;
   font-size: 12px;
-  color: black;
+  color: var(--text-primary);
   border-radius: 15px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 `;
