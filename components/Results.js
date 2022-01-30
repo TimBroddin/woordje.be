@@ -63,7 +63,7 @@ const ButtonRow = styled.div`
 
 const ShareButton = styled.a`
   padding: 5px;
-  color: var(--text-primary-inverse);
+  color: white;
   border: 1px solid var(--text-secondary);
   cursor: pointer;
   height: 40px;
