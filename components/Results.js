@@ -215,6 +215,9 @@ ${gameState.guesses
                   href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
                     getShareText(false, true)
                   )}`}
+                  onClick={(e) =>
+                    plausible("Share", { props: { method: "twitter" } })
+                  }
                   rel="noreferrer"
                   target="_blank"
                   className="share">
@@ -228,6 +231,9 @@ ${gameState.guesses
                       gameState
                     )}`
                   )}`}
+                  onClick={(e) =>
+                    plausible("Share", { props: { method: "facebook" } })
+                  }
                   rel="noreferrer"
                   target="_blank"
                   className="share">
@@ -241,6 +247,9 @@ ${gameState.guesses
                   href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
                     getShareText(false, true)
                   )}`}
+                  onClick={(e) =>
+                    plausible("Share", { props: { method: "whatsapp" } })
+                  }
                   rel="noreferrer"
                   target="_blank"
                   className="share">
@@ -254,6 +263,9 @@ ${gameState.guesses
                       gameState
                     )}`
                   )}`}
+                  onClick={(e) =>
+                    plausible("Share", { props: { method: "linkedin" } })
+                  }
                   rel="noreferrer"
                   target="_blank"
                   className="share">
