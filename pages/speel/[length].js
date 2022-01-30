@@ -266,7 +266,7 @@ export default function Home({ WORD_LENGTH }) {
                             .map((letter, index) => (
                               <Letter
                                 $focus={
-                                  isFocused &&
+                                  true &&
                                   index ===
                                     Math.min(
                                       Math.max(0, inputText.length),

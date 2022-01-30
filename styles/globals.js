@@ -7,17 +7,28 @@ const GlobalStyle = createGlobalStyle`
         --text-secondary: #999;
         --text-tertiary: #666;
         --text-primary-inverse: white;
-        --modal-background: #ffffff;
+        --text-keys: black;
 
+        --modal-background: #ffffff;
+        --color-good: #0f0;
+        --color-bad: #666;
+        --color-off: #ff0;
+        --color-unknown: #ccc;
+
+        --focus-color: cyan;
+        --keyboard-border-color: #666;
 
         @media (prefers-color-scheme: dark) {
             --background: #000000;
             --text-primary: #fff;
             --text-secondary: #ccc;
             --text-tertiary: #999;
-
+            --text-keys: black;
             --text-primary-inverse: #000;
             --modal-background: #333;
+
+            --focus-color: rgba(128,128,255,0.8);
+            --keyboard-border-color: #999;
 
         }
     }

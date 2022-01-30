@@ -75,14 +75,14 @@ const Back = styled(LetterFace)`
 
   background-color: ${(props) =>
     props.$disabled
-      ? "#666"
+      ? "var(--color-bad)"
       : props.$score === "bad"
-      ? "#ccc"
+      ? "var(--color-bad)"
       : props.$score === "good"
-      ? "#0f0"
+      ? "var(--color-good)"
       : props.$score === "off"
-      ? "yellow"
-      : "#CCC"};
+      ? "var(--color-off)"
+      : "var(--color-unknown)"};
 `;
 
 const Examples = ({ words }) => {
@@ -143,7 +143,7 @@ const Examples = ({ words }) => {
           {words[2].split("").map((letter, index) => (
             <Letter key={index} variants={item}>
               <Front />
-              <Back>{letter}</Back>
+              <Back $score="bad">{letter}</Back>
             </Letter>
           ))}
         </Board>

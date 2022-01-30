@@ -29,21 +29,21 @@ const Letter = styled.div`
   user-select: none;
   > span {
     display: block;
-    color: var(--text-primary);
+    color: var(--text-keys);
     padding: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--keyboard-border-color);
     border-radius: 10px;
     flex: 1;
     text-align: center;
     height: 50px;
     background-color: ${(props) =>
       props.$score === "good"
-        ? "#0f0"
+        ? "var(--color-good)"
         : props.$score === "bad"
-        ? "#666"
+        ? "var(--color-bad)"
         : props.$score === "off"
-        ? "yellow"
-        : "#ccc"};
+        ? "var(--color-off)"
+        : "var(--color-unknown)"};
     cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
     display: flex;
     justify-content: center;

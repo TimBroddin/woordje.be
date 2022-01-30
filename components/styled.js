@@ -55,16 +55,17 @@ export const Letter = styled(Row)`
 
   background-color: ${(props) =>
     props.$disabled
-      ? "#666"
+      ? "var(--color-bad)"
       : props.$score === "bad"
-      ? "#ccc"
+      ? "var(--color-bad)"
       : props.$score === "good"
-      ? "#0f0"
+      ? "var(--color-good)"
       : props.$score === "off"
-      ? "yellow"
-      : "#CCC"};
+      ? "var(--color-off)"
+      : "var(--color-unknown)"};
 
-  box-shadow: ${(props) => (props.$focus ? "0 0 3px 3px cyan" : "none")};
+  box-shadow: ${(props) =>
+    props.$focus ? "0 0 3px 3px var(--focus-color)" : "none"};
 `;
 
 export const ModalWrapper = styled.div`
