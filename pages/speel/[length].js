@@ -67,7 +67,7 @@ export default function Home({ WORD_LENGTH }) {
   const { width, height } = useWindowSize();
   const isGameOver = useSelector(getIsGameOver);
   const { visible: showSplash } = useSelector((state) => state.splash);
-
+  const colorBlind = useSelector((state) => state.settings?.colorBlind);
   const plausible = usePlausible();
 
   useEffect(() => {
@@ -91,6 +91,16 @@ export default function Home({ WORD_LENGTH }) {
     }
     toast.dismiss("toast");
   }, [inputText]);
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      if (colorBlind) {
+        document.body.classList.add("colorblind");
+      } else {
+        document.body.classList.remove("colorblind");
+      }
+    }
+  }, [colorBlind]);
 
   const submit = useCallback(
     async (text) => {

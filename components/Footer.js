@@ -3,6 +3,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import { useGameState } from "../lib/hooks";
 import { useSelector, useDispatch } from "react-redux";
+import { setColorBlind } from "../redux/features/settings";
 import { getRandomWord } from "../redux/features/randomWord";
 import { show as showSplash } from "../redux/features/splash";
 
@@ -49,6 +50,7 @@ const Footer = () => {
   const dispatch = useDispatch();
 
   const randomWord = useSelector((state) => state.randomWord);
+  const colorBlind = useSelector((state) => state.settings?.colorBlind);
   const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
   const [_, setGameState] = useGameState();
 
@@ -69,6 +71,27 @@ const Footer = () => {
           }}>
           Extra uitleg
         </a>
+        <br />
+        🎨{" "}
+        {colorBlind ? (
+          <a
+            href="#defaultcolor"
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(setColorBlind(false));
+            }}>
+            Standaard kleuren
+          </a>
+        ) : (
+          <a
+            href="#highcontrast"
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(setColorBlind(true));
+            }}>
+            Hoog contrast kleuren
+          </a>
+        )}
       </p>
 
       <p>Elke dag een nieuwe opgave!</p>

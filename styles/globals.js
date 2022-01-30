@@ -33,6 +33,12 @@ const GlobalStyle = createGlobalStyle`
             --keyboard-border-color: #999;
 
         }
+
+
+        @media (prefers-contrast: more) {
+            --color-good: #f5793a;
+            --color-off: #85c0f9;
+        }
     }
 
 
@@ -43,6 +49,11 @@ const GlobalStyle = createGlobalStyle`
     font-family:  -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
         Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
         background-color: var(--background);
+    }
+
+    body.colorblind {
+        --color-good: #f5793a;
+        --color-off: #85c0f9;       
     }
 
     a {
