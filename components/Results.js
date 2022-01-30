@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
-
+import Image from "next/image";
 import styled, { keyframes } from "styled-components";
 import { motion } from "framer-motion";
 
@@ -60,6 +60,36 @@ const ButtonRow = styled.div`
   gap: 5px;
   justify-content: space-between;
 `;
+
+const ShareButton = styled.a`
+  padding: 5px;
+  color: var(--text-primary-inverse);
+  border: 1px solid var(--text-secondary);
+  cursor: pointer;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-weight: bold;
+  text-transform: uppercase;
+  background: var(--color-share-button);
+  margin-bottom: 5px;
+  border-radius: 5px;
+  font-size: 13px;
+  flex: 1;
+  flex-grow: 1;
+  gap: 5px;
+  text-decoration: none !important;
+`;
+
+const IconImage = styled(Image)`
+  margin-right: 15px;
+`;
+
+const Icon = ({ src, alt, width = 20, height = 20 }) => (
+  <IconImage src={src} width={width} height={height} alt={alt} />
+);
 
 const Results = ({ solutions, close, toast }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
@@ -208,70 +238,65 @@ ${gameState.guesses
                 📈 Statistieken
               </button>
             </ButtonRow>
-            <h2>Deel score</h2>
+            <h2>Deel je score</h2>
             <ButtonRow>
-              <div className="button">
-                <a
-                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                    getShareText(false, true)
-                  )}`}
-                  onClick={(e) =>
-                    plausible("Share", { props: { method: "twitter" } })
-                  }
-                  rel="noreferrer"
-                  target="_blank"
-                  className="share">
-                  🐦 Twitter
-                </a>
-              </div>
-              <div className="button">
-                <a
-                  href={`https://www.facebook.com/share.php?u=${encodeURIComponent(
-                    `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
-                      gameState
-                    )}`
-                  )}`}
-                  onClick={(e) =>
-                    plausible("Share", { props: { method: "facebook" } })
-                  }
-                  rel="noreferrer"
-                  target="_blank"
-                  className="share">
-                  👍 Facebook
-                </a>
-              </div>
+              <ShareButton
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                  getShareText(false, true)
+                )}`}
+                onClick={(e) =>
+                  plausible("Share", { props: { method: "twitter" } })
+                }
+                rel="noreferrer"
+                target="_blank">
+                <Icon src={"/icons/twitter.svg"} alt="Twitter" /> Twitter
+              </ShareButton>
+              <ShareButton
+                href={`https://www.facebook.com/share.php?u=${encodeURIComponent(
+                  `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
+                    gameState
+                  )}`
+                )}`}
+                onClick={(e) =>
+                  plausible("Share", { props: { method: "facebook" } })
+                }
+                rel="noreferrer"
+                target="_blank">
+                <Icon src={"/icons/facebook.svg"} alt="Facebook" /> Facebook
+              </ShareButton>
             </ButtonRow>
             <ButtonRow>
-              <div className="button">
-                <a
-                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                    getShareText(false, true)
-                  )}`}
-                  onClick={(e) =>
-                    plausible("Share", { props: { method: "whatsapp" } })
-                  }
-                  rel="noreferrer"
-                  target="_blank"
-                  className="share">
-                  💬 WhatsApp
-                </a>
-              </div>
-              <div className="button">
-                <a
-                  href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                    `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
-                      gameState
-                    )}`
-                  )}`}
-                  onClick={(e) =>
-                    plausible("Share", { props: { method: "linkedin" } })
-                  }
-                  rel="noreferrer"
-                  target="_blank"
-                  className="share">
-                  🤵 LinkedIn
-                </a>
-              </div>
+              <ShareButton
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                  getShareText(false, true)
+                )}`}
+                onClick={(e) =>
+                  plausible("Share", { props: { method: "whatsapp" } })
+                }
+                rel="noreferrer"
+                target="_blank">
+                <Icon src={"/icons/whatsapp.svg"} alt="Whatsapp" /> WhatsApp
+              </ShareButton>
+
+              <ShareButton
+                href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+                  `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
+                    gameState
+                  )}`
+                )}`}
+                onClick={(e) =>
+                  plausible("Share", { props: { method: "linkedin" } })
+                }
+                rel="noreferrer"
+                target="_blank">
+                <Icon
+                  src={"/icons/linkedin.svg"}
+                  alt="LinkedIn"
+                  width={24}
+                  height={24}
+                />{" "}
+                LinkedIn
+              </ShareButton>
             </ButtonRow>
             <p>
               Probeer ook eens met{" "}

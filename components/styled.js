@@ -128,6 +128,7 @@ export const Summary = styled.div`
     text-decoration: none;
     flex: 1;
     flex-grow: 1;
+    gap: 5px;
   }
 
   a {
