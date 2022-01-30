@@ -81,7 +81,11 @@ export const ModalWrapper = styled.div`
 
 export const Summary = styled.div`
   position: relative;
-  width: 300px;
+  width: 90vw;
+
+  @media (min-width: 768px) {
+    width: 320px;
+  }
 
   h1 {
     font-size: 16px;
@@ -97,6 +101,10 @@ export const Summary = styled.div`
   h2 {
     text-transform: uppercase;
     font-size: 14px;
+  }
+
+  .button {
+    flex: 1;
   }
 
   button,
@@ -116,8 +124,10 @@ export const Summary = styled.div`
     background: #2980b9;
     margin-bottom: 5px;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 13px;
     text-decoration: none;
+    flex: 1;
+    flex-grow: 1;
   }
 
   a {

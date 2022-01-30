@@ -10,7 +10,7 @@ let persistor = persistStore(store);
 
 function MyApp({ Component, pageProps }) {
   return (
-    <PlausibleProvider domain="woordje.be">
+    <PlausibleProvider domain="woordje.be" trackOutboundLinks={true}>
       <Provider store={store}>
         <>
           <GlobalStyle />

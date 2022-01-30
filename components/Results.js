@@ -55,6 +55,12 @@ const Streak = styled(motion.h4)`
   margin-bottom: 10px;
 `;
 
+const ButtonRow = styled.div`
+  display: flex;
+  gap: 5px;
+  justify-content: space-between;
+`;
+
 const Results = ({ solutions, close, toast }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
   const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
@@ -191,55 +197,70 @@ ${gameState.guesses
             <ShareText onClick={(e) => e.stopPropagation()}>
               {getShareText()}
             </ShareText>
+            <ButtonRow>
+              <button onClick={onCopyToClipboard}>📋 Kopieer</button>
 
-            <button onClick={onCopyToClipboard}>📋 Kopieer</button>
-
-            <button
-              onClick={() => {
-                plausible("Statistics");
-                setShowStats(true);
-              }}>
-              📈 Toon statistieken
-            </button>
+              <button
+                onClick={() => {
+                  plausible("Statistics");
+                  setShowStats(true);
+                }}>
+                📈 Statistieken
+              </button>
+            </ButtonRow>
             <h2>Deel score</h2>
-            <div className="button">
-              <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  getShareText(false, true)
-                )}`}
-                rel="noreferrer"
-                target="_blank"
-                className="share">
-                🐦 Twitter
-              </a>
-            </div>
-            <div className="button">
-              <a
-                href={`https://www.facebook.com/share.php?u=${encodeURIComponent(
-                  `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
-                    gameState
-                  )}`
-                )}`}
-                rel="noreferrer"
-                target="_blank"
-                className="share">
-                👍 Facebook
-              </a>
-            </div>
-            <div className="button">
-              <a
-                href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                  `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
-                    gameState
-                  )}`
-                )}`}
-                rel="noreferrer"
-                target="_blank"
-                className="share">
-                🤵 LinkedIn
-              </a>
-            </div>
-
+            <ButtonRow>
+              <div className="button">
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    getShareText(false, true)
+                  )}`}
+                  rel="noreferrer"
+                  target="_blank"
+                  className="share">
+                  🐦 Twitter
+                </a>
+              </div>
+              <div className="button">
+                <a
+                  href={`https://www.facebook.com/share.php?u=${encodeURIComponent(
+                    `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
+                      gameState
+                    )}`
+                  )}`}
+                  rel="noreferrer"
+                  target="_blank"
+                  className="share">
+                  👍 Facebook
+                </a>
+              </div>
+            </ButtonRow>
+            <ButtonRow>
+              <div className="button">
+                <a
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                    getShareText(false, true)
+                  )}`}
+                  rel="noreferrer"
+                  target="_blank"
+                  className="share">
+                  💬 WhatsApp
+                </a>
+              </div>
+              <div className="button">
+                <a
+                  href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+                    `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
+                      gameState
+                    )}`
+                  )}`}
+                  rel="noreferrer"
+                  target="_blank"
+                  className="share">
+                  🤵 LinkedIn
+                </a>
+              </div>
+            </ButtonRow>
             <p>
               Probeer ook eens met{" "}
               {[3, 4, 5, 6, 7, 8]
