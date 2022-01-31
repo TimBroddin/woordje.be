@@ -323,6 +323,23 @@ ${gameState.guesses
               </a>
               .
             </p>
+            <p>
+              Discussiëren over Woordje of Wordle?
+              <br />
+              Bezoek{" "}
+              <a
+                href="https://www.reddit.com/r/woordje/"
+                rel="noreferrer"
+                onClick={(e) =>
+                  plausible("Link", {
+                    props: { to: "reddit", location: "win" },
+                  })
+                }
+                target="_blank">
+                /r/woordje op Reddit
+              </a>
+              .
+            </p>
           </Front>
           <Back>
             <CloseModal

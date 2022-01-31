@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import styled from "styled-components";
 import { useGameState } from "../lib/hooks";
+import { usePlausible } from "next-plausible";
 import { useSelector, useDispatch } from "react-redux";
 import { setColorBlind } from "../redux/features/settings";
 import { getRandomWord } from "../redux/features/randomWord";
@@ -53,6 +54,7 @@ const Footer = () => {
   const colorBlind = useSelector((state) => state.settings?.colorBlind);
   const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
   const [_, setGameState] = useGameState();
+  const plausible = usePlausible();
 
   return (
     <FooterWrapper>
@@ -119,7 +121,14 @@ const Footer = () => {
         letters
       </p>
 
-      <h1>Credits</h1>
+      <h1>Over</h1>
+      <p>
+        Tussen de 🥣 en de 🥔 gemaakt door{" "}
+        <a href="https://broddin.be/" rel="noreferrer" target="_blank">
+          Tim Broddin
+        </a>
+        .
+      </p>
       <p>
         Gebaseerd op{" "}
         <a
@@ -135,9 +144,20 @@ const Footer = () => {
           target="_blank">
           Wordledge
         </a>
-        . Tussen de 🥣 en de 🥔 gemaakt door{" "}
-        <a href="https://broddin.be/" rel="noreferrer" target="_blank">
-          Tim Broddin
+        .
+      </p>
+      <p>
+        Reddit community:{" "}
+        <a
+          href="https://www.reddit.com/r/woordje/"
+          rel="noreferrer"
+          onClick={(e) =>
+            plausible("Link", {
+              props: { to: "reddit", location: "home" },
+            })
+          }
+          target="_blank">
+          /r/woordje
         </a>
       </p>
     </FooterWrapper>
