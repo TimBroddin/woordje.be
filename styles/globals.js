@@ -1,7 +1,7 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
-    html {
+    :root {
         --background: #ffffff;
         --text-primary: black;
         --text-secondary: #999;
