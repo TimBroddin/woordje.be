@@ -154,20 +154,6 @@ const Footer = () => {
         </a>
         .
       </p>
-      <p>
-        Reddit community:{" "}
-        <a
-          href="https://www.reddit.com/r/woordje/"
-          rel="noreferrer"
-          onClick={(e) =>
-            plausible("Link", {
-              props: { to: "reddit", location: "home" },
-            })
-          }
-          target="_blank">
-          /r/woordje
-        </a>
-      </p>
     </FooterWrapper>
   );
 };
