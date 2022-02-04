@@ -130,8 +130,8 @@ const Footer = () => {
         Deze Vlaamse versie van Wordle werd tussen de 🥣 en de 🥔 gemaakt door{" "}
         <a href="https://www.scam.city/" rel="noreferrer" target="_blank">
           ScamCity
-        </a>{" "}
-        /{" "}
+        </a>
+        /
         <a href="https://broddin.be/" rel="noreferrer" target="_blank">
           Tim&nbsp;Broddin
         </a>
