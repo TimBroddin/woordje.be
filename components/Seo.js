@@ -11,7 +11,8 @@ const Seo = () => {
       openGraph={{
         url: "https://www.woordje.be/",
         title: "Woordje.be",
-        description: "Een dagelijks woordspelletje gebaseerd op Wordle.",
+        description:
+          "Een dagelijks woordspelletje gebaseerd op Wordle. De Vlaamse Wordle, voor België en Nederland.",
         images: [
           {
             url: "https://www.woordje.be/twitter.png",

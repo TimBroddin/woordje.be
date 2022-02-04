@@ -56,6 +56,10 @@ const Footer = () => {
   const [_, setGameState] = useGameState();
   const plausible = usePlausible();
 
+  const seoWord = ["Vlaamse", "nederlandstalige", "Belgische"][
+    Math.floor(Math.random() * 3)
+  ];
+
   return (
     <FooterWrapper>
       <h1>Help</h1>
@@ -123,9 +127,13 @@ const Footer = () => {
 
       <h1>Over</h1>
       <p>
-        Tussen de 🥣 en de 🥔 gemaakt door{" "}
+        Deze Vlaamse versie van Wordle werd tussen de 🥣 en de 🥔 gemaakt door{" "}
+        <a href="https://www.scam.city/" rel="noreferrer" target="_blank">
+          ScamCity
+        </a>{" "}
+        /{" "}
         <a href="https://broddin.be/" rel="noreferrer" target="_blank">
-          Tim Broddin
+          Tim&nbsp;Broddin
         </a>
         .
       </p>
