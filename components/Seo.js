@@ -1,11 +1,11 @@
 import { getGameId } from "../lib/gameId";
 import { NextSeo } from "next-seo";
 
-const Seo = () => {
+const Seo = ({ letters }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
   return (
     <NextSeo
-      title={`Woordje.be #${CORRECTED_GAME_ID} - nederlandstalige Wordle`}
+      title={`Woordje.be #${CORRECTED_GAME_ID} - nederlandstalige Wordle - ${letters} letters`}
       description="Een dagelijks woordspelletje."
       canonical="https://www.woordje.be/"
       openGraph={{

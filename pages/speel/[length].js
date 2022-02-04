@@ -209,7 +209,7 @@ export default function Home({ WORD_LENGTH }) {
   return WORD_LENGTH > 2 && WORD_LENGTH < 9 ? (
     <>
       <NextSeo
-        title={`Woordje.be #${CORRECTED_GAME_ID} - nederlandstalige Wordle`}
+        title={`Woordje.be #${CORRECTED_GAME_ID} - nederlandstalige Wordle - ${WORD_LENGTH} letters`}
         description="Een dagelijks woordspelletje."
         canonical="https://www.woordje.be/"
         openGraph={{

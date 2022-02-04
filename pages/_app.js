@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }) {
       <Provider store={store}>
         <>
           <GlobalStyle />
-          <Seo />
+          <Seo letters={pageProps?.WORD_LENGTH} />
           <PersistGate loading={null} persistor={persistor}>
             <Component {...pageProps} />
           </PersistGate>
