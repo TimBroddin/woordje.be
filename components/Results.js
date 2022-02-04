@@ -53,6 +53,7 @@ const Streak = styled(motion.h4)`
   font-size: 22px;
   margin: 0;
   margin-bottom: 10px;
+  backface-visibility: hidden;
 `;
 
 const ButtonRow = styled.div`

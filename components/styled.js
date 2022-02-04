@@ -138,6 +138,7 @@ export const Summary = styled.div`
 
 export const Inner = styled(motion.div)`
   position: relative;
+  min-height: 550px;
 
   text-align: center;
   transform-style: preserve-3d;
