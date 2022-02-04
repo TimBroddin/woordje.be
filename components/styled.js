@@ -138,7 +138,6 @@ export const Summary = styled.div`
 
 export const Inner = styled(motion.div)`
   position: relative;
-  min-height: 550px;
 
   text-align: center;
   transform-style: preserve-3d;
@@ -157,6 +156,7 @@ export const Face = styled.div`
 
   top: 0;
   backface-visibility: hidden;
+  min-height: 510px;
 `;
 
 export const CloseModal = styled.a`
