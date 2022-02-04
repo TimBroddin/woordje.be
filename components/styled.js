@@ -147,7 +147,7 @@ export const Face = styled.div`
   background: var(--modal-background);
   text-align: center;
   padding: 25px 15px;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-primary);
   border-radius: 15px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);

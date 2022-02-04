@@ -15,7 +15,7 @@ const GlobalStyle = createGlobalStyle`
         --color-off: #ff0;
         --color-unknown: #ccc;
 
-        --color-share-button: #e67e22;
+        --color-share-button: #2c3e50;
 
         --focus-color: cyan;
         --keyboard-border-color: #666;
