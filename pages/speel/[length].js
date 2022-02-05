@@ -210,7 +210,7 @@ export default function Home({ WORD_LENGTH }) {
     <>
       <NextSeo
         title={`Woordje.be #${CORRECTED_GAME_ID} - nederlandstalige Wordle - ${WORD_LENGTH} letters`}
-        description="Een dagelijks woordspelletje."
+        description="Een dagelijks woordspelletje gebaseerd op Wordle. De Vlaamse Wordle, voor België en Nederland."
         canonical="https://www.woordje.be/"
         openGraph={{
           url: "https://www.woordje.be/",

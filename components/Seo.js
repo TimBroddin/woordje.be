@@ -6,7 +6,7 @@ const Seo = ({ letters }) => {
   return (
     <NextSeo
       title={`Woordje.be #${CORRECTED_GAME_ID} - nederlandstalige Wordle - ${letters} letters`}
-      description="Een dagelijks woordspelletje."
+      description="Een dagelijks woordspelletje gebaseerd op Wordle. De Vlaamse Wordle, voor België en Nederland."
       canonical="https://www.woordje.be/"
       openGraph={{
         url: "https://www.woordje.be/",
