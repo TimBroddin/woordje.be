@@ -5,6 +5,7 @@ import { persistStore } from "redux-persist";
 import store from "../redux/store";
 import Seo from "../components/Seo";
 import GlobalStyle from "../styles/globals";
+import Loading from "../components/Loading";
 
 let persistor = persistStore(store);
 
@@ -15,7 +16,7 @@ function MyApp({ Component, pageProps }) {
         <>
           <GlobalStyle />
           <Seo letters={pageProps?.WORD_LENGTH} />
-          <PersistGate loading={null} persistor={persistor}>
+          <PersistGate loading={<Loading />} persistor={persistor}>
             <Component {...pageProps} />
           </PersistGate>
         </>
