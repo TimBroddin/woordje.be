@@ -299,6 +299,32 @@ ${gameState.guesses
                 LinkedIn
               </ShareButton>
             </ButtonRow>
+            {window && window.navigator?.share ? (
+              <ButtonRow>
+                <ShareButton
+                  href={`#webshare`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (window.navigator.share) {
+                      plausible("Share", { props: { method: "webshare" } });
+                      window.navigator
+                        .share({
+                          text: getShareText(false, true),
+                        })
+                        .then(() => {})
+                        .catch((e) => {});
+                    }
+                  }}>
+                  <Icon
+                    src={"/icons/share.svg"}
+                    alt="Share"
+                    width={24}
+                    height={24}
+                  />{" "}
+                  Andere ...
+                </ShareButton>
+              </ButtonRow>
+            ) : null}
             <p>
               Probeer ook eens met{" "}
               {[3, 4, 5, 6, 7, 8]
