@@ -10,8 +10,9 @@ const getRandomWord = createAsyncThunk(
     const { WORD_LENGTH } = thunkAPI.getState().settings;
 
     const res = await fetch(`/api/random?l=${WORD_LENGTH}`);
-    const json = await res.json();
-    return json;
+    const word = await res.text();
+
+    return word;
   }
 );
 

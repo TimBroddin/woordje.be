@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { hide } from "../redux/features/installPopup";
+import { getIsGameOver } from "../lib/helpers";
 
 const isIphone = () => {
   if (typeof window !== "undefined") {
@@ -62,13 +63,16 @@ const CloseIcon = styled(Image)``;
 const AddToHomeScreen = () => {
   const visible = useSelector((state) => state.installPopup.visible);
   const statistics = useSelector((state) => state.statistics);
-  const dispatch = useDispatch();
-  const [canShow, setCanShow] = useState(true);
-  useEffect(() => {
-    setCanShow(statistics.length);
-  }, []);
+  const isGameOver = useSelector(getIsGameOver);
+  const { visible: showSplash } = useSelector((state) => state.splash);
 
-  return isIphone() && canShow && visible ? (
+  const dispatch = useDispatch();
+
+  return isIphone() &&
+    statistics.length &&
+    !isGameOver &&
+    !showSplash &&
+    visible ? (
     <Root>
       <Popup initial={{ y: 10 }} animate={{ y: 0 }}>
         <Wrapper>

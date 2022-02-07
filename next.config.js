@@ -24,6 +24,7 @@ module.exports = withPWA(
       dest: "public",
       register: false,
       skipWaiting: false,
+      mode: "production",
       runtimeCaching,
       buildExcludes: [
         /middleware-manifest\.json$/,
