@@ -238,7 +238,7 @@ export default function Home({ WORD_LENGTH }) {
         <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
       <Toaster />
-      <AddToHomeScreen />
+      <AddToHomeScreen modalClosed={modalClosed} />
       {showConfetti ? (
         <Confetti
           numberOfPieces={300}

@@ -60,7 +60,7 @@ const ShareIcon = styled.span`
 `;
 const CloseIcon = styled(Image)``;
 
-const AddToHomeScreen = () => {
+const AddToHomeScreen = ({ modalClosed }) => {
   const visible = useSelector((state) => state.installPopup.visible);
   const statistics = useSelector((state) => state.statistics);
   const isGameOver = useSelector(getIsGameOver);
@@ -70,7 +70,7 @@ const AddToHomeScreen = () => {
 
   return isIphone() &&
     statistics.length &&
-    !isGameOver &&
+    (!isGameOver || modalClosed) &&
     !showSplash &&
     visible ? (
     <Root>
