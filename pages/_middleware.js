@@ -10,6 +10,7 @@ export default async function middleware(req) {
   const GAME_ID = getGameId();
 
   if (!woorden) {
+    console.log(woorden);
     console.log("Populating wooorden");
     const res = await fetch(
       "https://woordje-be-git-pwa-broddin.vercel.app/data/woorden.json"
