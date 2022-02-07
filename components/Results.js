@@ -12,7 +12,15 @@ import { getStreak } from "../lib/helpers";
 
 import Statistics from "./Statistics";
 import { usePlausible } from "next-plausible";
-import { ModalWrapper, Summary, Inner, Face, CloseModal } from "./styled";
+import {
+  ModalWrapper,
+  Summary,
+  Inner,
+  Face,
+  CloseModal,
+  Button,
+  ButtonRow,
+} from "./styled";
 
 const Front = styled(Face)``;
 
@@ -56,32 +64,8 @@ const Streak = styled(motion.h4)`
   backface-visibility: hidden;
 `;
 
-const ButtonRow = styled.div`
-  display: flex;
-  gap: 5px;
-  justify-content: space-between;
-`;
-
-const ShareButton = styled.a`
-  padding: 5px;
-  color: white;
-  border: 1px solid var(--text-secondary);
-  cursor: pointer;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  font-weight: bold;
-  text-transform: uppercase;
+const ShareButton = styled(Button)`
   background: var(--color-share-button);
-  margin-bottom: 5px;
-  border-radius: 5px;
-  font-size: 13px;
-  flex: 1;
-  flex-grow: 1;
-  gap: 5px;
-  text-decoration: none !important;
 `;
 
 const IconImage = styled(Image)`

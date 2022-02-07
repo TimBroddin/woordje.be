@@ -16,6 +16,11 @@ const GlobalStyle = createGlobalStyle`
         --color-unknown: #ccc;
 
         --color-share-button: #2c3e50;
+        --color-button: #2980b9;
+        --color-button-text: white;
+        --color-button-enabled: #2c3e50;
+
+        --color-primary: #0984e3;
 
         --focus-color: cyan;
         --keyboard-border-color: #666;
@@ -38,16 +43,19 @@ const GlobalStyle = createGlobalStyle`
         @media (prefers-contrast: more) {
             --color-good: #f5793a;
             --color-off: #85c0f9;
+            
         }
     }
 
+    
 
     html,
     body {
     padding: 0;
     margin: 0;
-    font-family:  -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-family: "new-order", sans-serif;
+
+
         background-color: var(--background);
     }
 

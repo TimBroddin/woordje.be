@@ -207,7 +207,7 @@ export default function Home({ WORD_LENGTH }) {
     gameState,
   ]);
 
-  return WORD_LENGTH > 2 && WORD_LENGTH < 9 ? (
+  return WORD_LENGTH > 2 && WORD_LENGTH < 11 ? (
     <>
       <NextSeo
         title={`Woordje.be #${CORRECTED_GAME_ID} - nederlandstalige Wordle - ${WORD_LENGTH} letters`}

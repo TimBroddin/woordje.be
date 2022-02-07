@@ -17,6 +17,7 @@ function MyApp({ Component, pageProps }) {
         <>
           <GlobalStyle />
           <Pwa />
+          <link rel="stylesheet" href="https://use.typekit.net/cwf8zgo.css" />
 
           <Seo letters={pageProps?.WORD_LENGTH} />
           <PersistGate loading={<Loading />} persistor={persistor}>

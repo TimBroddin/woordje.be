@@ -174,3 +174,30 @@ export const CloseModal = styled.a`
   text-decoration: none !important;
   font-weight: bold;
 `;
+
+export const Button = styled.a`
+  background-color: var(--color-button);
+  padding: 5px;
+  color: var(--color-button-text);
+  cursor: pointer;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  font-size: 13px;
+  flex: 1;
+  flex-grow: 1;
+  gap: 5px;
+  text-decoration: none !important;
+`;
+
+export const ButtonRow = styled.div`
+  display: flex;
+  gap: 5px;
+  justify-content: space-between;
+`;

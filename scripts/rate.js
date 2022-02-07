@@ -22,8 +22,10 @@ const loadSettings = async () => {
         6: defaultValue,
         7: defaultValue,
         8: defaultValue,
+        9: defaultValue,
+        10: defaultValue,
       },
-      done: { 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 },
+      done: { 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 },
     };
   }
 };

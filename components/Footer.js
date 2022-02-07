@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import { useGameState } from "../lib/hooks";
 import { usePlausible } from "next-plausible";
@@ -7,10 +8,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { setColorBlind } from "../redux/features/settings";
 import { getRandomWord } from "../redux/features/randomWord";
 import { show as showSplash } from "../redux/features/splash";
+import { Button, ButtonRow } from "./styled";
 
 const FooterWrapper = styled.footer`
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: 14px;
   text-align: center;
   padding: 3px 0;
 
@@ -28,7 +30,6 @@ const FooterWrapper = styled.footer`
 
   a {
     text-decoration: underline;
-    color: var(--text-tertiary);
   }
 
   p {
@@ -41,14 +42,37 @@ const FooterWrapper = styled.footer`
   }
 `;
 
-const Random = styled.span`
+const Random = styled.div`
   cursor: pointer;
   text-decoration: dotted underline;
-  color: white;
+  color: var(--text-primary-inverse) !important;
+  background-color: var(--text-primary);
+  padding: 5px;
+  margin-top: 5px;
+  font-size: 20px;
+  display: inline-block;
+  font-family: Courier;
+`;
+
+const Levels = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+`;
+
+const Level = styled.a`
+  padding: 10px;
+  border: 1px solid var(--color-button);
+  font-size: 16px;
+  background-color: ${(props) =>
+    props.$current ? "var(--color-button-enabled)" : "var(--color-button)"};
+  color: var(--text-primary-inverse);
+  text-decoration: none !important;
 `;
 
 const Footer = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const randomWord = useSelector((state) => state.randomWord);
   const colorBlind = useSelector((state) => state.settings?.colorBlind);
@@ -67,67 +91,53 @@ const Footer = () => {
         Raad het {WORD_LENGTH}-letterwoord in {BOARD_SIZE} beurten, of minder.
       </p>
 
-      <p>
-        💁🏼{" "}
-        <a
+      <ButtonRow>
+        <Button
           href="#help"
           onClick={(e) => {
             e.preventDefault();
             dispatch(showSplash());
           }}>
-          Extra uitleg
-        </a>
-        <br />
-        🎨{" "}
-        {colorBlind ? (
-          <a
-            href="#defaultcolor"
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch(setColorBlind(false));
-            }}>
-            Standaard kleuren
-          </a>
-        ) : (
-          <a
-            href="#highcontrast"
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch(setColorBlind(true));
-            }}>
-            Hoog contrast kleuren
-          </a>
-        )}
-      </p>
+          💁🏼 Extra uitleg
+        </Button>
+
+        <Button
+          href="#highcontrast"
+          onClick={(e) => {
+            e.preventDefault();
+            dispatch(setColorBlind(!colorBlind));
+          }}
+          style={{
+            backgroundColor: colorBlind
+              ? "var(--color-button-enabled)"
+              : "var(--color-button)",
+          }}>
+          <span>{colorBlind ? "☑️" : "🎨"}</span> Hoog contrast
+        </Button>
+      </ButtonRow>
 
       <p>Elke dag een nieuwe opgave!</p>
 
-      <h1>Hulplijn</h1>
+      <h1>Willekeurig woord</h1>
       <p>
-        Hier is een willekeurig woord met {WORD_LENGTH} letters:{" "}
         <Random onClick={(e) => dispatch(getRandomWord())}>
-          {randomWord.value}
+          {randomWord.value
+            ? randomWord.value
+            : new Array(WORD_LENGTH).fill("a")}
         </Random>
       </p>
-      <h1>Te moeilijk/makkelijk?</h1>
-      <p>
-        Probeer ook eens met{" "}
-        {[3, 4, 5, 6, 7, 8]
-          .filter((x) => x !== WORD_LENGTH)
-          .map((x, i) => (
-            <span key={`link-${x}`}>
-              <Link href={`/speel/${x}`}>
-                <a>{x}</a>
-              </Link>
-              {i < 3 ? ", " : i < 4 ? " of " : ""}
-            </span>
-          ))}{" "}
-        letters
-      </p>
+      <h1>Aantal letters</h1>
+      <Levels>
+        {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
+          <Link href={`/speel/${level}`} key={`level-${level}`} passHref>
+            <Level $current={WORD_LENGTH === level}>{level}</Level>
+          </Link>
+        ))}
+      </Levels>
 
       <h1>Over</h1>
       <p>
-        Deze Vlaamse versie van Wordle werd tussen de 🥣 en de 🥔 gemaakt door{" "}
+        Deze Vlaamse versie van Wordle werd gemaakt door{" "}
         <a href="https://www.scam.city/" rel="noreferrer" target="_blank">
           ScamCity
         </a>
