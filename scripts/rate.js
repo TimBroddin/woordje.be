@@ -40,7 +40,7 @@ const giveWord = async (words, index) => {
 };
 
 (async () => {
-  const { length: l, live } = argv;
+  const { length: l, live, start } = argv;
   const length = parseInt(l);
   const woorden = JSON.parse(
     await fs.readFile(
@@ -50,7 +50,7 @@ const giveWord = async (words, index) => {
   );
   const copy = structuredClone(woorden);
   const settings = await loadSettings();
-  const startIndex = settings.start[length];
+  const startIndex = start ? start : settings.start[length];
   let index = startIndex;
 
   let keep = [];

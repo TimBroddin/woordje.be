@@ -16,7 +16,11 @@ const isIphone = () => {
   }
 };
 
-const Root = styled.div``;
+const Root = styled.div`
+  @media all and (display-mode: standalone) or (display-mode: fullscreen) {
+    display: none;
+  }
+`;
 const Popup = styled(motion.div)`
   position: fixed;
   z-index: 9999;
