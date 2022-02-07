@@ -76,6 +76,7 @@ const Level = styled.a`
     props.$current ? "var(--color-button-enabled)" : "var(--color-button)"};
   color: white;
   text-decoration: none !important;
+  margin-bottom: 10px;
 `;
 
 const Footer = () => {
@@ -121,6 +122,14 @@ const Footer = () => {
       </ButtonRow>
 
       <p>Elke dag een nieuwe opgave!</p>
+      <h1>Aantal letters</h1>
+      <Levels>
+        {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
+          <Link href={`/speel/${level}`} key={`level-${level}`} passHref>
+            <Level $current={WORD_LENGTH === level}>{level}</Level>
+          </Link>
+        ))}
+      </Levels>
 
       <h1>Willekeurig woord</h1>
       <p>
@@ -130,14 +139,6 @@ const Footer = () => {
             : new Array(WORD_LENGTH).fill("a")}
         </Random>
       </p>
-      <h1>Aantal letters</h1>
-      <Levels>
-        {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
-          <Link href={`/speel/${level}`} key={`level-${level}`} passHref>
-            <Level $current={WORD_LENGTH === level}>{level}</Level>
-          </Link>
-        ))}
-      </Levels>
 
       <h1>Over</h1>
       <p>
