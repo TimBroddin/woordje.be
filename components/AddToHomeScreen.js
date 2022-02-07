@@ -65,8 +65,8 @@ const AddToHomeScreen = () => {
   const dispatch = useDispatch();
   const [canShow, setCanShow] = useState(true);
   useEffect(() => {
-    setCanShow(!statistics.length);
-  });
+    setCanShow(statistics.length);
+  }, []);
 
   return isIphone() && canShow && visible ? (
     <Root>
