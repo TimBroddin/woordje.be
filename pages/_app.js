@@ -16,8 +16,9 @@ function MyApp({ Component, pageProps }) {
       <Provider store={store}>
         <>
           <GlobalStyle />
-          <Seo letters={pageProps?.WORD_LENGTH} />
           <Pwa />
+
+          <Seo letters={pageProps?.WORD_LENGTH} />
           <PersistGate loading={<Loading />} persistor={persistor}>
             <Component {...pageProps} />
           </PersistGate>

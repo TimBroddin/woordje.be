@@ -9,9 +9,9 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/",
+  "start_url": "/#pwa",
   "background_color": "#3367D6",
-  "display": "standalone",
+  "display": "fullscreen",
   "scope": "/",
   "theme_color": "#3367D6"
 }
