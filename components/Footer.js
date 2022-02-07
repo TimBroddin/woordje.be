@@ -58,6 +58,11 @@ const Levels = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
+  justify-content: center;
+
+  @media (min-width: 768px) {
+    justify-content: flex-start;
+  }
 `;
 
 const Level = styled.a`
