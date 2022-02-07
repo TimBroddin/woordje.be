@@ -4,6 +4,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import store from "../redux/store";
 import Seo from "../components/Seo";
+import Pwa from "../components/Pwa";
 import GlobalStyle from "../styles/globals";
 import Loading from "../components/Loading";
 
@@ -16,6 +17,7 @@ function MyApp({ Component, pageProps }) {
         <>
           <GlobalStyle />
           <Seo letters={pageProps?.WORD_LENGTH} />
+          <Pwa />
           <PersistGate loading={<Loading />} persistor={persistor}>
             <Component {...pageProps} />
           </PersistGate>
