@@ -2,8 +2,8 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
     :root {
-        --background: #ffffff;
-        --text-primary: black;
+        --background: #FEFEFE;
+        --text-primary: #111;
         --text-secondary: #999;
         --text-tertiary: #666;
         --text-primary-inverse: white;
@@ -26,8 +26,8 @@ const GlobalStyle = createGlobalStyle`
         --keyboard-border-color: #666;
 
         @media (prefers-color-scheme: dark) {
-            --background: #000000;
-            --text-primary: #fff;
+            --background: #111;
+            --text-primary: #FEFEFE;
             --text-secondary: #ccc;
             --text-tertiary: #999;
             --text-keys: black;

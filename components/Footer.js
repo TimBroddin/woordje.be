@@ -11,7 +11,7 @@ import { show as showSplash } from "../redux/features/splash";
 import { Button, ButtonRow } from "./styled";
 
 const FooterWrapper = styled.footer`
-  color: var(--text-secondary);
+  color: var(--text-primary);
   font-size: 14px;
   text-align: center;
   padding: 3px 0;
@@ -30,6 +30,7 @@ const FooterWrapper = styled.footer`
 
   a {
     text-decoration: underline;
+    font-weight: bold;
   }
 
   p {
@@ -44,12 +45,9 @@ const FooterWrapper = styled.footer`
 
 const Random = styled.div`
   cursor: pointer;
-  text-decoration: dotted underline;
-  color: var(--text-primary-inverse) !important;
-  background-color: var(--text-primary);
+  font-size: 16px;
   padding: 5px;
   margin-top: 5px;
-  font-size: 20px;
   display: inline-block;
   font-family: Courier;
 `;
@@ -71,7 +69,7 @@ const Level = styled.a`
   font-size: 16px;
   background-color: ${(props) =>
     props.$current ? "var(--color-button-enabled)" : "var(--color-button)"};
-  color: var(--text-primary-inverse);
+  color: white;
   text-decoration: none !important;
 `;
 
@@ -84,10 +82,6 @@ const Footer = () => {
   const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
   const [_, setGameState] = useGameState();
   const plausible = usePlausible();
-
-  const seoWord = ["Vlaamse", "nederlandstalige", "Belgische"][
-    Math.floor(Math.random() * 3)
-  ];
 
   return (
     <FooterWrapper>
