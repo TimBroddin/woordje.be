@@ -29,6 +29,17 @@ export const InnerWrapper = styled.div`
   }
 `;
 
+export const ScreenWrapper = styled.div`
+  display: contents;
+  @media (max-width: 768px) {
+    min-height: 85vh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    display: flex;
+  }
+`;
+
 export const Board = styled.div`
   transition: all 0.2s ease-in-out;
   position: relative;

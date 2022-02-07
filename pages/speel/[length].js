@@ -25,6 +25,7 @@ import {
 import {
   Main,
   InnerWrapper,
+  ScreenWrapper,
   Board,
   Row,
   Letter,
@@ -70,6 +71,9 @@ export default function Home({ WORD_LENGTH }) {
   const { visible: showSplash } = useSelector((state) => state.splash);
   const colorBlind = useSelector((state) => state.settings?.colorBlind);
   const plausible = usePlausible();
+
+  const ConditionalScreenWrapper =
+    width > 768 ? ({ children }) => children : ScreenWrapper;
 
   useEffect(() => {
     getSolutions().then((solutions) => setSolutions(solutions));
@@ -251,80 +255,82 @@ export default function Home({ WORD_LENGTH }) {
 
       <Main $initializing={!gameState}>
         <InnerWrapper>
-          <Board
-            $loading={isLoading}
-            style={{ "--word-length": WORD_LENGTH, "--shrink-size": "4px" }}>
-            {gameState &&
-              gameState.guesses.map((match, i) => (
-                <Row key={`gs_row${i}`}>
-                  {match.map((item, i) => {
-                    return (
-                      <Letter key={`letter-${i}`} $score={item.score}>
-                        {item.letter}
-                      </Letter>
-                    );
-                  })}
-                </Row>
-              ))}
+          <ConditionalScreenWrapper>
+            <Board
+              $loading={isLoading}
+              style={{ "--word-length": WORD_LENGTH, "--shrink-size": "4px" }}>
+              {gameState &&
+                gameState.guesses.map((match, i) => (
+                  <Row key={`gs_row${i}`}>
+                    {match.map((item, i) => {
+                      return (
+                        <Letter key={`letter-${i}`} $score={item.score}>
+                          {item.letter}
+                        </Letter>
+                      );
+                    })}
+                  </Row>
+                ))}
 
-            {gameState && gameState.guesses.length < BOARD_SIZE
-              ? Array.from(
-                  { length: BOARD_SIZE - gameState.guesses.length },
-                  (_, i) => {
-                    if (i === 0 && !isGameOver) {
-                      return (
-                        <Row key="row_input">
-                          {inputText
-                            .padEnd(WORD_LENGTH, "?")
-                            .split("")
-                            .map((letter, index) => (
+              {gameState && gameState.guesses.length < BOARD_SIZE
+                ? Array.from(
+                    { length: BOARD_SIZE - gameState.guesses.length },
+                    (_, i) => {
+                      if (i === 0 && !isGameOver) {
+                        return (
+                          <Row key="row_input">
+                            {inputText
+                              .padEnd(WORD_LENGTH, "?")
+                              .split("")
+                              .map((letter, index) => (
+                                <Letter
+                                  $focus={
+                                    true &&
+                                    index ===
+                                      Math.min(
+                                        Math.max(0, inputText.length),
+                                        WORD_LENGTH - 1
+                                      )
+                                  }
+                                  key={`letter-${i}-${index}`}>
+                                  {letter === "?" ? null : letter}
+                                </Letter>
+                              ))}
+                          </Row>
+                        );
+                      } else {
+                        return (
+                          <Row key={`row_${i}`}>
+                            {Array.from({ length: WORD_LENGTH }, (_, j) => (
                               <Letter
-                                $focus={
-                                  true &&
-                                  index ===
-                                    Math.min(
-                                      Math.max(0, inputText.length),
-                                      WORD_LENGTH - 1
-                                    )
-                                }
-                                key={`letter-${i}-${index}`}>
-                                {letter === "?" ? null : letter}
-                              </Letter>
+                                $disabled={true}
+                                key={`disabled-${i}-${j}`}></Letter>
                             ))}
-                        </Row>
-                      );
-                    } else {
-                      return (
-                        <Row key={`row_${i}`}>
-                          {Array.from({ length: WORD_LENGTH }, (_, j) => (
-                            <Letter
-                              $disabled={true}
-                              key={`disabled-${i}-${j}`}></Letter>
-                          ))}
-                        </Row>
-                      );
+                          </Row>
+                        );
+                      }
                     }
-                  }
-                )
-              : null}
-          </Board>
-          <Keyboard
-            gameState={gameState}
-            onPress={(l) => {
-              dispatch(
-                setInputText(
-                  `${inputText}${l}`
-                    .toLowerCase()
-                    .replace(/[^a-z]+/g, "")
-                    .slice(0, WORD_LENGTH)
-                )
-              );
-            }}
-            onBackspace={() => {
-              dispatch(setInputText(inputText.slice(0, -1)));
-            }}
-            onSubmit={onSubmit}
-          />
+                  )
+                : null}
+            </Board>
+            <Keyboard
+              gameState={gameState}
+              onPress={(l) => {
+                dispatch(
+                  setInputText(
+                    `${inputText}${l}`
+                      .toLowerCase()
+                      .replace(/[^a-z]+/g, "")
+                      .slice(0, WORD_LENGTH)
+                  )
+                );
+              }}
+              onBackspace={() => {
+                dispatch(setInputText(inputText.slice(0, -1)));
+              }}
+              onSubmit={onSubmit}
+            />
+          </ConditionalScreenWrapper>
 
           <Footer WORD_LENGTH={WORD_LENGTH} BOARD_SIZE={BOARD_SIZE} />
         </InnerWrapper>
