@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import Head from "next/head";
-import Link from "next/link";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import useWindowSize from "react-use/lib/useWindowSize";
@@ -34,6 +34,7 @@ import Keyboard from "../../components/Keyboard";
 import Results from "../../components/Results";
 import Footer from "../../components/Footer";
 import Splash from "../../components/Splash";
+import AddToHomeScreen from "../../components/AddToHomeScreen";
 
 async function check(word, WORD_LENGTH, opts) {
   const res = await fetch(
@@ -237,6 +238,7 @@ export default function Home({ WORD_LENGTH }) {
         <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
       <Toaster />
+      <AddToHomeScreen />
       {showConfetti ? (
         <Confetti
           numberOfPieces={300}
@@ -246,6 +248,7 @@ export default function Home({ WORD_LENGTH }) {
           initialVelocityY={-25}
         />
       ) : null}
+
       <Main $initializing={!gameState}>
         <InnerWrapper>
           <Board

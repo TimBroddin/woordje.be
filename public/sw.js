@@ -82,7 +82,11 @@ define(['./workbox-9a8b0a38'], (function (workbox) { 'use strict';
   */
 
   importScripts();
-  self.skipWaiting();
+  self.addEventListener('message', event => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+      self.skipWaiting();
+    }
+  });
   workbox.clientsClaim();
   workbox.registerRoute("/", new workbox.NetworkFirst({
     "cacheName": "start-url",

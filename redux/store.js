@@ -12,6 +12,7 @@ import statistics from "./features/statistics";
 import timer from "./features/timer";
 import inputText from "./features/inputText";
 import splash from "./features/splash";
+import installPopup from "./features/installPopup";
 
 const persistConfig = {
   key: "root",
@@ -27,6 +28,7 @@ const reducers = combineReducers({
   timer,
   inputText,
   splash,
+  installPopup,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);
