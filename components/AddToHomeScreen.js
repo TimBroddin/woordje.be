@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -62,7 +63,12 @@ const AddToHomeScreen = () => {
   const visible = useSelector((state) => state.installPopup.visible);
   const statistics = useSelector((state) => state.statistics);
   const dispatch = useDispatch();
-  return isIphone() && statistics.length && visible ? (
+  const [canShow, setCanShow] = useState(true);
+  useEffect(() => {
+    setCanShow(!statistics.length);
+  });
+
+  return isIphone() && canShow && visible ? (
     <Root>
       <Popup initial={{ y: 10 }} animate={{ y: 0 }}>
         <Wrapper>
