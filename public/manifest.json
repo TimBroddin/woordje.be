@@ -9,7 +9,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/#pwa",
+  "start_url": "/",
   "background_color": "#3367D6",
   "display": "fullscreen",
   "scope": "/",

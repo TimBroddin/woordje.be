@@ -1,14 +1,21 @@
 import { NextResponse } from "next/server";
-import woorden from "../data/woorden.json";
 
 import { getGameId } from "../lib/gameId";
 
 const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
 const firstDate = new Date(2022, 0, 10).valueOf();
 const secondDate = new Date().valueOf();
-
+let woorden = false;
 export default async function middleware(req) {
   const GAME_ID = getGameId();
+
+  if (!woorden) {
+    console.log("Populating wooorden");
+    const res = await fetch(
+      "https://woordje-be-git-pwa-broddin.vercel.app/data/woorden.json"
+    );
+    woorden = await await res.json();
+  }
 
   if (req.nextUrl.pathname === "/api/random") {
     const WORD_LENGTH = parseInt(req.nextUrl.searchParams.get("l"));
