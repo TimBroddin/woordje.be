@@ -16,12 +16,17 @@ const FooterWrapper = styled.footer`
   text-align: center;
   padding: 3px 0;
 
+  @media (max-width: 768px) {
+    margin: 0 20px;
+  }
+
   h1 {
     font-size: 16px;
     font-weight: bold;
     text-transform: uppercase;
     color: var(--text-tertiary);
     margin-bottom: 2px;
+    margin-top: 0px;
   }
 
   span {

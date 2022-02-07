@@ -136,7 +136,15 @@ ${gameState.guesses
         return `${text}${addHashtag ? "\n#woordje" : ""}`;
       }
     },
-    [BOARD_SIZE, CORRECTED_GAME_ID, WORD_LENGTH, gameState]
+    [
+      BOARD_SIZE,
+      CORRECTED_GAME_ID,
+      WORD_LENGTH,
+      gameState,
+      streak,
+      timer?.start,
+      timer.value,
+    ]
   );
 
   const getEncodedState = useCallback(() => {

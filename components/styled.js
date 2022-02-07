@@ -32,9 +32,9 @@ export const InnerWrapper = styled.div`
 export const ScreenWrapper = styled.div`
   display: contents;
   @media (max-width: 768px) {
-    min-height: 85vh;
+    min-height: calc(100vh - 40px);
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     flex-direction: column;
     display: flex;
   }
