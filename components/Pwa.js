@@ -30,7 +30,22 @@ const Pwa = () => {
     ) {
       const wb = window.workbox;
       const promptNewVersionAvailable = (event) => {
-        setUpdateAvailable(true);
+        if (
+          confirm(
+            "Er is een nieuwe versie van Woordje beschikbaar. Wil je deze laden?"
+          )
+        ) {
+          wb.addEventListener("controlling", (event) => {
+            window.location.reload();
+          });
+
+          // Send a message to the waiting service worker, instructing it to activate.
+          wb.messageSkipWaiting();
+        } else {
+          console.log(
+            "User rejected to reload the web app, keep using old version. New version will be automatically load when user open the app next time."
+          );
+        }
       };
 
       wb.addEventListener("waiting", promptNewVersionAvailable);
