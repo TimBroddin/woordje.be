@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Head from "next/head";
 import Image from "next/image";
+import { Button, Text, Tooltip } from "@nextui-org/react";
+import { InfoSquare, Chart } from "react-iconly";
+
 import toast, { Toaster } from "react-hot-toast";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
@@ -21,9 +24,11 @@ import {
   stop as stopTimer,
   reset as resetTimer,
 } from "../../redux/features/timer";
+import { setModal } from "../../redux/features/modal";
 
 import {
   Main,
+  Nav,
   InnerWrapper,
   ScreenWrapper,
   Board,
@@ -35,6 +40,7 @@ import Keyboard from "../../components/Keyboard";
 import Results from "../../components/Results";
 import Footer from "../../components/Footer";
 import Splash from "../../components/Splash";
+import Statistics from "../../components/Statistics";
 import AddToHomeScreen from "../../components/AddToHomeScreen";
 
 async function check(word, WORD_LENGTH, opts) {
@@ -65,15 +71,13 @@ export default function Home({ WORD_LENGTH }) {
   const fetchControllerRef = useRef(null);
   const [gameState, setGameState] = useGameState();
   const [modalClosed, setModalClosed] = useState(false);
+  const { currentModal } = useSelector((state) => state.modal);
+
   const [solutions, setSolutions] = useState([]);
   const { width, height } = useWindowSize();
   const isGameOver = useSelector(getIsGameOver);
-  const { visible: showSplash } = useSelector((state) => state.splash);
   const colorBlind = useSelector((state) => state.settings?.colorBlind);
   const plausible = usePlausible();
-
-  const ConditionalScreenWrapper =
-    width > 768 ? ({ children }) => children : ScreenWrapper;
 
   useEffect(() => {
     getSolutions().then((solutions) => setSolutions(solutions));
@@ -85,6 +89,12 @@ export default function Home({ WORD_LENGTH }) {
     dispatch(setSettings({ WORD_LENGTH, BOARD_SIZE }));
     dispatch(resetTimer());
   }, [WORD_LENGTH, BOARD_SIZE, dispatch]);
+
+  useEffect(() => {
+    if (isGameOver) {
+      dispatch(setModal("results"));
+    }
+  }, [isGameOver]);
 
   useEffect(() => {
     dispatch(resetTimer());
@@ -258,98 +268,140 @@ export default function Home({ WORD_LENGTH }) {
       ) : null}
 
       <Main $initializing={!gameState}>
-        <InnerWrapper>
-          <ConditionalScreenWrapper>
-            <Board
-              $loading={isLoading}
-              style={{ "--word-length": WORD_LENGTH, "--shrink-size": "4px" }}>
-              {gameState &&
-                gameState.guesses.map((match, i) => (
-                  <Row key={`gs_row${i}`}>
-                    {match.map((item, i) => {
-                      return (
-                        <Letter key={`letter-${i}`} $score={item.score}>
-                          {item.letter}
-                        </Letter>
-                      );
-                    })}
-                  </Row>
-                ))}
-
-              {gameState && gameState.guesses.length < BOARD_SIZE
-                ? Array.from(
-                    { length: BOARD_SIZE - gameState.guesses.length },
-                    (_, i) => {
-                      if (i === 0 && !isGameOver) {
-                        return (
-                          <Row key="row_input">
-                            {inputText
-                              .padEnd(WORD_LENGTH, "?")
-                              .split("")
-                              .map((letter, index) => (
-                                <Letter
-                                  $focus={
-                                    true &&
-                                    index ===
-                                      Math.min(
-                                        Math.max(0, inputText.length),
-                                        WORD_LENGTH - 1
-                                      )
-                                  }
-                                  key={`letter-${i}-${index}`}>
-                                  {letter === "?" ? null : letter}
-                                </Letter>
-                              ))}
-                          </Row>
-                        );
-                      } else {
-                        return (
-                          <Row key={`row_${i}`}>
-                            {Array.from({ length: WORD_LENGTH }, (_, j) => (
-                              <Letter
-                                $disabled={true}
-                                key={`disabled-${i}-${j}`}></Letter>
-                            ))}
-                          </Row>
-                        );
-                      }
-                    }
-                  )
-                : null}
-            </Board>
-            <Keyboard
-              gameState={gameState}
-              onPress={(l) => {
-                dispatch(
-                  setInputText(
-                    `${inputText}${l}`
-                      .toLowerCase()
-                      .replace(/[^a-z]+/g, "")
-                      .slice(0, WORD_LENGTH)
-                  )
-                );
+        <Nav>
+          <Tooltip
+            placement="bottom"
+            content={"Klik hier voor uitleg over Woordje."}>
+            <Button
+              auto
+              light
+              animated={false}
+              onClick={(e) => {
+                dispatch(setModal("splash"));
               }}
-              onBackspace={() => {
-                dispatch(setInputText(inputText.slice(0, -1)));
-              }}
-              onSubmit={onSubmit}
+              icon={
+                <InfoSquare
+                  set="two-tone"
+                  primaryColor="var(--nextui-colors-blue500)"
+                  size="large"
+                />
+              }
             />
-          </ConditionalScreenWrapper>
+          </Tooltip>
+          <Text
+            h1
+            size={60}
+            css={{
+              textGradient: "45deg, $blue500 -20%, $pink500 50%",
+            }}
+            weight="bold">
+            Woordje
+          </Text>
+          <Tooltip placement="bottom" content="Klik hier voor je statistieken.">
+            <Button
+              light
+              auto
+              animated={false}
+              onClick={(e) => {
+                dispatch(setModal("statistics"));
+              }}
+              icon={
+                <Chart
+                  set="two-tone"
+                  primaryColor="var(--nextui-colors-pink500)"
+                  size="large"
+                />
+              }
+            />
+          </Tooltip>
+        </Nav>
 
-          <Footer WORD_LENGTH={WORD_LENGTH} BOARD_SIZE={BOARD_SIZE} />
+        <InnerWrapper>
+          <Board
+            $loading={isLoading}
+            style={{ "--word-length": WORD_LENGTH, "--shrink-size": "4px" }}>
+            {gameState &&
+              gameState.guesses.map((match, i) => (
+                <Row key={`gs_row${i}`}>
+                  {match.map((item, i) => {
+                    return (
+                      <Letter key={`letter-${i}`} $score={item.score}>
+                        {item.letter}
+                      </Letter>
+                    );
+                  })}
+                </Row>
+              ))}
+
+            {gameState && gameState.guesses.length < BOARD_SIZE
+              ? Array.from(
+                  { length: BOARD_SIZE - gameState.guesses.length },
+                  (_, i) => {
+                    if (i === 0 && !isGameOver) {
+                      return (
+                        <Row key="row_input">
+                          {inputText
+                            .padEnd(WORD_LENGTH, "?")
+                            .split("")
+                            .map((letter, index) => (
+                              <Letter
+                                $focus={
+                                  true &&
+                                  index ===
+                                    Math.min(
+                                      Math.max(0, inputText.length),
+                                      WORD_LENGTH - 1
+                                    )
+                                }
+                                key={`letter-${i}-${index}`}>
+                                {letter === "?" ? null : letter}
+                              </Letter>
+                            ))}
+                        </Row>
+                      );
+                    } else {
+                      return (
+                        <Row key={`row_${i}`}>
+                          {Array.from({ length: WORD_LENGTH }, (_, j) => (
+                            <Letter
+                              $disabled={true}
+                              key={`disabled-${i}-${j}`}></Letter>
+                          ))}
+                        </Row>
+                      );
+                    }
+                  }
+                )
+              : null}
+          </Board>
+          <Keyboard
+            gameState={gameState}
+            onPress={(l) => {
+              dispatch(
+                setInputText(
+                  `${inputText}${l}`
+                    .toLowerCase()
+                    .replace(/[^a-z]+/g, "")
+                    .slice(0, WORD_LENGTH)
+                )
+              );
+            }}
+            onBackspace={() => {
+              dispatch(setInputText(inputText.slice(0, -1)));
+            }}
+            onSubmit={onSubmit}
+          />
         </InnerWrapper>
+        <Footer WORD_LENGTH={WORD_LENGTH} BOARD_SIZE={BOARD_SIZE} />
       </Main>
-      {showSplash && (!isGameOver || modalClosed) ? <Splash /> : null}
 
-      {isGameOver && !modalClosed ? (
-        <Results
-          WORD_LENGTH={WORD_LENGTH}
-          gameState={gameState}
-          solutions={solutions}
-          close={() => setModalClosed(true)}
-          toast={toast}
-        />
-      ) : null}
+      <Splash visible={currentModal === "splash"} />
+      <Statistics visible={currentModal === "statistics"} />
+      <Results
+        visible={currentModal === "results"}
+        solutions={solutions}
+        toast={toast}
+      />
     </>
   ) : (
     <Main>

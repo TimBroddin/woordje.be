@@ -50,7 +50,7 @@ const giveWord = async (words, index) => {
   );
   const copy = structuredClone(woorden);
   const settings = await loadSettings();
-  const startIndex = start ? start : settings.start[length];
+  const startIndex = start ? parseInt(start) : settings.start[length];
   let index = startIndex;
 
   let keep = [];

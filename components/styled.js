@@ -3,21 +3,34 @@ import { motion } from "framer-motion";
 
 export const Main = styled.main`
   color: #fff;
-  width: 100vw;
-  height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
   height: -webkit-fill-available;
   transition: all 0.2s ease-in-out;
   opacity: ${(props) => (props.$initializing ? 0 : 1)};
 
   @media (min-width: 768px) {
-    height: 100vh;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    flex-wrap: wrap;
   }
+`;
+
+export const Nav = styled.nav`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  h1 {
+    flex: 2;
+  }
+
+  > div,
+  > button {
+    flex: 1;
+  }
+`;
+
+export const Title = styled.h1`
+  color: var(--text-primary);
 `;
 
 export const InnerWrapper = styled.div`

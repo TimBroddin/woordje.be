@@ -1,30 +1,10 @@
-import { useEffect, useState, useCallback } from "react";
-import { useSelector } from "react-redux";
-import { getStatistics } from "../lib/helpers";
+import { Modal, Button, Grid, Text, Card } from "@nextui-org/react";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-const StatsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-
-  p {
-    text-align: left;
-  }
-`;
-
-const Summary = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-`;
-
-const Box = styled.div`
-  border: 1px solid #ccc;
-  min-width: 100px;
-  flex: 1;
-`;
+import { hide } from "../redux/features/modal";
+import { getStatistics } from "../lib/helpers";
 
 const Property = styled.div`
   font-weight: bold;
@@ -77,7 +57,36 @@ const DistributionBar = styled.div`
   padding: 1px;
 `;
 
-const Statistics = ({ close }) => {
+const Box = ({ title, num, pct, color, large, children }) => {
+  return (
+    <Grid xs={large ? 12 : 6}>
+      <Card color={color}>
+        <Card.Header>
+          <Text b css={{ fontWeight: "$bold", color: "$white" }}>
+            {title}
+          </Text>
+        </Card.Header>
+        <Card.Body>
+          {children ? (
+            children
+          ) : (
+            <Text size="24px" css={{ fontWeight: "$bold", color: "$white" }}>
+              {num} {pct ? <Text small>({Math.round(pct)}%)</Text> : null}
+            </Text>
+          )}
+        </Card.Body>
+      </Card>
+    </Grid>
+  );
+};
+
+const Statistics = ({ visible }) => {
+  const dispatch = useDispatch();
+
+  const closeHandler = (e) => {
+    dispatch(hide());
+  };
+
   const { wins, lost, distribution, biggestStreak } =
     useSelector(getStatistics);
   const settings = useSelector((state) => state.settings);
@@ -105,36 +114,27 @@ const Statistics = ({ close }) => {
   });
 
   return (
-    <StatsContainer>
-      <div>
-        <h1>Statistieken voor {settings.WORD_LENGTH} tekens</h1>
-        <Summary>
-          <Box style={{ "--headerColor": "#2ecc71" }}>
-            <Property>🎉 Gewonnen</Property>
-            <Value>
-              <span>
-                {wins}
-                <br />
-                <small>{Math.round(pctWins)}%</small>
-              </span>
-            </Value>
-          </Box>
-          <Box style={{ "--headerColor": "#c0392b" }}>
-            <Property>💀 Verloren</Property>
-            <Value>
-              <span>
-                {lost}
-                <br />
-                <small>{Math.round(pctLost)}%</small>
-              </span>
-            </Value>
-          </Box>
-          <Box style={{ "--headerColor": "#8e44ad" }}>
-            <Property>🎳 Langste streak</Property>
-            <Value>{biggestStreak}</Value>
-          </Box>
-          <DistributionBox style={{ "--headerColor": "#f39c12" }}>
-            <Property>🔢 Aantal pogingen fancy chart</Property>
+    <Modal
+      closeButton
+      aria-labelledby="modal-title"
+      open={visible}
+      onClose={closeHandler}>
+      <Modal.Header>
+        <Text>
+          Statistieken voor <Text b>{settings.WORD_LENGTH} tekens</Text>
+        </Text>
+      </Modal.Header>
+      <Modal.Body>
+        <Grid.Container gap={2}>
+          <Box title="🎉 Gewonnen" num={wins} pct={pctWins} color="success" />
+          <Box title="💀 Verloren" num={lost} pct={pctLost} color="warning" />
+          <Box
+            large
+            title="🎳 Langste streak"
+            num={biggestStreak}
+            color="gradient"
+          />
+          <Box title="Aantal pogingen" large color="primary">
             <DistributionValue>
               {distributionValues.map((item) => {
                 return (
@@ -153,13 +153,10 @@ const Statistics = ({ close }) => {
                 );
               })}
             </DistributionValue>
-          </DistributionBox>
-        </Summary>
-      </div>
-      <div>
-        <button onClick={() => close()}>🥊 Terug</button>
-      </div>
-    </StatsContainer>
+          </Box>
+        </Grid.Container>
+      </Modal.Body>
+    </Modal>
   );
 };
 

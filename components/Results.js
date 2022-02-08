@@ -1,16 +1,18 @@
 import { useEffect, useState, useCallback } from "react";
-import { useSelector } from "react-redux";
+import { Modal, Button, Grid, Text, Container, Link } from "@nextui-org/react";
+
+import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
 import styled, { keyframes } from "styled-components";
 import { motion } from "framer-motion";
 
-import Link from "next/link";
+import NextLink from "next/link";
 import { copyToClipboard, getIsVictory } from "../lib/helpers";
 import { getGameId } from "../lib/gameId";
 import { useGameState } from "../lib/hooks";
 import { getStreak } from "../lib/helpers";
+import { hide } from "../redux/features/modal";
 
-import Statistics from "./Statistics";
 import { usePlausible } from "next-plausible";
 import {
   ModalWrapper,
@@ -18,19 +20,8 @@ import {
   Inner,
   Face,
   CloseModal,
-  Button,
   ButtonRow,
 } from "./styled";
-
-const Front = styled(Face)``;
-
-const Back = styled(Face)`
-  transform: rotateY(180deg);
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-`;
 
 const ShareText = styled.div`
   margin-bottom: 20px;
@@ -42,14 +33,15 @@ const ShareText = styled.div`
   white-space: pre-wrap;
   line-height: 14px;
   border: 3px solid #000;
+  text-align: center;
 `;
 
 const Redact = styled.span`
-  background-color: var(--text-primary);
-  color: var(--text-primary-inverse);
+  background-color: var(--nextui-colors-foreground);
+  color: var(--nextui-colors-background);
   padding: 3px 2px;
+  margin: 0 2px;
   cursor: pointer;
-  font-size: 22px;
 
   strong {
     filter: blur(${(props) => (props.redacted ? "6px" : "0px")});
@@ -62,10 +54,7 @@ const Streak = styled(motion.h4)`
   margin: 0;
   margin-bottom: 10px;
   backface-visibility: hidden;
-`;
-
-const ShareButton = styled(Button)`
-  background: var(--color-share-button);
+  text-align: center;
 `;
 
 const IconImage = styled(Image)`
@@ -76,7 +65,7 @@ const Icon = ({ src, alt, width = 20, height = 20 }) => (
   <IconImage src={src} width={width} height={height} alt={alt} />
 );
 
-const Results = ({ solutions, close, toast }) => {
+const Results = ({ solutions, visible, toast }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
   const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
   const streak = useSelector(getStreak);
@@ -85,7 +74,11 @@ const Results = ({ solutions, close, toast }) => {
   const [redacted, setRedacted] = useState(true);
   const [showStats, setShowStats] = useState(false);
   const plausible = usePlausible();
+  const dispatch = useDispatch();
 
+  const closeHandler = (e) => {
+    dispatch(hide());
+  };
   const getShareText = useCallback(
     (html = false, addHashtag = false) => {
       const header = [
@@ -180,183 +173,169 @@ ${gameState.guesses
   );
 
   return (
-    <ModalWrapper>
-      <Summary>
-        <Inner
-          initial={{ rotateY: 0 }}
-          animate={{ rotateY: showStats ? 180 : 0 }}
-          transition={{ type: "spring", duration: 0.8 }}>
-          <Front>
-            <CloseModal
-              href="#close"
+    <Modal
+      closeButton
+      aria-labelledby="modal-title"
+      open={visible}
+      onClose={closeHandler}>
+      <Modal.Header>
+        <Text b>
+          Het woordje was
+          <Redact redacted={redacted} onClick={(s) => setRedacted((s) => !s)}>
+            <strong>{solutions[WORD_LENGTH - 3]}</strong>
+          </Redact>
+        </Text>
+      </Modal.Header>
+      <Modal.Body>
+        {streak > 1 ? (
+          <Streak
+            initial={{ opacity: 0, scale: 0, rotate: 0 }}
+            animate={{ opacity: 1, scale: 1, rotate: 720 }}
+            transition={{
+              delay: 0.5,
+              rotate: { type: "spring", stiffness: 100 },
+            }}>
+            STREAK: <span>{streak}</span>
+          </Streak>
+        ) : null}
+        <ShareText onClick={(e) => e.stopPropagation()}>
+          {getShareText()}
+        </ShareText>
+        <Container justify="center" display="flex">
+          <Button auto onClick={onCopyToClipboard}>
+            📋 Kopieer
+          </Button>
+        </Container>
+        <Text h2 css={{ fontSize: "$sm" }}>
+          Deel je score
+        </Text>
+
+        <Grid.Container gap={1}>
+          <Grid sm={6}>
+            <Button
+              size={"sm"}
+              bordered
+              css={{ width: "100%" }}
+              icon={<Icon src={"/icons/twitter.svg"} alt="Twitter" />}
               onClick={(e) => {
-                e.preventDefault();
-                close();
+                plausible("Share", { props: { method: "twitter" } });
+                window.open(
+                  `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    getShareText(false, true)
+                  )}`,
+                  "_blank"
+                );
               }}>
-              X
-            </CloseModal>
-            <h1>
-              Het woordje was
-              <br />
-              <Redact
-                redacted={redacted}
-                onClick={(s) => setRedacted((s) => !s)}>
-                <strong>{solutions[WORD_LENGTH - 3]}</strong>
-              </Redact>
-              <br />
-              <small>(klik om te zien)</small>
-            </h1>
-            {streak > 1 ? (
-              <Streak
-                initial={{ opacity: 0, scale: 0, rotate: 0 }}
-                animate={{ opacity: 1, scale: 1, rotate: 720 }}
-                transition={{
-                  delay: 0.5,
-                  rotate: { type: "spring", stiffness: 100 },
-                }}>
-                STREAK: <span>{streak}</span>
-              </Streak>
-            ) : null}
-            <ShareText onClick={(e) => e.stopPropagation()}>
-              {getShareText()}
-            </ShareText>
-            <ButtonRow>
-              <button onClick={onCopyToClipboard}>📋 Kopieer</button>
-
-              <button
-                onClick={() => {
-                  plausible("Statistics");
-                  setShowStats(true);
-                }}>
-                📈 Statistieken
-              </button>
-            </ButtonRow>
-            <h2>Deel je score</h2>
-            <ButtonRow>
-              <ShareButton
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  getShareText(false, true)
-                )}`}
-                onClick={(e) =>
-                  plausible("Share", { props: { method: "twitter" } })
-                }
-                rel="noreferrer"
-                target="_blank">
-                <Icon src={"/icons/twitter.svg"} alt="Twitter" /> Twitter
-              </ShareButton>
-              <ShareButton
-                href={`https://www.facebook.com/share.php?u=${encodeURIComponent(
-                  `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
-                    gameState
-                  )}`
-                )}`}
-                onClick={(e) =>
-                  plausible("Share", { props: { method: "facebook" } })
-                }
-                rel="noreferrer"
-                target="_blank">
-                <Icon src={"/icons/facebook.svg"} alt="Facebook" /> Facebook
-              </ShareButton>
-            </ButtonRow>
-            <ButtonRow>
-              <ShareButton
-                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                  getShareText(false, true)
-                )}`}
-                onClick={(e) =>
-                  plausible("Share", { props: { method: "whatsapp" } })
-                }
-                rel="noreferrer"
-                target="_blank">
-                <Icon src={"/icons/whatsapp.svg"} alt="Whatsapp" /> WhatsApp
-              </ShareButton>
-
-              <ShareButton
-                href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                  `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
-                    gameState
-                  )}`
-                )}`}
-                onClick={(e) =>
-                  plausible("Share", { props: { method: "linkedin" } })
-                }
-                rel="noreferrer"
-                target="_blank">
-                <Icon
-                  src={"/icons/linkedin.svg"}
-                  alt="LinkedIn"
-                  width={24}
-                  height={24}
-                />{" "}
-                LinkedIn
-              </ShareButton>
-            </ButtonRow>
-            {window && window.navigator?.share ? (
-              <ButtonRow>
-                <ShareButton
-                  href={`#webshare`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (window.navigator.share) {
-                      plausible("Share", { props: { method: "webshare" } });
-                      window.navigator
-                        .share({
-                          text: getShareText(false, true),
-                        })
-                        .then(() => {})
-                        .catch((e) => {});
-                    }
-                  }}>
-                  <Icon
-                    src={"/icons/share.svg"}
-                    alt="Share"
-                    width={24}
-                    height={24}
-                  />{" "}
-                  Andere ...
-                </ShareButton>
-              </ButtonRow>
-            ) : null}
-            <p>
-              Probeer ook eens met{" "}
-              {[3, 4, 5, 6, 7, 8]
-                .filter((x) => x !== WORD_LENGTH)
-                .map((x, i) => (
-                  <span key={`link-${x}`}>
-                    <Link href={`/speel/${x}`}>
-                      <a>{x}</a>
-                    </Link>
-                    {i < 3 ? ", " : i < 4 ? " of " : ""}
-                  </span>
-                ))}{" "}
-              letters.
-              <br />
-              Of{" "}
-              <a
-                href="#"
+              Twitter
+            </Button>
+          </Grid>
+          <Grid sm={6}>
+            <Button
+              size={"sm"}
+              bordered
+              css={{ width: "100%" }}
+              icon={<Icon src={"/icons/facebook.svg"} alt="Facebook" />}
+              onClick={(e) => {
+                plausible("Share", { props: { method: "facebook" } });
+                window.open(
+                  `https://www.facebook.com/share.php?u=${encodeURIComponent(
+                    `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
+                      gameState
+                    )}`
+                  )}`,
+                  "_blank"
+                );
+              }}>
+              Facebook
+            </Button>
+          </Grid>
+          <Grid sm={6}>
+            <Button
+              size={"sm"}
+              bordered
+              css={{ width: "100%" }}
+              icon={<Icon src={"/icons/whatsapp.svg"} alt="Whatsapp" />}
+              onClick={(e) => {
+                plausible("Share", { props: { method: "whatsapp" } });
+                window.open(
+                  `https://api.whatsapp.com/send?text=${encodeURIComponent(
+                    getShareText(false, true)
+                  )}`,
+                  "_blank"
+                );
+              }}>
+              Whatsapp
+            </Button>
+          </Grid>
+          <Grid sm={6}>
+            <Button
+              size={"sm"}
+              bordered
+              css={{ width: "100%" }}
+              icon={<Icon src={"/icons/linkedin.svg"} alt="Linkedin" />}
+              onClick={(e) => {
+                plausible("Share", { props: { method: "linkedin" } });
+                window.open(
+                  `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+                    `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
+                      gameState
+                    )}`
+                  )}`,
+                  "_blank"
+                );
+              }}>
+              Linkedin
+            </Button>
+          </Grid>
+          {window && window.navigator?.share ? (
+            <Grid sm={12}>
+              <Button
+                size={"sm"}
+                icon={<Icon src={"/icons/share.svg"} alt="Share" />}
                 onClick={(e) => {
-                  e.preventDefault();
-                  setGameState({ guesses: [] });
+                  if (window.navigator.share) {
+                    plausible("Share", { props: { method: "webshare" } });
+                    window.navigator
+                      .share({
+                        text: getShareText(false, true),
+                      })
+                      .then(() => {})
+                      .catch((e) => {});
+                  }
                 }}>
-                probeer opnieuw
-              </a>
-              .
-            </p>
-          </Front>
-          <Back>
-            <CloseModal
-              href="#close"
-              onClick={(e) => {
-                e.preventDefault();
-                close();
-              }}>
-              X
-            </CloseModal>
-            <Statistics close={(e) => setShowStats(false)} />
-          </Back>
-        </Inner>
-      </Summary>
-    </ModalWrapper>
+                Andere ...
+              </Button>
+            </Grid>
+          ) : null}
+        </Grid.Container>
+
+        <p>
+          Probeer ook eens met{" "}
+          {[3, 4, 5, 6, 7, 8, 9, 10]
+            .filter((x) => x !== WORD_LENGTH)
+            .map((x, i) => (
+              <span key={`link-${x}`}>
+                <NextLink passHref href={`/speel/${x}`}>
+                  <Link>{x}</Link>
+                </NextLink>
+                {i < 5 ? ", " : i < 6 ? " of " : ""}
+              </span>
+            ))}{" "}
+          letters.
+          <br />
+          Of{" "}
+          <Link
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              setGameState({ guesses: [] });
+            }}>
+            probeer opnieuw
+          </Link>
+          .
+        </p>
+      </Modal.Body>
+    </Modal>
   );
 };
 

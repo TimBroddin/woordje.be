@@ -10,9 +10,9 @@ const GlobalStyle = createGlobalStyle`
         --text-keys: black;
 
         --modal-background: #ffffff;
-        --color-good: #0f0;
-        --color-bad: #666;
-        --color-off: #ff0;
+        --color-good: var(--nextui-colors-green400);
+        --color-bad: var(--nextui-colors-gray600);
+        --color-off: var(--nextui-colors-yellow400);
         --color-unknown: #ccc;
 
         --color-share-button: #2c3e50;
@@ -41,8 +41,8 @@ const GlobalStyle = createGlobalStyle`
 
 
         @media (prefers-contrast: more) {
-            --color-good: #f5793a;
-            --color-off: #85c0f9;
+            --color-good: var(--nextui-colors-yellow500);
+            --color-off: var(--nextui-colors-blue200);
             
         }
     }
@@ -53,15 +53,14 @@ const GlobalStyle = createGlobalStyle`
     body {
     padding: 0;
     margin: 0;
-    font-family: "new-order", sans-serif;
 
 
         background-color: var(--background);
     }
 
     body.colorblind {
-        --color-good: #f5793a;
-        --color-off: #85c0f9;       
+        --color-good: var(--nextui-colors-yellow500);
+            --color-off: var(--nextui-colors-blue200);     
     }
 
     a {

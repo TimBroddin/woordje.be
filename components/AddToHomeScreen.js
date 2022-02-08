@@ -68,15 +68,14 @@ const AddToHomeScreen = ({ modalClosed }) => {
   const visible = useSelector((state) => state.installPopup.visible);
   const statistics = useSelector((state) => state.statistics);
   const isGameOver = useSelector(getIsGameOver);
-  const { visible: showSplash } = useSelector((state) => state.splash);
+  const { currentModal } = useSelector((state) => state.modal);
 
   const dispatch = useDispatch();
 
   return (
     isIphone() &&
     statistics.length &&
-    (!isGameOver || modalClosed) &&
-    !showSplash &&
+    !currentModal &&
     !window?.navigator?.standalone
   );
   visible ? (
