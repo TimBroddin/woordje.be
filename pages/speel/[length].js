@@ -87,6 +87,10 @@ export default function Home({ WORD_LENGTH }) {
   }, [WORD_LENGTH, BOARD_SIZE, dispatch]);
 
   useEffect(() => {
+    dispatch(resetTimer());
+  }, [CORRECTED_GAME_ID, dispatch]);
+
+  useEffect(() => {
     dispatch(getRandomWord());
   }, [dispatch, WORD_LENGTH]);
 
