@@ -72,13 +72,11 @@ const AddToHomeScreen = ({ modalClosed }) => {
 
   const dispatch = useDispatch();
 
-  return (
-    isIphone() &&
+  return isIphone() &&
     statistics.length &&
     !currentModal &&
-    !window?.navigator?.standalone
-  );
-  visible ? (
+    !window?.navigator?.standalone &&
+    visible ? (
     <Root>
       <Popup initial={{ y: 10 }} animate={{ y: 0 }}>
         <Wrapper>
