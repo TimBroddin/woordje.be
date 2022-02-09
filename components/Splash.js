@@ -25,11 +25,12 @@ const Letter = styled(Row)`
 `;
 
 export const LetterFace = styled.div`
-  width: calc(36px - ((var(--word-length, 6) - 6) * var(--shrink-size, 5px)));
-  height: calc(34px - ((var(--word-length, 6) - 6) * var(--shrink-size, 5px)));
+  width: calc(36px - ((var(--word-length, 6) - 6) * var(--shrink-size, 4px)));
+  height: calc(34px - ((var(--word-length, 6) - 6) * var(--shrink-size, 4px)));
   background-color: #ccc;
-  font-size: calc(
-    22px - ((var(--word-length, 6) - 6) * var(--shrink-size, 5px))
+  font-size: max(
+    14px,
+    calc(22px - ((var(--word-length, 6) - 6) * var(--shrink-size, 4px)))
   );
   font-weight: bold;
   text-transform: uppercase;

@@ -30,12 +30,12 @@ import {
   Main,
   Nav,
   InnerWrapper,
-  ScreenWrapper,
   Board,
   Row,
   Letter,
 } from "../../components/styled";
 
+import Header from "../../components/Header";
 import Keyboard from "../../components/Keyboard";
 import Results from "../../components/Results";
 import Footer from "../../components/Footer";
@@ -94,7 +94,7 @@ export default function Home({ WORD_LENGTH }) {
     if (isGameOver) {
       dispatch(setModal("results"));
     }
-  }, [isGameOver]);
+  }, [dispatch, isGameOver]);
 
   useEffect(() => {
     dispatch(resetTimer());
@@ -256,7 +256,7 @@ export default function Home({ WORD_LENGTH }) {
         <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
       <Toaster />
-      <AddToHomeScreen modalClosed={modalClosed} />
+      <AddToHomeScreen />
       {showConfetti ? (
         <Confetti
           numberOfPieces={300}
@@ -267,54 +267,8 @@ export default function Home({ WORD_LENGTH }) {
         />
       ) : null}
 
-      <Main $initializing={!gameState}>
-        <Nav>
-          <Tooltip
-            placement="bottom"
-            content={"Klik hier voor uitleg over Woordje."}>
-            <Button
-              auto
-              light
-              animated={false}
-              onClick={(e) => {
-                dispatch(setModal("splash"));
-              }}
-              icon={
-                <InfoSquare
-                  set="two-tone"
-                  primaryColor="var(--nextui-colors-blue500)"
-                  size="large"
-                />
-              }
-            />
-          </Tooltip>
-          <Text
-            h1
-            size={60}
-            css={{
-              textGradient: "45deg, $blue500 -20%, $pink500 50%",
-            }}
-            weight="bold">
-            Woordje
-          </Text>
-          <Tooltip placement="bottom" content="Klik hier voor je statistieken.">
-            <Button
-              light
-              auto
-              animated={false}
-              onClick={(e) => {
-                dispatch(setModal("statistics"));
-              }}
-              icon={
-                <Chart
-                  set="two-tone"
-                  primaryColor="var(--nextui-colors-pink500)"
-                  size="large"
-                />
-              }
-            />
-          </Tooltip>
-        </Nav>
+      <Main>
+        <Header />
 
         <InnerWrapper>
           <Board

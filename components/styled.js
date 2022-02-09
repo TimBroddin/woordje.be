@@ -16,7 +16,7 @@ export const Main = styled.main`
 
 export const Nav = styled.nav`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 
   h1 {
@@ -26,11 +26,8 @@ export const Nav = styled.nav`
   > div,
   > button {
     flex: 1;
+    justify-self: flex-end;
   }
-`;
-
-export const Title = styled.h1`
-  color: var(--text-primary);
 `;
 
 export const InnerWrapper = styled.div`
@@ -76,7 +73,7 @@ export const Letter = styled(Row)`
   text-transform: uppercase;
   margin: 3px;
   color: #000;
-
+  border-radius: var(--nextui-radii-xs);
   background-color: ${(props) =>
     props.$disabled
       ? "var(--color-bad)"
@@ -92,136 +89,9 @@ export const Letter = styled(Row)`
     props.$focus ? "0 0 3px 3px var(--focus-color)" : "none"};
 `;
 
-export const ModalWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  height: 100%;
-  margin: auto;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const Summary = styled.div`
-  position: relative;
-  width: 90vw;
-
-  @media (min-width: 768px) {
-    width: 320px;
-  }
-
-  h1 {
-    font-size: 16px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    text-align: center;
-    line-height: 1.4;
-    small {
-      font-size: 9px;
-    }
-  }
-
-  h2 {
-    text-transform: uppercase;
-    font-size: 14px;
-  }
-
-  .button {
-    flex: 1;
-  }
-
-  button,
-  a.share {
-    padding: 5px;
-    background: #fff;
-    color: white;
-    border: 1px solid #000;
-    cursor: pointer;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    font-weight: bold;
-    text-transform: uppercase;
-    background: #2980b9;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    font-size: 13px;
-    text-decoration: none;
-    flex: 1;
-    flex-grow: 1;
-    gap: 5px;
-  }
-
-  a {
-    text-decoration: underline;
-  }
-`;
-
 export const Inner = styled(motion.div)`
   position: relative;
 
   text-align: center;
   transform-style: preserve-3d;
-`;
-
-export const Face = styled.div`
-  background: var(--modal-background);
-  text-align: center;
-  padding: 25px 15px;
-  font-size: 14px;
-  color: var(--text-primary);
-  border-radius: 15px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-
-  position: relative;
-
-  top: 0;
-  backface-visibility: hidden;
-  min-height: 510px;
-`;
-
-export const CloseModal = styled.a`
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  display: inline-flex;
-  border-radius: 50%;
-  background-color: var(--text-primary);
-  color: var(--text-primary-inverse);
-  width: 20px;
-  height: 20px;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none !important;
-  font-weight: bold;
-`;
-
-export const Button = styled.a`
-  background-color: var(--color-button);
-  padding: 5px;
-  color: var(--color-button-text);
-  cursor: pointer;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-bottom: 5px;
-  border-radius: 5px;
-  font-size: 13px;
-  flex: 1;
-  flex-grow: 1;
-  gap: 5px;
-  text-decoration: none !important;
-`;
-
-export const ButtonRow = styled.div`
-  display: flex;
-  gap: 5px;
-  justify-content: space-between;
 `;

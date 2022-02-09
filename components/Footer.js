@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import { useGameState } from "../lib/hooks";
@@ -14,21 +14,13 @@ import {
   Card,
   Grid,
   Text,
+  Link,
   Container,
   Row,
   Tooltip,
 } from "@nextui-org/react";
 
 const Wrapper = styled.footer``;
-
-const Random = styled.div`
-  cursor: pointer;
-  font-size: 16px;
-  padding: 5px;
-  margin-top: 5px;
-  display: inline-block;
-  font-family: Courier;
-`;
 
 const Levels = styled.div`
   margin: 24px 0;
@@ -61,8 +53,8 @@ const Footer = () => {
   const plausible = usePlausible();
 
   return (
-    <Wrapper>
-      <Grid.Container gap={1}>
+    <Container gap={1}>
+      <Grid.Container gap={2}>
         <Grid xs={12} sm={6}>
           <Card>
             <Card.Body>
@@ -70,12 +62,12 @@ const Footer = () => {
 
               <Levels>
                 {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
-                  <Link
+                  <NextLink
                     href={`/speel/${level}`}
                     key={`level-${level}`}
                     passHref>
                     <Level $current={WORD_LENGTH === level}>{level}</Level>
-                  </Link>
+                  </NextLink>
                 ))}
               </Levels>
             </Card.Body>
@@ -125,45 +117,49 @@ const Footer = () => {
             <Card.Body>
               <Text css={{ fontWeight: "$bold", color: "$white" }}>
                 Deze Vlaamse versie van Wordle werd gemaakt door{" "}
-                <a
+                <Link
+                  css={{ color: "$white", textDecoration: "underline" }}
                   href="https://www.scam.city/"
                   rel="noreferrer"
                   style={{ textDecoration: "underline" }}
                   target="_blank">
                   ScamCity
-                </a>
+                </Link>
                 /
-                <a
+                <Link
+                  css={{ color: "$white", textDecoration: "underline" }}
                   href="https://broddin.be/"
                   style={{ textDecoration: "underline" }}
                   rel="noreferrer"
                   target="_blank">
                   Tim&nbsp;Broddin
-                </a>
+                </Link>
                 .
               </Text>
               <Text css={{ fontWeight: "$bold", color: "$white" }}>
                 Gebaseerd op{" "}
-                <a
+                <Link
+                  css={{ color: "$white", textDecoration: "underline" }}
                   href="https://www.powerlanguage.co.uk/wordle/"
                   rel="noreferrer"
                   target="_blank">
                   Wordle
-                </a>{" "}
+                </Link>{" "}
                 en{" "}
-                <a
+                <Link
+                  css={{ color: "$white", textDecoration: "underline" }}
                   href="https://github.com/rauchg/wordledge"
                   rel="noreferrer"
                   target="_blank">
                   Wordledge
-                </a>
+                </Link>
                 .
               </Text>
             </Card.Body>
           </Card>
         </Grid>
       </Grid.Container>
-    </Wrapper>
+    </Container>
   );
 };
 

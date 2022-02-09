@@ -9,7 +9,6 @@ const Wrapper = styled.div`
 
   @media (min-width: 768px) {
     padding: 0 30vw;
-    order: 3;
   }
 `;
 const Row = styled.div`

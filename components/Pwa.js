@@ -48,14 +48,14 @@ const Pwa = () => {
         }
       };
 
-      wb.addEventListener("waiting", promptNewVersionAvailable);
+      // wb.addEventListener("waiting", promptNewVersionAvailable);
       wb.addEventListener("installed", (event) => {
         plausible("Install");
       });
 
       wb.register();
     }
-  }, []);
+  }, [plausible]);
 
   return (
     <>
@@ -66,6 +66,7 @@ const Pwa = () => {
         <meta name="apple-mobile-web-app-title" content="Woordje" />
         <meta name="apple-mobile-web-app-name" content="Woordje" />
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="theme-color" content="#ffffff" />
         <meta
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
@@ -74,6 +75,7 @@ const Pwa = () => {
         <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="google" content="notranslate" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {updateAvailable ? (
         <Warning initial={{ y: -30 }} animate={{ y: 0 }}>
