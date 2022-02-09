@@ -20,6 +20,14 @@ const darkTheme = createTheme({
   type: "dark",
 });
 
+const Gate = ({ children }) => {
+  if (typeof window !== "undefined") {
+    return <PersistGate persistor={persistor}>{children}</PersistGate>;
+  } else {
+    return children;
+  }
+};
+
 function MyApp({ Component, pageProps }) {
   return (
     <NextThemesProvider
@@ -37,9 +45,9 @@ function MyApp({ Component, pageProps }) {
               <Pwa />
 
               <Seo letters={pageProps?.WORD_LENGTH} />
-              <PersistGate loading={<Loading />} persistor={persistor}>
+              <Gate>
                 <Component {...pageProps} />
-              </PersistGate>
+              </Gate>
             </>
           </Provider>
         </PlausibleProvider>

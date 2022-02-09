@@ -378,23 +378,33 @@ export default function Home({ gameType, WORD_LENGTH }) {
   );
 }
 
-export const getServerSideProps = async (ctx) => {
-  const { gameType } = ctx.query;
+export const getStaticProps = async (ctx) => {
+  const { gameType } = ctx.params;
 
   if (gameType === "vrttaal") {
     const { Woord } = await getCurrentWordFromAirTable();
     return {
       props: {
-        gameType: ctx.query.gameType,
+        gameType: gameType,
         WORD_LENGTH: Woord.length,
       },
     };
   } else {
     return {
       props: {
-        gameType: `normal-${ctx.query.gameType}`,
-        WORD_LENGTH: parseInt(ctx.query.gameType, 10),
+        gameType: `normal-${gameType}`,
+        WORD_LENGTH: parseInt(gameType, 10),
       },
     };
   }
 };
+
+export async function getStaticPaths() {
+  const items = ["3", "4", "5", "6", "7", "8", "9", "10", "vrttaal"];
+
+  const paths = items.map((item) => ({
+    params: { gameType: item },
+  }));
+
+  return { paths, fallback: "blocking" };
+}

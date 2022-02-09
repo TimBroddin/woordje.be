@@ -31,7 +31,7 @@ const Letter = styled.div`
     color: var(--text-keys);
     padding: 5px;
     border: 1px solid var(--keyboard-border-color);
-    border-radius: 10px;
+    border-radius: var(--nextui-radii-sm);
     flex: 1;
     text-align: center;
     height: 50px;

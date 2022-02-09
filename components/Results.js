@@ -298,7 +298,9 @@ ${gameState.guesses
               Linkedin
             </Button>
           </Grid>
-          {window && window.navigator?.share ? (
+          {typeof window !== "undefined" &&
+          window &&
+          window.navigator?.share ? (
             <Grid sm={12}>
               <Button
                 size={"sm"}
