@@ -12,6 +12,7 @@ import Confetti from "react-confetti";
 import { NextSeo } from "next-seo";
 import { usePlausible } from "next-plausible";
 
+import { getCurrentWordFromAirTable } from "../../lib/airtable";
 import { getGameId } from "../../lib/gameId";
 import { getIsGameOver } from "../../lib/helpers";
 import { useGameState } from "../../lib/hooks";
@@ -43,20 +44,22 @@ import Splash from "../../components/Splash";
 import Statistics from "../../components/Statistics";
 import AddToHomeScreen from "../../components/AddToHomeScreen";
 
-async function check(word, WORD_LENGTH, opts) {
+async function check(word, gameType, WORD_LENGTH, opts) {
   const res = await fetch(
-    `/api/check?word=${encodeURIComponent(word)}&l=${WORD_LENGTH}`,
+    `/api/check?word=${encodeURIComponent(word)}&l=${
+      gameType === "vrttaal" ? gameType : WORD_LENGTH
+    }`,
     opts
   );
   return await res.json();
 }
 
-async function getSolutions() {
-  const res = await fetch(`/api/solutions`);
+async function getSolution(l) {
+  const res = await fetch(`/api/solution?l=${l}`);
   return await res.json();
 }
 
-export default function Home({ WORD_LENGTH }) {
+export default function Home({ gameType, WORD_LENGTH }) {
   const dispatch = useDispatch();
 
   const CORRECTED_GAME_ID = getGameId() - 1;
@@ -73,22 +76,26 @@ export default function Home({ WORD_LENGTH }) {
   const [modalClosed, setModalClosed] = useState(false);
   const { currentModal } = useSelector((state) => state.modal);
 
-  const [solutions, setSolutions] = useState([]);
+  const [solution, setSolution] = useState(false);
   const { width, height } = useWindowSize();
   const isGameOver = useSelector(getIsGameOver);
   const colorBlind = useSelector((state) => state.settings?.colorBlind);
   const plausible = usePlausible();
 
   useEffect(() => {
-    getSolutions().then((solutions) => setSolutions(solutions));
-  }, []);
+    getSolution(gameType === "vrttaal" ? "vrttaal" : WORD_LENGTH).then(
+      (solution) => setSolution(solution)
+    );
+  }, [WORD_LENGTH, gameType]);
+
+  console.log(solution);
 
   useEffect(() => {
     setShowConfetti(false);
     setModalClosed(false);
-    dispatch(setSettings({ WORD_LENGTH, BOARD_SIZE }));
+    dispatch(setSettings({ WORD_LENGTH, BOARD_SIZE, gameType }));
     dispatch(resetTimer());
-  }, [WORD_LENGTH, BOARD_SIZE, dispatch]);
+  }, [WORD_LENGTH, gameType, BOARD_SIZE, dispatch]);
 
   useEffect(() => {
     if (isGameOver) {
@@ -135,7 +142,7 @@ export default function Home({ WORD_LENGTH }) {
 
       let serverResponse;
       try {
-        serverResponse = await check(text, WORD_LENGTH, {
+        serverResponse = await check(text, gameType, WORD_LENGTH, {
           signal: controller.signal,
         });
       } catch (err) {
@@ -174,6 +181,7 @@ export default function Home({ WORD_LENGTH }) {
             addWin({
               gameId: getGameId(),
               WORD_LENGTH,
+              gameType,
               guesses: gameState.guesses.length + 1,
             })
           );
@@ -188,7 +196,7 @@ export default function Home({ WORD_LENGTH }) {
               game: `${CORRECTED_GAME_ID}x${WORD_LENGTH}`,
             },
           });
-          dispatch(addLoss({ gameId: getGameId(), WORD_LENGTH }));
+          dispatch(addLoss({ gameId: getGameId(), gameType, WORD_LENGTH }));
         }
 
         setGameState({
@@ -207,6 +215,7 @@ export default function Home({ WORD_LENGTH }) {
       randomWord,
       setGameState,
       dispatch,
+      gameType,
     ]
   );
 
@@ -353,7 +362,7 @@ export default function Home({ WORD_LENGTH }) {
       <Statistics visible={currentModal === "statistics"} />
       <Results
         visible={currentModal === "results"}
-        solutions={solutions}
+        solution={solution}
         toast={toast}
       />
     </>
@@ -370,9 +379,22 @@ export default function Home({ WORD_LENGTH }) {
 }
 
 export const getServerSideProps = async (ctx) => {
-  return {
-    props: {
-      WORD_LENGTH: parseInt(ctx.query.length, 10),
-    },
-  };
+  const { gameType } = ctx.query;
+
+  if (gameType === "vrttaal") {
+    const { Woord } = await getCurrentWordFromAirTable();
+    return {
+      props: {
+        gameType: ctx.query.gameType,
+        WORD_LENGTH: Woord.length,
+      },
+    };
+  } else {
+    return {
+      props: {
+        gameType: `normal-${ctx.query.gameType}`,
+        WORD_LENGTH: parseInt(ctx.query.gameType, 10),
+      },
+    };
+  }
 };

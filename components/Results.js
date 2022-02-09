@@ -1,5 +1,13 @@
 import { useEffect, useState, useCallback } from "react";
-import { Modal, Button, Grid, Text, Container, Link } from "@nextui-org/react";
+import {
+  Modal,
+  Button,
+  Card,
+  Grid,
+  Text,
+  Container,
+  Link,
+} from "@nextui-org/react";
 
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
@@ -14,14 +22,6 @@ import { getStreak } from "../lib/helpers";
 import { hide } from "../redux/features/modal";
 
 import { usePlausible } from "next-plausible";
-import {
-  ModalWrapper,
-  Summary,
-  Inner,
-  Face,
-  CloseModal,
-  ButtonRow,
-} from "./styled";
 
 const ShareText = styled.div`
   margin-bottom: 20px;
@@ -65,9 +65,11 @@ const Icon = ({ src, alt, width = 20, height = 20 }) => (
   <IconImage src={src} width={width} height={height} alt={alt} />
 );
 
-const Results = ({ solutions, visible, toast }) => {
+const Results = ({ solution, visible, toast }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
-  const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
+  const { WORD_LENGTH, BOARD_SIZE, gameType } = useSelector(
+    (state) => state.settings
+  );
   const streak = useSelector(getStreak);
   const timer = useSelector((state) => state.timer);
   const [gameState, setGameState] = useGameState();
@@ -86,8 +88,12 @@ const Results = ({ solutions, visible, toast }) => {
           html ? '<a href="https://woordje.be">Woordje.be</a>' : "woordje.be"
         } #${CORRECTED_GAME_ID}`,
       ];
-      if (WORD_LENGTH != 6) {
-        header.push(`(${WORD_LENGTH} letters)`);
+      if (gameType === "vrttaal") {
+        header.push(`VRT Taal`);
+      } else {
+        if (WORD_LENGTH != 6) {
+          header.push(`(${WORD_LENGTH} letters)`);
+        }
       }
       header.push(
         `💡 ${
@@ -179,14 +185,19 @@ ${gameState.guesses
       open={visible}
       onClose={closeHandler}>
       <Modal.Header>
-        <Text b>
-          Het woordje was
-          <Redact redacted={redacted} onClick={(s) => setRedacted((s) => !s)}>
-            <strong>{solutions[WORD_LENGTH - 3]}</strong>
-          </Redact>
+        <Text>
+          Het woordje was <Text b>{solution?.word}</Text>
         </Text>
       </Modal.Header>
       <Modal.Body>
+        {solution.meaning ? (
+          <Card>
+            <Text>
+              <Text b>Betekenis:</Text> {solution.meaning}
+            </Text>
+          </Card>
+        ) : null}
+
         {streak > 1 ? (
           <Streak
             initial={{ opacity: 0, scale: 0, rotate: 0 }}
@@ -316,7 +327,12 @@ ${gameState.guesses
             .map((x, i) => (
               <span key={`link-${x}`}>
                 <NextLink passHref href={`/speel/${x}`}>
-                  <Link>{x}</Link>
+                  <Link
+                    onClick={(e) => {
+                      dispatch(hide());
+                    }}>
+                    {x}
+                  </Link>
                 </NextLink>
                 {i < 5 ? ", " : i < 6 ? " of " : ""}
               </span>
@@ -328,6 +344,7 @@ ${gameState.guesses
             href="#"
             onClick={(e) => {
               e.preventDefault();
+              dispatch(hide());
               setGameState({ guesses: [] });
             }}>
             probeer opnieuw

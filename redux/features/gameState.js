@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { customGameResolver } from "../../lib/customGames";
 
 const initialState = {
   gameId: null,
@@ -9,9 +10,12 @@ export const gameStateSlice = createSlice({
   name: "gameState",
   initialState,
   reducers: {
-    setGameState: (state, { payload: { gameId, WORD_LENGTH, guesses } }) => {
+    setGameState: (
+      state,
+      { payload: { gameId, WORD_LENGTH, gameType, guesses } }
+    ) => {
       state.gameId = gameId;
-      state.guesses[WORD_LENGTH] = guesses;
+      state.guesses[customGameResolver(gameType, WORD_LENGTH)] = guesses;
     },
     resetGameState: (state, action) => {
       state.gameId = action.payload;

@@ -1,17 +1,18 @@
 import { Container, Row, Col, Button, Text, Tooltip } from "@nextui-org/react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { InfoSquare, Chart } from "react-iconly";
 
 import { setModal } from "../redux/features/modal";
 
 const Header = () => {
   const dispatch = useDispatch();
-
+  const gameType = useSelector((state) => state.settings.gameType);
   return (
     <Container
       justify="space-between"
       alignItems="center"
-      alignContent="space-between">
+      alignContent="space-between"
+      css={{ marginBottom: "$8" }}>
       <Row justify="space-between" align="center">
         <Col>
           <Tooltip
@@ -40,10 +41,12 @@ const Header = () => {
             size={60}
             css={{
               textGradient: "45deg, $blue500 -20%, $pink500 50%",
+              lineHeight: "60px",
             }}
             weight="bold">
             Woordje
           </Text>
+          {gameType === "vrttaal" ? <Text small>VRT Taal editie</Text> : null}
         </Col>
         <Col>
           <Tooltip

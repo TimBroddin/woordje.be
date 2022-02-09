@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import NextLink from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import { useGameState } from "../lib/hooks";
@@ -24,6 +25,8 @@ const Wrapper = styled.footer``;
 
 const Levels = styled.div`
   margin: 24px 0;
+  display: flex;
+  flex-wrap: wrap;
 `;
 
 const Level = styled.a`
@@ -39,8 +42,9 @@ const Level = styled.a`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
+  width: ${(props) => (props.$wide ? "72px" : "36px")};
   height: 36px;
+  padding: ${(props) => (props.$wide ? "10px" : "0")};
 `;
 
 const Footer = () => {
@@ -48,6 +52,7 @@ const Footer = () => {
   const router = useRouter();
 
   const randomWord = useSelector((state) => state.randomWord);
+  const { gameType } = useSelector((state) => state.settings);
   const colorBlind = useSelector((state) => state.settings?.colorBlind);
   const { WORD_LENGTH } = useSelector((state) => state.settings);
   const plausible = usePlausible();
@@ -66,9 +71,27 @@ const Footer = () => {
                     href={`/speel/${level}`}
                     key={`level-${level}`}
                     passHref>
-                    <Level $current={WORD_LENGTH === level}>{level}</Level>
+                    <Level
+                      $current={
+                        WORD_LENGTH === level && gameType !== "vrttaal"
+                      }>
+                      {level}
+                    </Level>
                   </NextLink>
                 ))}
+                <NextLink
+                  href={`/speel/vrttaal`}
+                  key={`level-vrttaal`}
+                  passHref>
+                  <Level $current={gameType === "vrttaal"} $wide>
+                    <Image
+                      src="/images/vrttaal.svg"
+                      width={100}
+                      height={48}
+                      alt="VRT Taal"
+                    />
+                  </Level>
+                </NextLink>
               </Levels>
             </Card.Body>
           </Card>

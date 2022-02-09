@@ -1,12 +1,26 @@
 import woorden from "../../data/woorden.json";
 import { getGameId } from "../../lib/gameId";
+import { getCurrentWordFromAirTable } from "../../lib/airtable";
 
-export default function handler(req, res) {
+const getGameType = async (l) => {
   const GAME_ID = getGameId();
-  const WORD_LENGTH = parseInt(req.query?.l);
 
-  const WORD = woorden[WORD_LENGTH][GAME_ID];
+  if (l === "vrttaal") {
+    const { Woord } = await getCurrentWordFromAirTable();
+    return {
+      WORD_LENGTH: Woord.length,
+      WORD: Woord.toLowerCase(),
+    };
+  } else {
+    return {
+      WORD_LENGTH: parseInt(l),
+      WORD: woorden[parseInt(l)][GAME_ID],
+    };
+  }
+};
 
+export default async function handler(req, res) {
+  const { WORD_LENGTH, WORD } = await getGameType(req.query.l);
   const word = req.query?.word.toLowerCase().slice(0, WORD.length);
 
   // if the word doesn't match, assert it's a
