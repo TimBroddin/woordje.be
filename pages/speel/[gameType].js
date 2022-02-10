@@ -14,7 +14,10 @@ import { usePlausible } from "next-plausible";
 
 import { getCurrentWordFromAirTable } from "../../lib/airtable";
 import { getGameId } from "../../lib/gameId";
-import { getIsGameOver } from "../../lib/helpers";
+import {
+  getIsGameOver,
+  getSolution as getSsrSolution,
+} from "../../lib/helpers";
 import { useGameState } from "../../lib/hooks";
 
 import { setSettings } from "../../redux/features/settings";
@@ -59,7 +62,7 @@ async function getSolution(l) {
   return await res.json();
 }
 
-export default function Home({ gameType, WORD_LENGTH }) {
+export default function Home({ gameType, WORD_LENGTH, ssrSolution }) {
   const dispatch = useDispatch();
 
   const CORRECTED_GAME_ID = getGameId() - 1;
@@ -76,7 +79,7 @@ export default function Home({ gameType, WORD_LENGTH }) {
   const [modalClosed, setModalClosed] = useState(false);
   const { currentModal } = useSelector((state) => state.modal);
 
-  const [solution, setSolution] = useState(false);
+  const [solution, setSolution] = useState(ssrSolution);
   const { width, height } = useWindowSize();
   const isGameOver = useSelector(getIsGameOver);
   const colorBlind = useSelector((state) => state.settings?.colorBlind);
@@ -387,14 +390,18 @@ export const getStaticProps = async (ctx) => {
       props: {
         gameType: gameType,
         WORD_LENGTH: Woord.length,
+        ssrSolution: await getSsrSolution(gameType),
       },
+      revalidate: 60,
     };
   } else {
     return {
       props: {
         gameType: `normal-${gameType}`,
+        ssrSolution: await getSsrSolution(parseInt(gameType, 10)),
         WORD_LENGTH: parseInt(gameType, 10),
       },
+      revalidate: 60,
     };
   }
 };
