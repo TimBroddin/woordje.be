@@ -1,6 +1,8 @@
 import { Container, Row, Col, Button, Text, Tooltip } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
-import { InfoSquare, Chart } from "react-iconly";
+import InfoSquare from "../lib/iconly/Icons/InfoSquare";
+import Chart from "../lib/iconly/Icons/Chart";
+
 import { usePlausible } from "next-plausible";
 
 import { setModal } from "../redux/features/modal";

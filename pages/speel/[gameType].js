@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Head from "next/head";
 import Image from "next/image";
 import { Button, Text, Tooltip } from "@nextui-org/react";
-import { InfoSquare, Chart } from "react-iconly";
 
 import toast, { Toaster } from "react-hot-toast";
 import useWindowSize from "react-use/lib/useWindowSize";

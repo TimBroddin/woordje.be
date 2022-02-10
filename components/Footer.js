@@ -6,7 +6,8 @@ import { usePlausible } from "next-plausible";
 import { useSelector, useDispatch } from "react-redux";
 import { useTheme as useNextTheme } from "next-themes";
 import { Sun, Moon } from "../lib/icons";
-import { Show, Hide } from "react-iconly";
+import Show from "../lib/iconly/Icons/Show";
+import Hide from "../lib/iconly/Icons/Hide";
 
 import { setColorBlind } from "../redux/features/settings";
 import { getRandomWord } from "../redux/features/randomWord";
