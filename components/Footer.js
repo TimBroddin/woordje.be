@@ -1,24 +1,27 @@
-import { useState, useEffect } from "react";
 import NextLink from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import { useGameState } from "../lib/hooks";
 import { usePlausible } from "next-plausible";
 import { useSelector, useDispatch } from "react-redux";
+import { useTheme as useNextTheme } from "next-themes";
+import { Sun, Moon } from "../lib/icons";
+import { Show, Hide } from "react-iconly";
+
 import { setColorBlind } from "../redux/features/settings";
 import { getRandomWord } from "../redux/features/randomWord";
-import { show as showSplash } from "../redux/features/splash";
-import { ButtonRow } from "./styled";
 import {
   Button,
   Card,
+  Col,
   Grid,
   Text,
   Link,
   Container,
   Row,
+  Switch,
   Tooltip,
+  useTheme,
 } from "@nextui-org/react";
 
 const Wrapper = styled.footer``;
@@ -33,7 +36,7 @@ const Level = styled.a`
   font-size: 16px;
   background-color: ${(props) =>
     props.$current
-      ? "var(--nextui-colors-primaryDark)"
+      ? "var(--nextui-colors-secondaryDark)"
       : "var(--nextui-colors-primaryLight)"};
   color: white;
   text-decoration: none !important;
@@ -49,7 +52,8 @@ const Level = styled.a`
 
 const Footer = () => {
   const dispatch = useDispatch();
-  const router = useRouter();
+  const { setTheme } = useNextTheme();
+  const { isDark, type } = useTheme();
 
   const randomWord = useSelector((state) => state.randomWord);
   const { gameType } = useSelector((state) => state.settings);
@@ -117,14 +121,43 @@ const Footer = () => {
                   <Text b>Instellingen</Text>
                 </Card.Header>
                 <Card.Body>
-                  <Tooltip content={"Hoog contrast voor kleurenblinden."}>
-                    <Button
-                      auto
-                      bordered={colorBlind ? false : true}
-                      onClick={(e) => dispatch(setColorBlind(!colorBlind))}>
-                      Hoog contrast
-                    </Button>
-                  </Tooltip>
+                  <Container gap={0}>
+                    <Row>
+                      <Col span={3} css={{ color: "$green600" }}>
+                        <Switch
+                          checked={colorBlind}
+                          onChange={(e) => dispatch(setColorBlind(!colorBlind))}
+                          iconOff={<Hide set="bold" />}
+                          iconOn={<Show set="bold" />}
+                        />
+                      </Col>
+                      <Col>
+                        <Text>
+                          <Tooltip
+                            content="Handig voor kleurenblinden."
+                            color="primary">
+                            Hoog contrast
+                          </Tooltip>
+                        </Text>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={3} css={{ color: "$yellow600" }}>
+                        <Switch
+                          checked={isDark}
+                          onChange={(e) =>
+                            setTheme(e.target.checked ? "dark" : "light")
+                          }
+                          color="warning"
+                          iconOn={<Sun filled />}
+                          iconOff={<Moon filled />}
+                        />
+                      </Col>
+                      <Col>
+                        <Text>Donkere modus</Text>
+                      </Col>
+                    </Row>
+                  </Container>
                 </Card.Body>
               </Card>
             </Row>
@@ -167,14 +200,6 @@ const Footer = () => {
                   rel="noreferrer"
                   target="_blank">
                   Wordle
-                </Link>{" "}
-                en{" "}
-                <Link
-                  css={{ color: "$white", textDecoration: "underline" }}
-                  href="https://github.com/rauchg/wordledge"
-                  rel="noreferrer"
-                  target="_blank">
-                  Wordledge
                 </Link>
                 .
               </Text>

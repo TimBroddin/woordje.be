@@ -17,13 +17,13 @@ const isIphone = () => {
 };
 
 const Root = styled.div`
-  @media all and (display-mode: standalone) or (display-mode: fullscreen) {
+  @media all and (display-mode: standalone), (display-mode: fullscreen) {
     display: none;
   }
 `;
 const Popup = styled(motion.div)`
   position: fixed;
-  z-index: 9999;
+  z-index: 99999;
   max-width: 380px;
   margin: auto;
   bottom: 20px;
