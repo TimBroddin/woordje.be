@@ -71,8 +71,13 @@ const Pwa = () => {
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
+        <link rel="apple-touch-icon" href="/icons/favicon-180.png" />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="512x512"
+          href="/icons/favicon-512.png"
+        />
         <link rel="manifest" href="/manifest.json" />
         <meta name="google" content="notranslate" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
