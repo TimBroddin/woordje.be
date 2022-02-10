@@ -8,6 +8,7 @@ import {
   Container,
   Link,
 } from "@nextui-org/react";
+import dynamic from "next/dynamic";
 
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
@@ -23,6 +24,8 @@ import { hide } from "../redux/features/modal";
 
 import { usePlausible } from "next-plausible";
 
+const LazyLoadMarkDown = dynamic(() => import("./Markdown"));
+
 const ShareText = styled.div`
   margin-bottom: 20px;
   font-size: 13px;
@@ -34,19 +37,6 @@ const ShareText = styled.div`
   line-height: 14px;
   border: 3px solid #000;
   text-align: center;
-`;
-
-const Redact = styled.span`
-  background-color: var(--nextui-colors-foreground);
-  color: var(--nextui-colors-background);
-  padding: 3px 2px;
-  margin: 0 2px;
-  cursor: pointer;
-
-  strong {
-    filter: blur(${(props) => (props.redacted ? "6px" : "0px")});
-    transition: 1s all;
-  }
 `;
 
 const Streak = styled(motion.h4)`
@@ -73,8 +63,6 @@ const Results = ({ solution, visible, toast }) => {
   const streak = useSelector(getStreak);
   const timer = useSelector((state) => state.timer);
   const [gameState, setGameState] = useGameState();
-  const [redacted, setRedacted] = useState(true);
-  const [showStats, setShowStats] = useState(false);
   const plausible = usePlausible();
   const dispatch = useDispatch();
 
@@ -193,7 +181,8 @@ ${gameState.guesses
         {solution.meaning ? (
           <Card>
             <Text>
-              <Text b>Betekenis:</Text> {solution.meaning}
+              <Text b>Betekenis:</Text>{" "}
+              <LazyLoadMarkDown text={solution.meaning} />
             </Text>
           </Card>
         ) : null}

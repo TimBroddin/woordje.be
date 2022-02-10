@@ -1,11 +1,14 @@
 import { getGameId } from "../lib/gameId";
 import { NextSeo } from "next-seo";
+import Head from "next/head";
 
 const Seo = ({ letters }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;
   return (
     <>
-      <link rel="icon" type="image/png" href="/favicon.png" />
+      <Head>
+        <link rel="icon" type="image/png" href="/favicon.png" />
+      </Head>
       <NextSeo
         title={`Woordje.be #${CORRECTED_GAME_ID} - nederlandstalige Wordle - ${letters} letters`}
         description="Een dagelijks woordspelletje gebaseerd op Wordle. De Vlaamse Wordle, voor België en Nederland. In het Nederlands."

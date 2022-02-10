@@ -3,12 +3,17 @@ import { useEffect } from "react";
 import { useGameState } from "../lib/hooks";
 
 const Wrapper = styled.div`
-  min-width: 100vw;
-  margin: 10px 0px;
+  margin-top: 10px;
   padding: 0px 5px;
 
+  @media (min-width: 480px) {
+    margin-left: calc(-100vw / 2 + 480px / 2);
+    margin-right: calc(-100vw / 2 + 480px / 2);
+  }
   @media (min-width: 768px) {
-    padding: 0 30vw;
+    width: 768px;
+    margin-left: calc(-768px / 2 + 480px / 2);
+    margin-right: calc(-768px / 2 + 480px / 2);
   }
 `;
 const Row = styled.div`

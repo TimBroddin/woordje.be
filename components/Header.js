@@ -1,12 +1,15 @@
 import { Container, Row, Col, Button, Text, Tooltip } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import { InfoSquare, Chart } from "react-iconly";
+import { usePlausible } from "next-plausible";
 
 import { setModal } from "../redux/features/modal";
 
 const Header = () => {
   const dispatch = useDispatch();
   const gameType = useSelector((state) => state.settings.gameType);
+  const plausible = usePlausible();
+
   return (
     <Container
       justify="space-between"
@@ -58,6 +61,8 @@ const Header = () => {
               auto
               animated={false}
               onClick={(e) => {
+                plausible("Statistics");
+
                 dispatch(setModal("statistics"));
               }}
               icon={

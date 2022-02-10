@@ -264,9 +264,7 @@ export default function Home({ gameType, WORD_LENGTH, ssrSolution }) {
           cardType: "summary",
         }}
       />
-      <Head>
-        <link rel="icon" type="image/png" href="/favicon.png" />
-      </Head>
+
       <Toaster />
       <AddToHomeScreen />
       {showConfetti ? (
