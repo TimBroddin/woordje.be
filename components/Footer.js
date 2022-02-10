@@ -123,7 +123,7 @@ const Footer = () => {
                 <Card.Body>
                   <Container gap={0}>
                     <Row>
-                      <Col span={3} css={{ color: "$green600" }}>
+                      <Col span={5} css={{ color: "$green600" }}>
                         <Switch
                           checked={colorBlind}
                           onChange={(e) => dispatch(setColorBlind(!colorBlind))}
@@ -142,7 +142,7 @@ const Footer = () => {
                       </Col>
                     </Row>
                     <Row>
-                      <Col span={3} css={{ color: "$yellow600" }}>
+                      <Col span={5} css={{ color: "$yellow600" }}>
                         <Switch
                           checked={isDark}
                           onChange={(e) =>
