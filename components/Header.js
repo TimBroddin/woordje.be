@@ -33,7 +33,8 @@ const Header = () => {
               icon={
                 <InfoSquare
                   set="two-tone"
-                  primaryColor="var(--nextui-colors-blue500)"
+                  primaryColor="var(--nextui-colors-blue200)"
+                  secondaryColor="var(--nextui-colors-blue500)"
                   size="large"
                 />
               }
@@ -70,7 +71,8 @@ const Header = () => {
               icon={
                 <Chart
                   set="two-tone"
-                  primaryColor="var(--nextui-colors-pink500)"
+                  primaryColor="var(--nextui-colors-pink200)"
+                  secondaryColor="var(--nextui-colors-pink500)"
                   size="large"
                 />
               }

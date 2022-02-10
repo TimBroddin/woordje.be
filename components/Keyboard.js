@@ -33,7 +33,8 @@ const Letter = styled.div`
   user-select: none;
   > span {
     display: block;
-    color: var(--text-keys);
+    color: var(--nextui-colors-text);
+    font-weight: bold;
     padding: 5px;
     border: 1px solid var(--keyboard-border-color);
     border-radius: var(--nextui-radii-sm);

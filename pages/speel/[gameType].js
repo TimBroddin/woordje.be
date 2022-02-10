@@ -13,12 +13,12 @@ import { usePlausible } from "next-plausible";
 
 import { getCurrentWordFromAirTable } from "../../lib/airtable";
 import { getGameId } from "../../lib/gameId";
+import { getIsGameOver } from "../../lib/helpers";
 import {
-  getIsGameOver,
   getSolution as getSsrSolution,
   getRandomWord as getSsrRandomWord,
   getDemoWords as getDemoWords,
-} from "../../lib/helpers";
+} from "../../lib/ssr";
 import { useGameState } from "../../lib/hooks";
 
 import { setSettings } from "../../redux/features/settings";
@@ -97,8 +97,6 @@ export default function Home({
       (solution) => setSolution(solution)
     );
   }, [WORD_LENGTH, gameType]);
-
-  console.log(solution);
 
   useEffect(() => {
     setShowConfetti(false);

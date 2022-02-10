@@ -1,4 +1,4 @@
-import { getRandomWord } from "../../lib/helpers";
+import { getRandomWord } from "../../lib/ssr";
 
 export default function handler(req, res) {
   const WORD_LENGTH = parseInt(req.query?.l);

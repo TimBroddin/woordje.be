@@ -47,6 +47,16 @@ const Facebook = () => {
             min-width: 100vw;
             align-items: center;
             background: linear-gradient(#330d69, #30c4cb);
+            background: linear-gradient(
+              45deg,
+              var(--nextui-colors-blue500) -20%,
+              var(--nextui-colors-pink500) 50%
+            );
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
           }
 
           main > div {
@@ -66,15 +76,15 @@ const Facebook = () => {
           }
 
           .square.correct {
-            background-color: green;
+            background-color: var(--color-good);
           }
 
           .square.incorrect {
-            background-color: black;
+            background-color: var(--color-bad);
           }
 
           .square.off {
-            background-color: yellow;
+            background-color: var(--color-off);
           }
         `}</style>
       </>
