@@ -6,32 +6,6 @@ import styled from "styled-components";
 import { hide } from "../redux/features/modal";
 import { getStatistics } from "../lib/helpers";
 
-const Property = styled.div`
-  font-weight: bold;
-  text-align: center;
-  text-tansform: uppercase;
-  color: white;
-  background-color: var(--headerColor, #000);
-  padding: 2px 0px;
-`;
-const Value = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50px;
-  font-size: 28px;
-  line-height: 9px;
-
-  small {
-    font-size: 9px;
-  }
-`;
-
-const DistributionBox = styled.div`
-  min-width: 100%;
-  border: 1px solid #ccc;
-`;
-
 const DistributionValue = styled.div`
   box-sizing: border-box;
   padding: 5px;
@@ -121,7 +95,12 @@ const Statistics = ({ visible }) => {
       onClose={closeHandler}>
       <Modal.Header>
         <Text>
-          Statistieken voor <Text b>{settings.WORD_LENGTH} tekens</Text>
+          Statistieken voor{" "}
+          {settings.gameType === "vrttaal" ? (
+            <Text b>het VRT Taal woord</Text>
+          ) : (
+            <Text b>{settings.WORD_LENGTH} tekens</Text>
+          )}
         </Text>
       </Modal.Header>
       <Modal.Body>
