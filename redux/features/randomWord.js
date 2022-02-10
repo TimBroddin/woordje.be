@@ -19,7 +19,11 @@ const getRandomWord = createAsyncThunk(
 export const randomWordSlice = createSlice({
   name: "randomWord",
   initialState,
-  reducers: {},
+  reducers: {
+    setRandomWord: (state, { payload }) => {
+      state.value = payload;
+    },
+  },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(getRandomWord.fulfilled, (state, action) => {
@@ -29,7 +33,8 @@ export const randomWordSlice = createSlice({
   },
 });
 
+const { setRandomWord } = randomWordSlice.actions;
 // Action creators are generated for each case reducer function
-export { getRandomWord };
+export { getRandomWord, setRandomWord };
 
 export default randomWordSlice.reducer;

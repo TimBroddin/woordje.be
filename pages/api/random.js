@@ -1,9 +1,7 @@
-import woorden from "../../data/woorden.json";
+import { getRandomWord } from "../../lib/helpers";
 
 export default function handler(req, res) {
   const WORD_LENGTH = parseInt(req.query?.l);
-
-  const idx = Math.floor(Math.random() * woorden[WORD_LENGTH].length);
-  const word = woorden[WORD_LENGTH][idx];
+  const word = getRandomWord(WORD_LENGTH);
   res.status(200).send(word);
 }

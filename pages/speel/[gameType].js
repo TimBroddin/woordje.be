@@ -17,11 +17,13 @@ import { getGameId } from "../../lib/gameId";
 import {
   getIsGameOver,
   getSolution as getSsrSolution,
+  getRandomWord as getSsrRandomWord,
+  getDemoWords as getDemoWords,
 } from "../../lib/helpers";
 import { useGameState } from "../../lib/hooks";
 
 import { setSettings } from "../../redux/features/settings";
-import { getRandomWord } from "../../redux/features/randomWord";
+import { getRandomWord, setRandomWord } from "../../redux/features/randomWord";
 import { addWin, addLoss } from "../../redux/features/statistics";
 import { setInputText } from "../../redux/features/inputText";
 import {
@@ -62,7 +64,13 @@ async function getSolution(l) {
   return await res.json();
 }
 
-export default function Home({ gameType, WORD_LENGTH, ssrSolution }) {
+export default function Home({
+  gameType,
+  WORD_LENGTH,
+  ssrSolution,
+  ssrRandomWord,
+  ssrDemoWords,
+}) {
   const dispatch = useDispatch();
 
   const CORRECTED_GAME_ID = getGameId() - 1;
@@ -111,8 +119,8 @@ export default function Home({ gameType, WORD_LENGTH, ssrSolution }) {
   }, [CORRECTED_GAME_ID, dispatch]);
 
   useEffect(() => {
-    dispatch(getRandomWord());
-  }, [dispatch, WORD_LENGTH]);
+    dispatch(setRandomWord(ssrRandomWord));
+  }, [dispatch, ssrRandomWord]);
 
   useEffect(() => {
     if (fetchControllerRef.current) {
@@ -359,7 +367,7 @@ export default function Home({ gameType, WORD_LENGTH, ssrSolution }) {
         <Footer WORD_LENGTH={WORD_LENGTH} BOARD_SIZE={BOARD_SIZE} />
       </Main>
 
-      <Splash visible={currentModal === "splash"} />
+      <Splash visible={currentModal === "splash"} words={ssrDemoWords} />
       <Statistics visible={currentModal === "statistics"} />
       <Results
         visible={currentModal === "results"}
@@ -389,6 +397,8 @@ export const getStaticProps = async (ctx) => {
         gameType: gameType,
         WORD_LENGTH: Woord.length,
         ssrSolution: await getSsrSolution(gameType),
+        ssrRandomWord: getSsrRandomWord(Woord.length),
+        ssrDemoWords: getDemoWords(Woord.length),
       },
       revalidate: 60,
     };
@@ -398,6 +408,8 @@ export const getStaticProps = async (ctx) => {
         gameType: `normal-${gameType}`,
         ssrSolution: await getSsrSolution(parseInt(gameType, 10)),
         WORD_LENGTH: parseInt(gameType, 10),
+        ssrRandomWord: getSsrRandomWord(parseInt(gameType, 10)),
+        ssrDemoWords: getDemoWords(parseInt(gameType, 10)),
       },
       revalidate: 60,
     };

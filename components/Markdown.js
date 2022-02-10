@@ -17,7 +17,7 @@ const Markdown = ({ text }) => {
 
   useEffect(() => {
     setMarkdownSource(text);
-  }, [text]);
+  }, [setMarkdownSource, text]);
 
   return reactContent;
 };

@@ -131,6 +131,7 @@ ${gameState.guesses
       streak,
       timer?.start,
       timer.value,
+      gameType,
     ]
   );
 

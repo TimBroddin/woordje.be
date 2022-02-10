@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { Modal, Button, Text, Loading } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
 
 import { hide } from "../redux/features/modal";
 
@@ -139,16 +138,9 @@ const Examples = ({ words }) => {
   }
 };
 
-const Splash = ({ visible }) => {
+const Splash = ({ visible, words }) => {
   const dispatch = useDispatch();
   const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
-  const [words, setWords] = useState([]);
-
-  useEffect(() => {
-    fetch(`/api/demo?l=${WORD_LENGTH}`)
-      .then((res) => res.json())
-      .then((w) => setWords(w));
-  }, [WORD_LENGTH]);
 
   const closeHandler = (e) => {
     dispatch(hide());
