@@ -275,7 +275,7 @@ export default function Home({
             "Een dagelijks woordspelletje gebaseerd op Wordle. De Vlaamse Wordle, voor België en Nederland.",
           images: [
             {
-              url: "https://www.woordje.be/twitter.png",
+              url: "https://www.woordje.be/og.png?v=2",
               width: 1200,
               height: 630,
               alt: "Woordje.be",
