@@ -33,7 +33,6 @@ import { setModal } from "../../redux/features/modal";
 
 import {
   Main,
-  Nav,
   InnerWrapper,
   Board,
   Row,

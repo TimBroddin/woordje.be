@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useCallback } from "react";
 import {
   Modal,
   Button,
@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { motion } from "framer-motion";
 
 import NextLink from "next/link";

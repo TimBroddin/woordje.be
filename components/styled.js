@@ -7,27 +7,6 @@ export const Main = styled.main`
   margin: 0 auto;
   min-height: 100vh;
   height: -webkit-fill-available;
-  transition: all 0.2s ease-in-out;
-  opacity: ${(props) => (props.$initializing ? 0 : 1)};
-
-  @media (min-width: 768px) {
-  }
-`;
-
-export const Nav = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  h1 {
-    flex: 2;
-  }
-
-  > div,
-  > button {
-    flex: 1;
-    justify-self: flex-end;
-  }
 `;
 
 export const InnerWrapper = styled.div`
@@ -36,17 +15,6 @@ export const InnerWrapper = styled.div`
     gap: 30px;
     flex-wrap: wrap;
     justify-content: center;
-  }
-`;
-
-export const ScreenWrapper = styled.div`
-  display: contents;
-  @media (max-width: 768px) {
-    min-height: calc(100vh - 40px);
-    align-items: center;
-    justify-content: flex-end;
-    flex-direction: column;
-    display: flex;
   }
 `;
 
@@ -112,11 +80,4 @@ export const LetterBack = styled(LetterFace)`
       : props.$score === "off"
       ? "var(--color-off)"
       : "var(--color-unknown)"};
-`;
-
-export const Inner = styled(motion.div)`
-  position: relative;
-
-  text-align: center;
-  transform-style: preserve-3d;
 `;

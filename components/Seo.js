@@ -1,6 +1,5 @@
 import { getGameId } from "../lib/gameId";
 import { NextSeo } from "next-seo";
-import Head from "next/head";
 
 const Seo = ({ letters }) => {
   const CORRECTED_GAME_ID = getGameId() - 1;

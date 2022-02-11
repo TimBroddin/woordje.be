@@ -1,6 +1,5 @@
-import { Modal, Button, Grid, Text, Card } from "@nextui-org/react";
+import { Modal, Grid, Text, Card } from "@nextui-org/react";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { hide } from "../redux/features/modal";
