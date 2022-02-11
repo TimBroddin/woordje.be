@@ -22,6 +22,7 @@ const Header = () => {
         <Col>
           <Tooltip
             placement="bottom"
+            aria-label="Klik hier voor uitleg over Woordje."
             content={"Klik hier voor uitleg over Woordje."}>
             <Button
               auto
@@ -30,6 +31,7 @@ const Header = () => {
               onClick={(e) => {
                 dispatch(setModal("splash"));
               }}
+              aria-label="Uitleg"
               icon={
                 <InfoSquare
                   set="two-tone"
@@ -58,11 +60,13 @@ const Header = () => {
           <Tooltip
             style={{ float: "right" }}
             placement="bottom"
+            aria-label="Klik hier voor je statistieken."
             content="Klik hier voor je statistieken.">
             <Button
               light
               auto
               animated={false}
+              aria-label="Statistieken"
               onClick={(e) => {
                 plausible("Statistics");
 

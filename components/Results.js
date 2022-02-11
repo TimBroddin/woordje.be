@@ -28,13 +28,13 @@ const LazyLoadMarkDown = dynamic(() => import("./Markdown"));
 
 const ShareText = styled.div`
   margin-bottom: 20px;
-  font-size: 13px;
+  font-size: 16px;
   background: #fff;
   color: #000;
   user-select: all;
   padding: 5px;
   white-space: pre-wrap;
-  line-height: 14px;
+  line-height: 17px;
   border: 3px solid #000;
   text-align: center;
 `;

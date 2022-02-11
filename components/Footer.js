@@ -64,7 +64,7 @@ const Footer = () => {
     <Container gap={1}>
       <Grid.Container gap={2}>
         <Grid xs={12} sm={6}>
-          <Card>
+          <Card role="region">
             <Card.Body>
               <Text b>Level</Text>
 
@@ -82,19 +82,21 @@ const Footer = () => {
                     </Level>
                   </NextLink>
                 ))}
-                <NextLink
-                  href={`/speel/vrttaal`}
-                  key={`level-vrttaal`}
-                  passHref>
-                  <Level $current={gameType === "vrttaal"} $wide>
-                    <Image
-                      src="/images/vrttaal.svg"
-                      width={100}
-                      height={48}
-                      alt="VRT Taal"
-                    />
-                  </Level>
-                </NextLink>
+                {process.env.NEXT_PUBLIC_VRTTAAL ? (
+                  <NextLink
+                    href={`/speel/vrttaal`}
+                    key={`level-vrttaal`}
+                    passHref>
+                    <Level $current={gameType === "vrttaal"} $wide>
+                      <Image
+                        src="/images/vrttaal.svg"
+                        width={100}
+                        height={48}
+                        alt="VRT Taal"
+                      />
+                    </Level>
+                  </NextLink>
+                ) : null}
               </Levels>
             </Card.Body>
           </Card>
@@ -103,6 +105,7 @@ const Footer = () => {
           <Container gap={0}>
             <Row>
               <Card
+                role="region"
                 clickable
                 css={{ marginBottom: "$8" }}
                 onClick={(e) => dispatch(getRandomWord())}>
@@ -115,7 +118,7 @@ const Footer = () => {
               </Card>
             </Row>
             <Row>
-              <Card>
+              <Card role="region">
                 <Card.Header>
                   <Text b>Instellingen</Text>
                 </Card.Header>
@@ -125,6 +128,7 @@ const Footer = () => {
                       <Col span={5} css={{ color: "$green600" }}>
                         <Switch
                           checked={colorBlind}
+                          aria-label="Hoog contrast"
                           onChange={(e) => dispatch(setColorBlind(!colorBlind))}
                           iconOff={<Hide set="bold" />}
                           iconOn={<Show set="bold" />}
@@ -132,6 +136,7 @@ const Footer = () => {
                       </Col>
                       <Col>
                         <Tooltip
+                          aria-label="Handig voor kleurenblinden."
                           content="Handig voor kleurenblinden."
                           color="primary">
                           <Text>Hoog contrast</Text>
@@ -148,6 +153,7 @@ const Footer = () => {
                           color="warning"
                           iconOn={<Sun filled />}
                           iconOff={<Moon filled />}
+                          aria-label="Donkere modus"
                         />
                       </Col>
                       <Col>
@@ -161,7 +167,7 @@ const Footer = () => {
           </Container>
         </Grid>
         <Grid xs={12}>
-          <Card color="gradient" bordered>
+          <Card role="region" color="gradient" bordered>
             <Card.Header>
               <Text b css={{ fontWeight: "$bold", color: "$white" }}>
                 🤵 Over
