@@ -16,6 +16,8 @@ const GlobalStyle = createGlobalStyle`
 
         --color-level: var(--nextui-colors-primaryLight);
         --color-level-active: var(--nextui-colors-secondaryDark);
+        --color-icon-left: var(--nextui-colors-blue200);
+        --color-icon-right: var(--nextui-colors-pink200);
 
         @media (prefers-color-scheme: dark) {
             --text-keys: black;
@@ -29,7 +31,13 @@ const GlobalStyle = createGlobalStyle`
 
         @media (prefers-contrast: more) {
             --color-good: var(--nextui-colors-yellow500);
-            --color-off: var(--nextui-colors-blue200);
+            --color-off: var(--nextui-colors-blue200);     
+
+            --color-level: var(--nextui-colors-primaryDark);
+            --color-level-active: var(--nextui-colors-secondaryDark);
+
+            --color-icon-left: var(--nextui-colors-primaryDark);
+            --color-icon-right: var(--nextui-colors-pink100);
             
         }
     }
@@ -44,6 +52,9 @@ const GlobalStyle = createGlobalStyle`
 
         --color-level: var(--nextui-colors-primaryDark);
         --color-level-active: var(--nextui-colors-secondaryDark);
+
+        --color-icon-left: var(--nextui-colors-primaryDark);
+        --color-icon-right: var(--nextui-colors-primaryDark);
     }
 
 

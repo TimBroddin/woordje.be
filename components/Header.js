@@ -9,9 +9,8 @@ import { setModal } from "../redux/features/modal";
 
 const Header = () => {
   const dispatch = useDispatch();
-  const gameType = useSelector((state) => state.settings.gameType);
+  const { gameType, colorBlind } = useSelector((state) => state.settings);
   const plausible = usePlausible();
-
   return (
     <Container
       justify="space-between"
@@ -34,8 +33,8 @@ const Header = () => {
               aria-label="Uitleg"
               icon={
                 <InfoSquare
-                  set="two-tone"
-                  primaryColor="var(--nextui-colors-blue200)"
+                  set={colorBlind ? "bold" : "two-tone"}
+                  primaryColor="var(--color-icon-left)"
                   secondaryColor="var(--nextui-colors-blue500)"
                   size="large"
                 />
@@ -74,8 +73,8 @@ const Header = () => {
               }}
               icon={
                 <Chart
-                  set="two-tone"
-                  primaryColor="var(--nextui-colors-pink200)"
+                  set={colorBlind ? "bold" : "two-tone"}
+                  primaryColor="var(--color-icon-right)"
                   secondaryColor="var(--nextui-colors-pink500)"
                   size="large"
                 />
