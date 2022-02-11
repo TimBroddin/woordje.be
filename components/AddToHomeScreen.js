@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { hide } from "../redux/features/installPopup";
-import { getIsGameOver } from "../lib/helpers";
+import { getIsGameOverSelector } from "../lib/helpers";
 
 const isIphone = () => {
   if (typeof window !== "undefined") {
@@ -66,7 +66,7 @@ const CloseIcon = styled(Image)``;
 const AddToHomeScreen = ({ modalClosed }) => {
   const visible = useSelector((state) => state.installPopup.visible);
   const statistics = useSelector((state) => state.statistics);
-  const isGameOver = useSelector(getIsGameOver);
+  const isGameOver = useSelector(getIsGameOverSelector);
   const { currentModal } = useSelector((state) => state.modal);
 
   const dispatch = useDispatch();

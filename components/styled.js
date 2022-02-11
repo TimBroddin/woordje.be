@@ -42,7 +42,6 @@ const LetterFace = styled.div`
   text-transform: uppercase;
   margin: 3px;
   color: #000;
-  border-radius: var(--nextui-radii-xs);
 
   position: relative;
 

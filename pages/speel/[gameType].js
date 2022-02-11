@@ -13,7 +13,7 @@ import { usePlausible } from "next-plausible";
 
 import { getCurrentWordFromAirTable } from "../../lib/airtable";
 import { getGameId } from "../../lib/gameId";
-import { getIsGameOver } from "../../lib/helpers";
+import { getIsGameOverSelector, getIsVictorySelector } from "../../lib/helpers";
 import {
   getSolution as getSsrSolution,
   getRandomWord as getSsrRandomWord,
@@ -29,7 +29,7 @@ import {
   stop as stopTimer,
   reset as resetTimer,
 } from "../../redux/features/timer";
-import { setModal } from "../../redux/features/modal";
+import { setModal, hide as hideModal } from "../../redux/features/modal";
 
 import {
   Main,
@@ -47,6 +47,8 @@ import Footer from "../../components/Footer";
 import Splash from "../../components/Splash";
 import Statistics from "../../components/Statistics";
 import AddToHomeScreen from "../../components/AddToHomeScreen";
+
+const STAGGER = 0.15;
 
 async function check(word, gameType, WORD_LENGTH, opts) {
   const res = await fetch(
@@ -78,7 +80,6 @@ export default function Home({
   const randomWord = useSelector((state) => state.randomWord);
 
   const inputText = useSelector((state) => state.inputText).value;
-  const [isFocused, setIsFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(null);
   const fetchControllerRef = useRef(null);
@@ -87,7 +88,8 @@ export default function Home({
 
   const [solution, setSolution] = useState(ssrSolution);
   const { width, height } = useWindowSize();
-  const isGameOver = useSelector(getIsGameOver);
+  const isGameOver = useSelector(getIsGameOverSelector);
+  const isVictory = useSelector(getIsVictorySelector);
   const colorBlind = useSelector((state) => state.settings?.colorBlind);
   const plausible = usePlausible();
 
@@ -101,13 +103,22 @@ export default function Home({
     setShowConfetti(false);
     dispatch(setSettings({ WORD_LENGTH, BOARD_SIZE, gameType }));
     dispatch(resetTimer());
+    dispatch(setInputText(""));
   }, [WORD_LENGTH, gameType, BOARD_SIZE, dispatch]);
 
   useEffect(() => {
-    if (isGameOver) {
-      dispatch(setModal("results"));
+    if (currentModal && !isGameOver) {
+      dispatch(hideModal());
     }
-  }, [dispatch, isGameOver]);
+  }, [currentModal, dispatch, gameType, isGameOver]);
+
+  useEffect(() => {
+    if (isGameOver) {
+      setTimeout(() => {
+        dispatch(setModal("results"));
+      }, WORD_LENGTH * STAGGER * 1000);
+    }
+  }, [dispatch, isGameOver, WORD_LENGTH]);
 
   useEffect(() => {
     dispatch(resetTimer());
@@ -244,7 +255,7 @@ export default function Home({
     hidden: {},
     show: {
       transition: {
-        staggerChildren: 0.15,
+        staggerChildren: STAGGER,
       },
     },
   };

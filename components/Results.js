@@ -203,7 +203,7 @@ ${gameState.guesses
           {getShareText()}
         </ShareText>
         <Container justify="center" display="flex">
-          <Button auto onClick={onCopyToClipboard}>
+          <Button ghost auto onClick={onCopyToClipboard}>
             📋 Kopieer
           </Button>
         </Container>
@@ -215,7 +215,7 @@ ${gameState.guesses
           <Grid sm={6}>
             <Button
               size={"sm"}
-              bordered
+              ghost
               css={{ width: "100%" }}
               icon={<Icon src={"/icons/twitter.svg"} alt="Twitter" />}
               onClick={(e) => {
@@ -233,7 +233,7 @@ ${gameState.guesses
           <Grid sm={6}>
             <Button
               size={"sm"}
-              bordered
+              ghost
               css={{ width: "100%" }}
               icon={<Icon src={"/icons/facebook.svg"} alt="Facebook" />}
               onClick={(e) => {
@@ -253,7 +253,7 @@ ${gameState.guesses
           <Grid sm={6}>
             <Button
               size={"sm"}
-              bordered
+              ghost
               css={{ width: "100%" }}
               icon={<Icon src={"/icons/whatsapp.svg"} alt="Whatsapp" />}
               onClick={(e) => {
@@ -271,7 +271,7 @@ ${gameState.guesses
           <Grid sm={6}>
             <Button
               size={"sm"}
-              bordered
+              ghost
               css={{ width: "100%" }}
               icon={<Icon src={"/icons/linkedin.svg"} alt="Linkedin" />}
               onClick={(e) => {
