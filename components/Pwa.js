@@ -32,9 +32,8 @@ const Pwa = () => {
         }
       };
 
-      // wb.addEventListener("waiting", promptNewVersionAvailable);
-      wb.addEventListener("installed", (event) => {
-        plausible("Install");
+      window.addEventListener("appinstalled", () => {
+        plausible("A2HS");
       });
 
       wb.register();
