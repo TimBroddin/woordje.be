@@ -426,17 +426,24 @@ export const getStaticProps = async (ctx) => {
   const { gameType } = ctx.params;
 
   if (gameType === "vrttaal") {
-    const { Woord } = await getCurrentWordFromAirTable();
-    return {
-      props: {
-        gameType: gameType,
-        WORD_LENGTH: Woord.length,
-        ssrSolution: await getSsrSolution(gameType),
-        ssrRandomWord: getSsrRandomWord(Woord.length),
-        ssrDemoWords: getDemoWords(Woord.length),
-      },
-      revalidate: 60,
-    };
+    try {
+      const { Woord } = await getCurrentWordFromAirTable();
+      return {
+        props: {
+          gameType: gameType,
+          WORD_LENGTH: Woord.length,
+          ssrSolution: await getSsrSolution(gameType),
+          ssrRandomWord: getSsrRandomWord(Woord.length),
+          ssrDemoWords: getDemoWords(Woord.length),
+        },
+        revalidate: 60,
+      };
+    } catch (e) {
+      return {
+        props: {},
+        revalidate: 60,
+      };
+    }
   } else {
     return {
       props: {
