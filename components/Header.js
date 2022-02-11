@@ -48,7 +48,7 @@ const Header = () => {
             size={60}
             css={{
               textGradient: "45deg, $blue500 -20%, $pink500 50%",
-              lineHeight: "60px",
+              lineHeight: "70px",
             }}
             weight="bold">
             Woordje
