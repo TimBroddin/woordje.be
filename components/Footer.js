@@ -28,6 +28,7 @@ const Levels = styled.div`
   margin: 24px 0;
   display: flex;
   flex-wrap: wrap;
+  gap: 10px;
 `;
 
 const Level = styled.a`
@@ -36,7 +37,6 @@ const Level = styled.a`
     props.$current ? "var(--color-level-active)" : "var(--color-level)"};
   color: white;
   text-decoration: none !important;
-  margin: 0 5px 5px 0;
   border-radius: var(--nextui-radii-md);
   display: inline-flex;
   align-items: center;
