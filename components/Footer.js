@@ -33,9 +33,7 @@ const Levels = styled.div`
 const Level = styled.a`
   font-size: 16px;
   background-color: ${(props) =>
-    props.$current
-      ? "var(--nextui-colors-secondaryDark)"
-      : "var(--nextui-colors-primaryLight)"};
+    props.$current ? "var(--color-level-active)" : "var(--color-level)"};
   color: white;
   text-decoration: none !important;
   margin: 0 5px 5px 0;

@@ -14,6 +14,9 @@ const GlobalStyle = createGlobalStyle`
         --focus-color: cyan;
         --keyboard-border-color: #666;
 
+        --color-level: var(--nextui-colors-primaryLight);
+        --color-level-active: var(--nextui-colors-secondaryDark);
+
         @media (prefers-color-scheme: dark) {
             --text-keys: black;
             --text-primary-inverse: #000;
@@ -37,7 +40,10 @@ const GlobalStyle = createGlobalStyle`
 
     body.colorblind {
         --color-good: var(--nextui-colors-yellow500);
-            --color-off: var(--nextui-colors-blue200);     
+        --color-off: var(--nextui-colors-blue200);     
+
+        --color-level: var(--nextui-colors-primaryDark);
+        --color-level-active: var(--nextui-colors-secondaryDark);
     }
 
 
