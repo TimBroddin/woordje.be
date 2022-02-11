@@ -63,7 +63,7 @@ const Footer = () => {
         <Grid xs={12} sm={6}>
           <Card role="region">
             <Card.Body>
-              <Text b>Level</Text>
+              <Text b>Aantal letters</Text>
 
               <Levels>
                 {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
