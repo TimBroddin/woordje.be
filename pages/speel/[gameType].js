@@ -107,8 +107,8 @@ export default function Home({
   }, [WORD_LENGTH, gameType, BOARD_SIZE, dispatch]);
 
   useEffect(() => {
-    if (currentModal && !isGameOver) {
-      dispatch(hideModal());
+    if (currentModal && !isGameOver && currentModal === "results") {
+      //dispatch(hideModal());
     }
   }, [currentModal, dispatch, gameType, isGameOver]);
 
@@ -406,7 +406,7 @@ export default function Home({
       <Splash visible={currentModal === "splash"} words={ssrDemoWords} />
       <Statistics visible={currentModal === "statistics"} />
       <Results
-        visible={currentModal === "results"}
+        visible={currentModal === "results" && isGameOver}
         solution={solution}
         toast={toast}
       />
