@@ -172,7 +172,15 @@ const Footer = () => {
             </Card.Header>
             <Card.Body>
               <Text css={{ fontWeight: "$bold", color: "$white" }}>
-                Deze Vlaamse versie van Wordle werd gemaakt door{" "}
+                Deze Vlaamse versie van{" "}
+                <Link
+                  css={{ color: "$white", textDecoration: "underline" }}
+                  href="https://www.powerlanguage.co.uk/wordle/"
+                  rel="noreferrer"
+                  target="_blank">
+                  Wordle
+                </Link>{" "}
+                werd gemaakt door{" "}
                 <Link
                   css={{ color: "$white", textDecoration: "underline" }}
                   href="https://www.scam.city/"
@@ -189,17 +197,6 @@ const Footer = () => {
                   rel="noreferrer"
                   target="_blank">
                   Tim&nbsp;Broddin
-                </Link>
-                .
-              </Text>
-              <Text css={{ fontWeight: "$bold", color: "$white" }}>
-                Gebaseerd op{" "}
-                <Link
-                  css={{ color: "$white", textDecoration: "underline" }}
-                  href="https://www.powerlanguage.co.uk/wordle/"
-                  rel="noreferrer"
-                  target="_blank">
-                  Wordle
                 </Link>
                 .
               </Text>
