@@ -62,9 +62,10 @@ const Footer = () => {
       <Grid.Container gap={2}>
         <Grid xs={12} sm={6}>
           <Card role="region">
-            <Card.Body>
+            <Card.Header>
               <Text b>Aantal letters</Text>
-
+            </Card.Header>
+            <Card.Body>
               <Levels>
                 {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
                   <NextLink
