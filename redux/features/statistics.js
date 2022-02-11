@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { customGameResolver } from "../../lib/customGames";
 
 const data = {
   winDistribution: [], // array consisting of  tries per gameId, lose = -1
@@ -10,22 +11,29 @@ export const statisticsSlice = createSlice({
   name: "statistics",
   initialState,
   reducers: {
-    addWin: (state, { payload: { gameId, WORD_LENGTH, guesses } }) => {
-      if (!state[WORD_LENGTH]) {
-        state[WORD_LENGTH] = [];
+    addWin: (
+      state,
+      { payload: { gameId, WORD_LENGTH, gameType, guesses } }
+    ) => {
+      const idx = customGameResolver(gameType, WORD_LENGTH);
+
+      if (!state[idx]) {
+        state[idx] = [];
       }
       // don't overwrite already played games
-      if (!state[WORD_LENGTH][gameId]) {
-        state[WORD_LENGTH][gameId] = guesses;
+      if (!state[idx][gameId]) {
+        state[idx][gameId] = guesses;
       }
     },
-    addLoss: (state, { payload: { gameId, WORD_LENGTH } }) => {
-      if (!state[WORD_LENGTH]) {
-        state[WORD_LENGTH] = [];
+    addLoss: (state, { payload: { gameId, gameType, WORD_LENGTH } }) => {
+      const idx = customGameResolver(gameType, WORD_LENGTH);
+
+      if (!state[idx]) {
+        state[idx] = [];
       }
       // don't overwrite already played games
-      if (!state[WORD_LENGTH][gameId]) {
-        state[WORD_LENGTH][gameId] = -1;
+      if (!state[idx][gameId]) {
+        state[idx][gameId] = -1;
       }
     },
   },

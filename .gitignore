@@ -15,6 +15,11 @@
 # production
 /build
 
+/public/sw.js
+/public/sw.js.map
+/public/workbox*
+
+
 # misc
 .DS_Store
 *.pem
@@ -32,3 +37,4 @@ yarn-error.log*
 
 # vercel
 .vercel
+/.env

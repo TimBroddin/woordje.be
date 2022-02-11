@@ -1,16 +1,9 @@
 import styled from "styled-components";
+import { Modal, Button, Text, Loading } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import { ModalWrapper, Summary, CloseModal } from "./styled";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
 
-import { hide as hideSplash } from "../redux/features/splash";
-import { setWordSize } from "../redux/features/settings";
-
-const Title = styled.h1`
-  text-transform: uppercase;
-  font-size: 36px;
-`;
+import { hide } from "../redux/features/modal";
 
 const Board = styled(motion.div)`
   display: flex;
@@ -30,22 +23,13 @@ const Letter = styled(Row)`
   transform-style: preserve-3d;
 `;
 
-const Inner = styled(motion.div)`
-  background: var(--modal-background);
-  text-align: center;
-  padding: 25px 15px;
-  font-size: 12px;
-  color: var(--text-primary);
-  border-radius: 15px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-`;
-
 export const LetterFace = styled.div`
-  width: calc(36px - ((var(--word-length, 6) - 6) * var(--shrink-size, 5px)));
-  height: calc(34px - ((var(--word-length, 6) - 6) * var(--shrink-size, 5px)));
+  width: calc(36px - ((var(--word-length, 6) - 6) * var(--shrink-size, 4px)));
+  height: calc(34px - ((var(--word-length, 6) - 6) * var(--shrink-size, 4px)));
   background-color: #ccc;
-  font-size: calc(
-    22px - ((var(--word-length, 6) - 6) * var(--shrink-size, 5px))
+  font-size: max(
+    14px,
+    calc(22px - ((var(--word-length, 6) - 6) * var(--shrink-size, 4px)))
   );
   font-weight: bold;
   text-transform: uppercase;
@@ -121,10 +105,10 @@ const Examples = ({ words }) => {
             </Letter>
           ))}
         </Board>
-        <p>
-          De letter <strong>{words[0].split("")[0].toUpperCase()}</strong> komt
-          voor in het woord en staat op de <strong>juiste</strong> plaats.
-        </p>
+        <Text>
+          De letter <Text b>{words[0].split("")[0].toUpperCase()}</Text> komt
+          voor in het woord en staat op de <Text b>juiste</Text> plaats.
+        </Text>
 
         <Board initial="hidden" animate="visible" variants={board}>
           {words[1].split("").map((letter, index) => (
@@ -134,11 +118,10 @@ const Examples = ({ words }) => {
             </Letter>
           ))}
         </Board>
-        <p>
-          De letter <strong>{words[1].split("")[2].toUpperCase()}</strong> komt
-          voor in het woord, maar staat <strong>niet</strong> op de juiste
-          plaats.
-        </p>
+        <Text>
+          De letter <Text b>{words[1].split("")[2].toUpperCase()}</Text> komt
+          voor in het woord, maar staat <Text b>niet</Text> op de juiste plaats.
+        </Text>
         <Board initial="hidden" animate="visible" variants={board}>
           {words[2].split("").map((letter, index) => (
             <Letter key={index} variants={item}>
@@ -147,62 +130,55 @@ const Examples = ({ words }) => {
             </Letter>
           ))}
         </Board>
-        <p>Geen enkele letter komt voor in het woord.</p>
+        <Text>Geen enkele letter komt voor in het woord.</Text>
       </div>
     );
   } else {
-    return null;
+    return <Loading size="xl" />;
   }
 };
 
-const Splash = ({}) => {
+const Splash = ({ visible, words }) => {
   const dispatch = useDispatch();
   const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
-  const [words, setWords] = useState([]);
 
-  useEffect(() => {
-    fetch(`/api/demo?l=${WORD_LENGTH}`)
-      .then((res) => res.json())
-      .then((w) => setWords(w));
-  }, [WORD_LENGTH]);
+  const closeHandler = (e) => {
+    dispatch(hide());
+  };
 
   return (
-    <ModalWrapper>
-      <Summary>
-        <Inner
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", duration: 0.8 }}>
-          <CloseModal
-            href="#close"
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch(hideSplash());
-            }}>
-            X
-          </CloseModal>
-          <Title>Woordje</Title>
-          <p>
-            Raad het {WORD_LENGTH}-letterwoord in {BOARD_SIZE} beurten, of
-            minder.
-          </p>
+    <Modal
+      closeButton
+      aria-labelledby="modal-title"
+      open={visible}
+      onClose={closeHandler}>
+      <Modal.Header>
+        <Text size={18}>
+          Welkom bij{" "}
+          <Text b size={18}>
+            Woordje
+          </Text>
+        </Text>
+      </Modal.Header>
+      <Modal.Body>
+        <Text>
+          Raad het {WORD_LENGTH}-letterwoord in {BOARD_SIZE} beurten, of minder.
+        </Text>
 
-          <p>
-            Elke gok moet een geldig woord zijn. Gebruik enter om je woord in te
-            dienen.
-          </p>
+        <Text>
+          Elke gok moet een geldig woord zijn. Gebruik enter om je woord in te
+          dienen.
+        </Text>
+        <Text>Elke dag verschijnt er een nieuwe opgave!</Text>
 
-          <h2>Voorbeelden</h2>
-          <Examples words={words} />
+        <Text h2 size={24} margin={"36px 0 10px 0"}>
+          Voorbeelden
+        </Text>
+        <Examples words={words} />
 
-          <p>Elke dag verschijnt er een nieuwe opgave!</p>
-
-          <button onClick={() => dispatch(hideSplash())}>
-            Gaan met die 🍌
-          </button>
-        </Inner>
-      </Summary>
-    </ModalWrapper>
+        <Button onClick={closeHandler}>Start</Button>
+      </Modal.Body>
+    </Modal>
   );
 };
 

@@ -3,13 +3,17 @@ import { useEffect } from "react";
 import { useGameState } from "../lib/hooks";
 
 const Wrapper = styled.div`
-  min-width: 100vw;
-  margin: 10px 0px;
+  margin-top: 10px;
   padding: 0px 5px;
 
+  @media (min-width: 480px) {
+    margin-left: calc(-100vw / 2 + 480px / 2);
+    margin-right: calc(-100vw / 2 + 480px / 2);
+  }
   @media (min-width: 768px) {
-    padding: 0 30vw;
-    order: 3;
+    width: 768px;
+    margin-left: calc(-768px / 2 + 480px / 2);
+    margin-right: calc(-768px / 2 + 480px / 2);
   }
 `;
 const Row = styled.div`
@@ -29,10 +33,11 @@ const Letter = styled.div`
   user-select: none;
   > span {
     display: block;
-    color: var(--text-keys);
+    color: var(--nextui-colors-text);
+    font-weight: bold;
     padding: 5px;
     border: 1px solid var(--keyboard-border-color);
-    border-radius: 10px;
+    border-radius: var(--nextui-radii-sm);
     flex: 1;
     text-align: center;
     height: 50px;

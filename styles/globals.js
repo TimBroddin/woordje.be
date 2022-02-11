@@ -2,32 +2,21 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
     :root {
-        --background: #ffffff;
-        --text-primary: black;
-        --text-secondary: #999;
-        --text-tertiary: #666;
         --text-primary-inverse: white;
         --text-keys: black;
 
-        --modal-background: #ffffff;
-        --color-good: #0f0;
-        --color-bad: #666;
-        --color-off: #ff0;
-        --color-unknown: #ccc;
+        --color-good: var(--nextui-colors-green400);
+        --color-bad: var(--nextui-colors-gray600);
+        --color-off: var(--nextui-colors-yellow400);
+        --color-unknown: var(--nextui-colors-gray300);
 
-        --color-share-button: #2c3e50;
 
         --focus-color: cyan;
         --keyboard-border-color: #666;
 
         @media (prefers-color-scheme: dark) {
-            --background: #000000;
-            --text-primary: #fff;
-            --text-secondary: #ccc;
-            --text-tertiary: #999;
             --text-keys: black;
             --text-primary-inverse: #000;
-            --modal-background: #333;
 
             --focus-color: rgba(128,128,255,0.8);
             --keyboard-border-color: #999;
@@ -36,33 +25,19 @@ const GlobalStyle = createGlobalStyle`
 
 
         @media (prefers-contrast: more) {
-            --color-good: #f5793a;
-            --color-off: #85c0f9;
+            --color-good: var(--nextui-colors-yellow500);
+            --color-off: var(--nextui-colors-blue200);
+            
         }
     }
 
+    
 
-    html,
-    body {
-    padding: 0;
-    margin: 0;
-    font-family:  -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-        background-color: var(--background);
-    }
+
 
     body.colorblind {
-        --color-good: #f5793a;
-        --color-off: #85c0f9;       
-    }
-
-    a {
-    color: inherit;
-    text-decoration: none;
-    }
-
-    * {
-    box-sizing: border-box;
+        --color-good: var(--nextui-colors-yellow500);
+            --color-off: var(--nextui-colors-blue200);     
     }
 
 
