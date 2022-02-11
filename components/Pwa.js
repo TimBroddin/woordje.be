@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { usePlausible } from "next-plausible";
-import styled from "styled-components";
 
 const Pwa = () => {
   const plausible = usePlausible();

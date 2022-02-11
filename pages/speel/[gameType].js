@@ -33,7 +33,6 @@ import { setModal } from "../../redux/features/modal";
 
 import {
   Main,
-  InnerWrapper,
   Board,
   Row,
   Letter,
@@ -84,7 +83,6 @@ export default function Home({
   const [showConfetti, setShowConfetti] = useState(null);
   const fetchControllerRef = useRef(null);
   const [gameState, setGameState] = useGameState();
-  const [modalClosed, setModalClosed] = useState(false);
   const { currentModal } = useSelector((state) => state.modal);
 
   const [solution, setSolution] = useState(ssrSolution);
@@ -101,7 +99,6 @@ export default function Home({
 
   useEffect(() => {
     setShowConfetti(false);
-    setModalClosed(false);
     dispatch(setSettings({ WORD_LENGTH, BOARD_SIZE, gameType }));
     dispatch(resetTimer());
   }, [WORD_LENGTH, gameType, BOARD_SIZE, dispatch]);
@@ -247,7 +244,7 @@ export default function Home({
     hidden: {},
     show: {
       transition: {
-        staggerChildren: 0.2,
+        staggerChildren: 0.15,
       },
     },
   };
@@ -304,100 +301,94 @@ export default function Home({
       <Main>
         <Header />
 
-        <InnerWrapper>
-          <Board
-            $loading={isLoading}
-            style={{ "--word-length": WORD_LENGTH, "--shrink-size": "4px" }}>
-            {gameState &&
-              gameState.guesses.map((match, i) => (
-                <Row
-                  key={`gs_row${i}`}
-                  variants={row}
-                  initial={
-                    i === gameState.guesses.length - 1 ? "hidden" : "show"
-                  }
-                  animate="show">
-                  {match.map((item, i) => {
-                    return (
-                      <Letter variants={rowItem} key={`letter-${i}`}>
-                        <LetterFront>{item.letter}</LetterFront>
-                        <LetterBack $score={item.score}>
-                          {item.letter}
-                        </LetterBack>
-                      </Letter>
-                    );
-                  })}
-                </Row>
-              ))}
+        <Board
+          $loading={isLoading}
+          style={{ "--word-length": WORD_LENGTH, "--shrink-size": "4px" }}>
+          {gameState &&
+            gameState.guesses.map((match, i) => (
+              <Row
+                key={`gs_row${i}`}
+                variants={row}
+                initial={i === gameState.guesses.length - 1 ? "hidden" : "show"}
+                animate="show">
+                {match.map((item, i) => {
+                  return (
+                    <Letter variants={rowItem} key={`letter-${i}`}>
+                      <LetterFront>{item.letter}</LetterFront>
+                      <LetterBack $score={item.score}>{item.letter}</LetterBack>
+                    </Letter>
+                  );
+                })}
+              </Row>
+            ))}
 
-            {gameState && gameState.guesses.length < BOARD_SIZE
-              ? Array.from(
-                  { length: BOARD_SIZE - gameState.guesses.length },
-                  (_, i) => {
-                    if (i === 0 && !isGameOver) {
-                      return (
-                        <Row
-                          key={`gs_row${
-                            gameState.guesses ? gameState.guesses.length : 0
-                          }`}>
-                          {inputText
-                            .padEnd(WORD_LENGTH, "?")
-                            .split("")
-                            .map((letter, index) => (
-                              <Letter
-                                $focus={
-                                  true &&
-                                  index ===
-                                    Math.min(
-                                      Math.max(0, inputText.length),
-                                      WORD_LENGTH - 1
-                                    )
-                                }
-                                key={`letter-${i}-${index}`}>
-                                <LetterFront>
-                                  {letter === "?" ? null : letter}
-                                </LetterFront>
-                                <LetterBack>
-                                  {letter === "?" ? null : letter}
-                                </LetterBack>
-                              </Letter>
-                            ))}
-                        </Row>
-                      );
-                    } else {
-                      return (
-                        <Row key={`row_${i}`}>
-                          {Array.from({ length: WORD_LENGTH }, (_, j) => (
-                            <Letter $disabled={true} key={`disabled-${i}-${j}`}>
-                              <LetterFront></LetterFront>
-                              <LetterBack></LetterBack>
+          {gameState && gameState.guesses.length < BOARD_SIZE
+            ? Array.from(
+                { length: BOARD_SIZE - gameState.guesses.length },
+                (_, i) => {
+                  if (i === 0 && !isGameOver) {
+                    return (
+                      <Row
+                        key={`gs_row${
+                          gameState.guesses ? gameState.guesses.length : 0
+                        }`}>
+                        {inputText
+                          .padEnd(WORD_LENGTH, "?")
+                          .split("")
+                          .map((letter, index) => (
+                            <Letter
+                              $focus={
+                                true &&
+                                index ===
+                                  Math.min(
+                                    Math.max(0, inputText.length),
+                                    WORD_LENGTH - 1
+                                  )
+                              }
+                              key={`letter-${i}-${index}`}>
+                              <LetterFront>
+                                {letter === "?" ? null : letter}
+                              </LetterFront>
+                              <LetterBack>
+                                {letter === "?" ? null : letter}
+                              </LetterBack>
                             </Letter>
                           ))}
-                        </Row>
-                      );
-                    }
+                      </Row>
+                    );
+                  } else {
+                    return (
+                      <Row key={`row_${i}`}>
+                        {Array.from({ length: WORD_LENGTH }, (_, j) => (
+                          <Letter $disabled={true} key={`disabled-${i}-${j}`}>
+                            <LetterFront></LetterFront>
+                            <LetterBack></LetterBack>
+                          </Letter>
+                        ))}
+                      </Row>
+                    );
                   }
-                )
-              : null}
-          </Board>
-          <Keyboard
-            gameState={gameState}
-            onPress={(l) => {
-              dispatch(
-                setInputText(
-                  `${inputText}${l}`
-                    .toLowerCase()
-                    .replace(/[^a-z]+/g, "")
-                    .slice(0, WORD_LENGTH)
-                )
-              );
-            }}
-            onBackspace={() => {
-              dispatch(setInputText(inputText.slice(0, -1)));
-            }}
-            onSubmit={onSubmit}
-          />
-        </InnerWrapper>
+                }
+              )
+            : null}
+        </Board>
+        <Keyboard
+          gameState={gameState}
+          onPress={(l) => {
+            dispatch(
+              setInputText(
+                `${inputText}${l}`
+                  .toLowerCase()
+                  .replace(/[^a-z]+/g, "")
+                  .slice(0, WORD_LENGTH)
+              )
+            );
+          }}
+          onBackspace={() => {
+            dispatch(setInputText(inputText.slice(0, -1)));
+          }}
+          onSubmit={onSubmit}
+        />
         <Footer WORD_LENGTH={WORD_LENGTH} BOARD_SIZE={BOARD_SIZE} />
       </Main>
 

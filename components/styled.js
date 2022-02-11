@@ -9,15 +9,6 @@ export const Main = styled.main`
   height: -webkit-fill-available;
 `;
 
-export const InnerWrapper = styled.div`
-  @media (min-width: 768px) {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-`;
-
 export const Board = styled.div`
   transition: all 0.2s ease-in-out;
   position: relative;
