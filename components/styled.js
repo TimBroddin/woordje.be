@@ -56,13 +56,23 @@ export const Board = styled.div`
   filter: ${(props) => (props.$loading ? "blur(5px)" : "none")};
 `;
 
-export const Row = styled.div`
+export const Row = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-export const Letter = styled(Row)`
+export const Letter = styled(motion.div)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  text-align: center;
+  transform-style: preserve-3d;
+`;
+
+const LetterFace = styled.div`
   width: calc(46px - ((var(--word-length, 6) - 6) * var(--shrink-size, 5px)));
   height: calc(44px - ((var(--word-length, 6) - 6) * var(--shrink-size, 5px)));
   background-color: #ccc;
@@ -74,6 +84,24 @@ export const Letter = styled(Row)`
   margin: 3px;
   color: #000;
   border-radius: var(--nextui-radii-xs);
+
+  position: relative;
+
+  top: 0;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const LetterFront = styled(LetterFace)``;
+
+export const LetterBack = styled(LetterFace)`
+  transform: rotateY(180deg);
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: ${(props) =>
     props.$disabled
       ? "var(--color-bad)"
@@ -84,9 +112,6 @@ export const Letter = styled(Row)`
       : props.$score === "off"
       ? "var(--color-off)"
       : "var(--color-unknown)"};
-
-  box-shadow: ${(props) =>
-    props.$focus ? "0 0 3px 3px var(--focus-color)" : "none"};
 `;
 
 export const Inner = styled(motion.div)`

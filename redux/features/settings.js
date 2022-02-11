@@ -4,6 +4,7 @@ const initialState = {
   WORD_LENGTH: 6,
   BOARD_SIZE: 7,
   colorBlind: false,
+  pushNotifications: false,
   gameType: "normal",
 };
 
@@ -25,6 +26,9 @@ export const settingsSlice = createSlice({
     },
     setColorBlind: (state, action) => {
       state.colorBlind = action.payload;
+    },
+    setPushNotifications: (state, action) => {
+      state.pushNotifications = action.payload;
     },
   },
 });

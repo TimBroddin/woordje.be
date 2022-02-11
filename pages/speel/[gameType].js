@@ -38,6 +38,8 @@ import {
   Board,
   Row,
   Letter,
+  LetterFront,
+  LetterBack,
 } from "../../components/styled";
 
 import Header from "../../components/Header";
@@ -242,6 +244,24 @@ export default function Home({
     gameState,
   ]);
 
+  const row = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const rowItem = {
+    hidden: {
+      rotateY: 0,
+    },
+    show: {
+      rotateY: 180,
+    },
+  };
+
   return WORD_LENGTH > 2 && WORD_LENGTH < 11 ? (
     <>
       <NextSeo
@@ -291,11 +311,20 @@ export default function Home({
             style={{ "--word-length": WORD_LENGTH, "--shrink-size": "4px" }}>
             {gameState &&
               gameState.guesses.map((match, i) => (
-                <Row key={`gs_row${i}`}>
+                <Row
+                  key={`gs_row${i}`}
+                  variants={row}
+                  initial={
+                    i === gameState.guesses.length - 1 ? "hidden" : "show"
+                  }
+                  animate="show">
                   {match.map((item, i) => {
                     return (
-                      <Letter key={`letter-${i}`} $score={item.score}>
-                        {item.letter}
+                      <Letter variants={rowItem} key={`letter-${i}`}>
+                        <LetterFront>{item.letter}</LetterFront>
+                        <LetterBack $score={item.score}>
+                          {item.letter}
+                        </LetterBack>
                       </Letter>
                     );
                   })}
@@ -308,7 +337,10 @@ export default function Home({
                   (_, i) => {
                     if (i === 0 && !isGameOver) {
                       return (
-                        <Row key="row_input">
+                        <Row
+                          key={`gs_row${
+                            gameState.guesses ? gameState.guesses.length : 0
+                          }`}>
                           {inputText
                             .padEnd(WORD_LENGTH, "?")
                             .split("")
@@ -323,7 +355,12 @@ export default function Home({
                                     )
                                 }
                                 key={`letter-${i}-${index}`}>
-                                {letter === "?" ? null : letter}
+                                <LetterFront>
+                                  {letter === "?" ? null : letter}
+                                </LetterFront>
+                                <LetterBack>
+                                  {letter === "?" ? null : letter}
+                                </LetterBack>
                               </Letter>
                             ))}
                         </Row>
@@ -332,9 +369,10 @@ export default function Home({
                       return (
                         <Row key={`row_${i}`}>
                           {Array.from({ length: WORD_LENGTH }, (_, j) => (
-                            <Letter
-                              $disabled={true}
-                              key={`disabled-${i}-${j}`}></Letter>
+                            <Letter $disabled={true} key={`disabled-${i}-${j}`}>
+                              <LetterFront></LetterFront>
+                              <LetterBack></LetterBack>
+                            </Letter>
                           ))}
                         </Row>
                       );

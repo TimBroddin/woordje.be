@@ -25,8 +25,6 @@ import {
   useTheme,
 } from "@nextui-org/react";
 
-const Wrapper = styled.footer``;
-
 const Levels = styled.div`
   margin: 24px 0;
   display: flex;
@@ -123,7 +121,7 @@ const Footer = () => {
                 </Card.Header>
                 <Card.Body>
                   <Container gap={0}>
-                    <Row>
+                    <Row gap={0}>
                       <Col span={5} css={{ color: "$green600" }}>
                         <Switch
                           checked={colorBlind}
@@ -133,13 +131,11 @@ const Footer = () => {
                         />
                       </Col>
                       <Col>
-                        <Text>
-                          <Tooltip
-                            content="Handig voor kleurenblinden."
-                            color="primary">
-                            Hoog contrast
-                          </Tooltip>
-                        </Text>
+                        <Tooltip
+                          content="Handig voor kleurenblinden."
+                          color="primary">
+                          <Text>Hoog contrast</Text>
+                        </Tooltip>
                       </Col>
                     </Row>
                     <Row>
