@@ -31,8 +31,10 @@ const LetterFace = styled.div`
   justify-content: center;
   align-items: center;
 
-  background-color: ${(props) =>
-    props.$disabled ? "var(--color-bad)" : "#ccc"};
+  background-color: #ccc;
+
+  box-shadow: ${(props) =>
+    props.$focus ? "0 0 3px 1px var(--nextui-colors-purple100)" : "none"};
 `;
 
 export const LetterFront = styled(LetterFace)``;
@@ -66,8 +68,8 @@ const letterVariants = {
 
 const Letter = ({ focus, disabled, score, radius, children }) => {
   return (
-    <LetterContainer $focus={focus} variants={letterVariants}>
-      <LetterFront style={radius} $disabled={disabled}>
+    <LetterContainer variants={letterVariants}>
+      <LetterFront $focus={focus} style={radius} $disabled={disabled}>
         {children}
       </LetterFront>
       <LetterBack style={radius} $disabled={disabled} $score={score}>

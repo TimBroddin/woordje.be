@@ -366,12 +366,11 @@ export default function Home({
                           .map((letter, index) => (
                             <Letter
                               focus={
-                                true &&
                                 index ===
-                                  Math.min(
-                                    Math.max(0, inputText.length),
-                                    WORD_LENGTH - 1
-                                  )
+                                Math.min(
+                                  Math.max(0, inputText.length),
+                                  WORD_LENGTH - 1
+                                )
                               }
                               key={`letter-${i}-${index}`}
                               radius={letterBorderRadius(
