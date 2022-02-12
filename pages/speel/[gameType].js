@@ -269,6 +269,27 @@ export default function Home({
     },
   };
 
+  const letterBorderRadius = (
+    rowIndex,
+    totalRows,
+    letterIndex,
+    totalLLetters
+  ) => {
+    const borderRadius = "7px";
+    if (rowIndex === 0 && letterIndex === 0) {
+      return { borderTopLeftRadius: borderRadius };
+    }
+    if (rowIndex === 0 && letterIndex === totalLLetters - 1) {
+      return { borderTopRightRadius: borderRadius };
+    }
+    if (rowIndex === totalRows - 1 && letterIndex === 0) {
+      return { borderBottomLeftRadius: borderRadius };
+    }
+    if (rowIndex === totalRows - 1 && letterIndex === totalLLetters - 1) {
+      return { borderBottomRightRadius: borderRadius };
+    }
+  };
+
   return WORD_LENGTH > 2 && WORD_LENGTH < 11 ? (
     <>
       <NextSeo
@@ -322,11 +343,28 @@ export default function Home({
                 variants={row}
                 initial={i === gameState.guesses.length - 1 ? "hidden" : "show"}
                 animate="show">
-                {match.map((item, i) => {
+                {match.map((item, k) => {
                   return (
-                    <Letter variants={rowItem} key={`letter-${i}`}>
-                      <LetterFront>{item.letter}</LetterFront>
-                      <LetterBack $score={item.score}>{item.letter}</LetterBack>
+                    <Letter variants={rowItem} key={`letter-${k}`}>
+                      <LetterFront
+                        style={letterBorderRadius(
+                          i,
+                          BOARD_SIZE,
+                          k,
+                          WORD_LENGTH
+                        )}>
+                        {item.letter}
+                      </LetterFront>
+                      <LetterBack
+                        $score={item.score}
+                        style={letterBorderRadius(
+                          i,
+                          BOARD_SIZE,
+                          k,
+                          WORD_LENGTH
+                        )}>
+                        {item.letter}
+                      </LetterBack>
                     </Letter>
                   );
                 })}
@@ -337,12 +375,12 @@ export default function Home({
             ? Array.from(
                 { length: BOARD_SIZE - gameState.guesses.length },
                 (_, i) => {
+                  const idx = gameState.guesses
+                    ? gameState.guesses.length + i
+                    : i;
                   if (i === 0 && !isGameOver) {
                     return (
-                      <Row
-                        key={`gs_row${
-                          gameState.guesses ? gameState.guesses.length : 0
-                        }`}>
+                      <Row key={`gs_row${idx}`}>
                         {inputText
                           .padEnd(WORD_LENGTH, "?")
                           .split("")
@@ -357,10 +395,22 @@ export default function Home({
                                   )
                               }
                               key={`letter-${i}-${index}`}>
-                              <LetterFront>
+                              <LetterFront
+                                style={letterBorderRadius(
+                                  idx,
+                                  BOARD_SIZE,
+                                  index,
+                                  WORD_LENGTH
+                                )}>
                                 {letter === "?" ? null : letter}
                               </LetterFront>
-                              <LetterBack>
+                              <LetterBack
+                                style={letterBorderRadius(
+                                  idx,
+                                  BOARD_SIZE,
+                                  index,
+                                  WORD_LENGTH
+                                )}>
                                 {letter === "?" ? null : letter}
                               </LetterBack>
                             </Letter>
@@ -372,8 +422,20 @@ export default function Home({
                       <Row key={`row_${i}`}>
                         {Array.from({ length: WORD_LENGTH }, (_, j) => (
                           <Letter $disabled={true} key={`disabled-${i}-${j}`}>
-                            <LetterFront></LetterFront>
-                            <LetterBack></LetterBack>
+                            <LetterFront
+                              style={letterBorderRadius(
+                                idx,
+                                BOARD_SIZE,
+                                j,
+                                WORD_LENGTH
+                              )}></LetterFront>
+                            <LetterBack
+                              style={letterBorderRadius(
+                                idx,
+                                BOARD_SIZE,
+                                j,
+                                WORD_LENGTH
+                              )}></LetterBack>
                           </Letter>
                         ))}
                       </Row>
