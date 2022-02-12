@@ -31,16 +31,10 @@ import {
 } from "../../redux/features/timer";
 import { setModal, hide as hideModal } from "../../redux/features/modal";
 
-import {
-  Main,
-  Board,
-  Row,
-  Letter,
-  LetterFront,
-  LetterBack,
-} from "../../components/styled";
+import { Main, Board, Row } from "../../components/styled";
 
 import Header from "../../components/Header";
+import Letter from "../../components/Letter";
 import Keyboard from "../../components/Keyboard";
 import Results from "../../components/Results";
 import Footer from "../../components/Footer";
@@ -345,26 +339,11 @@ export default function Home({
                 animate="show">
                 {match.map((item, k) => {
                   return (
-                    <Letter variants={rowItem} key={`letter-${k}`}>
-                      <LetterFront
-                        style={letterBorderRadius(
-                          i,
-                          BOARD_SIZE,
-                          k,
-                          WORD_LENGTH
-                        )}>
-                        {item.letter}
-                      </LetterFront>
-                      <LetterBack
-                        $score={item.score}
-                        style={letterBorderRadius(
-                          i,
-                          BOARD_SIZE,
-                          k,
-                          WORD_LENGTH
-                        )}>
-                        {item.letter}
-                      </LetterBack>
+                    <Letter
+                      key={`letter-${k}`}
+                      radius={letterBorderRadius(i, BOARD_SIZE, k, WORD_LENGTH)}
+                      score={item.score}>
+                      {item.letter}
                     </Letter>
                   );
                 })}
@@ -386,7 +365,7 @@ export default function Home({
                           .split("")
                           .map((letter, index) => (
                             <Letter
-                              $focus={
+                              focus={
                                 true &&
                                 index ===
                                   Math.min(
@@ -394,25 +373,14 @@ export default function Home({
                                     WORD_LENGTH - 1
                                   )
                               }
-                              key={`letter-${i}-${index}`}>
-                              <LetterFront
-                                style={letterBorderRadius(
-                                  idx,
-                                  BOARD_SIZE,
-                                  index,
-                                  WORD_LENGTH
-                                )}>
-                                {letter === "?" ? null : letter}
-                              </LetterFront>
-                              <LetterBack
-                                style={letterBorderRadius(
-                                  idx,
-                                  BOARD_SIZE,
-                                  index,
-                                  WORD_LENGTH
-                                )}>
-                                {letter === "?" ? null : letter}
-                              </LetterBack>
+                              key={`letter-${i}-${index}`}
+                              radius={letterBorderRadius(
+                                idx,
+                                BOARD_SIZE,
+                                index,
+                                WORD_LENGTH
+                              )}>
+                              {letter === "?" ? null : letter}
                             </Letter>
                           ))}
                       </Row>
@@ -421,22 +389,15 @@ export default function Home({
                     return (
                       <Row key={`row_${i}`}>
                         {Array.from({ length: WORD_LENGTH }, (_, j) => (
-                          <Letter $disabled={true} key={`disabled-${i}-${j}`}>
-                            <LetterFront
-                              style={letterBorderRadius(
-                                idx,
-                                BOARD_SIZE,
-                                j,
-                                WORD_LENGTH
-                              )}></LetterFront>
-                            <LetterBack
-                              style={letterBorderRadius(
-                                idx,
-                                BOARD_SIZE,
-                                j,
-                                WORD_LENGTH
-                              )}></LetterBack>
-                          </Letter>
+                          <Letter
+                            disabled={true}
+                            key={`disabled-${i}-${j}`}
+                            radius={letterBorderRadius(
+                              idx,
+                              BOARD_SIZE,
+                              j,
+                              WORD_LENGTH
+                            )}></Letter>
                         ))}
                       </Row>
                     );
