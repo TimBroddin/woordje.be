@@ -108,11 +108,14 @@ export default function Home({
 
   useEffect(() => {
     if (isGameOver) {
+      getSolution(gameType === "vrttaal" ? "vrttaal" : WORD_LENGTH).then(
+        (solution) => setSolution(solution)
+      );
       setTimeout(() => {
         dispatch(setModal("results"));
       }, WORD_LENGTH * STAGGER * 1000);
     }
-  }, [dispatch, isGameOver, WORD_LENGTH]);
+  }, [dispatch, isGameOver, WORD_LENGTH, gameType]);
 
   useEffect(() => {
     dispatch(resetTimer());
