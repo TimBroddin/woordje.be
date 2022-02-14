@@ -80,7 +80,7 @@ const Footer = () => {
                     </Level>
                   </NextLink>
                 ))}
-                {process.env.NEXT_PUBLIC_VRTTAAL ? (
+                {process.env.NEXT_PUBLIC_VRTTAAL === "1" ? (
                   <NextLink
                     href={`/speel/vrttaal`}
                     key={`level-vrttaal`}
