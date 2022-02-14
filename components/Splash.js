@@ -158,7 +158,7 @@ const Splash = ({ visible, words }) => {
         <Text size={18}>
           Welkom bij{" "}
           <Text b size={18}>
-            {brand.settings}
+            {brand.title}
           </Text>
         </Text>
       </Modal.Header>
