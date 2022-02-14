@@ -4,6 +4,9 @@ import styled from "styled-components";
 import { usePlausible } from "next-plausible";
 import { useSelector, useDispatch } from "react-redux";
 import { useTheme as useNextTheme } from "next-themes";
+import { useRouter } from "next/router";
+
+import { useBrand } from "../lib/hooks";
 import { Sun, Moon } from "../lib/icons";
 import Show from "../lib/iconly/Icons/Show";
 import Hide from "../lib/iconly/Icons/Hide";
@@ -50,7 +53,8 @@ const Footer = () => {
   const dispatch = useDispatch();
   const { setTheme } = useNextTheme();
   const { isDark, type } = useTheme();
-
+  const { locale } = useRouter();
+  const brand = useBrand();
   const randomWord = useSelector((state) => state.randomWord);
   const { gameType } = useSelector((state) => state.settings);
   const colorBlind = useSelector((state) => state.settings?.colorBlind);
@@ -80,7 +84,8 @@ const Footer = () => {
                     </Level>
                   </NextLink>
                 ))}
-                {process.env.NEXT_PUBLIC_VRTTAAL === "1" ? (
+                {process.env.NEXT_PUBLIC_VRTTAAL === "1" &&
+                locale === "nl-BE" ? (
                   <NextLink
                     href={`/speel/vrttaal`}
                     key={`level-vrttaal`}
@@ -173,7 +178,7 @@ const Footer = () => {
             </Card.Header>
             <Card.Body>
               <Text css={{ fontWeight: "$bold", color: "$white" }}>
-                Deze Vlaamse versie van{" "}
+                Deze {brand.local} versie van{" "}
                 <Link
                   css={{ color: "$white", textDecoration: "underline" }}
                   href="https://www.powerlanguage.co.uk/wordle/"

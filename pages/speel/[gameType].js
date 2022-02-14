@@ -485,10 +485,16 @@ export const getStaticProps = async (ctx) => {
 
 export async function getStaticPaths() {
   const items = ["3", "4", "5", "6", "7", "8", "9", "10", "vrttaal"];
+  const locales = ["nl-NL", "nl-BE"];
+  const paths = [];
 
-  const paths = items.map((item) => ({
-    params: { gameType: item },
-  }));
+  items.forEach((item) => {
+    locales.forEach((locale) => {
+      paths.push({
+        params: { gameType: item, locale },
+      });
+    });
+  });
 
   return { paths, fallback: "blocking" };
 }
