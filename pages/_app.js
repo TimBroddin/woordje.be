@@ -46,7 +46,7 @@ function MyApp({ Component, pageProps }) {
             href={brand.alternate_url}
           />
         </Head>
-        <PlausibleProvider domain={brand}>
+        <PlausibleProvider domain={brand.plausible}>
           <Provider store={store}>
             <>
               <GlobalStyle />
