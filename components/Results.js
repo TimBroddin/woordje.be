@@ -17,8 +17,7 @@ import { motion } from "framer-motion";
 
 import NextLink from "next/link";
 import { copyToClipboard, getIsVictory } from "../lib/helpers";
-import { getGameId } from "../lib/gameId";
-import { useGameState } from "../lib/hooks";
+import { useGameState, useBrand, useCorrectedGameId } from "../lib/hooks";
 import { getStreak } from "../lib/helpers";
 import { hide } from "../redux/features/modal";
 
@@ -56,7 +55,8 @@ const Icon = ({ src, alt, width = 20, height = 20 }) => (
 );
 
 const Results = ({ solution, visible, toast }) => {
-  const CORRECTED_GAME_ID = getGameId() - 1;
+  const CORRECTED_GAME_ID = useCorrectedGameId();
+  const brand = useBrand();
   const { WORD_LENGTH, BOARD_SIZE, gameType } = useSelector(
     (state) => state.settings
   );
@@ -72,9 +72,7 @@ const Results = ({ solution, visible, toast }) => {
   const getShareText = useCallback(
     (html = false, addHashtag = false) => {
       const header = [
-        `${
-          html ? '<a href="https://woordje.be">Woordje.be</a>' : "woordje.be"
-        } #${CORRECTED_GAME_ID}`,
+        `${html ? brand.share_html : brand.share_text} #${CORRECTED_GAME_ID}`,
       ];
       if (gameType === "vrttaal") {
         header.push(`VRT Taal`);
@@ -120,7 +118,7 @@ ${gameState.guesses
       if (html) {
         return text.replace(/\n/g, "<br>");
       } else {
-        return `${text}${addHashtag ? "\n#woordje" : ""}`;
+        return `${text}${addHashtag ? "\n" + brand.share_hashtag : ""}`;
       }
     },
     [
@@ -175,7 +173,7 @@ ${gameState.guesses
       onClose={closeHandler}>
       <Modal.Header>
         <Text>
-          Het woordje was <Text b>{solution?.word}</Text>
+          Het woord is <Text b>{solution?.word}</Text>
         </Text>
       </Modal.Header>
       <Modal.Body>
@@ -240,7 +238,7 @@ ${gameState.guesses
                 plausible("Share", { props: { method: "facebook" } });
                 window.open(
                   `https://www.facebook.com/share.php?u=${encodeURIComponent(
-                    `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
+                    `${brand.url}/share/${WORD_LENGTH}/${getEncodedState(
                       gameState
                     )}`
                   )}`,
@@ -278,7 +276,7 @@ ${gameState.guesses
                 plausible("Share", { props: { method: "linkedin" } });
                 window.open(
                   `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                    `https://www.woordje.be/share/${WORD_LENGTH}/${getEncodedState(
+                    `${brand.url}/share/${WORD_LENGTH}/${getEncodedState(
                       gameState
                     )}`
                   )}`,

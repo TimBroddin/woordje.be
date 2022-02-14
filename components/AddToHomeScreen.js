@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { hide } from "../redux/features/installPopup";
+import { useBrand } from "../lib/hooks";
 import { getIsGameOverSelector } from "../lib/helpers";
 
 const isIphone = () => {
@@ -68,6 +69,7 @@ const AddToHomeScreen = ({ modalClosed }) => {
   const statistics = useSelector((state) => state.statistics);
   const isGameOver = useSelector(getIsGameOverSelector);
   const { currentModal } = useSelector((state) => state.modal);
+  const brand = useBrand();
 
   const dispatch = useDispatch();
 
@@ -80,7 +82,7 @@ const AddToHomeScreen = ({ modalClosed }) => {
       <Popup initial={{ y: 10 }} animate={{ y: 0 }}>
         <Wrapper>
           <LabelWrapper>
-            <Label>Zet Woordje op je beginscherm</Label>
+            <Label>Zet {brand.title} op je beginscherm</Label>
             <Label>
               Tap
               <ShareIcon>

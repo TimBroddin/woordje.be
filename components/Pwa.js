@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
+import { useSelector } from "react-redux";
 import { usePlausible } from "next-plausible";
+
+import { useBrand } from "../lib/hooks";
 
 const Pwa = () => {
   const plausible = usePlausible();
   const [updateAvailable, setUpdateAvailable] = useState(false);
+  const brand = useBrand();
 
   useEffect(() => {
     if (
@@ -15,9 +19,7 @@ const Pwa = () => {
       const wb = window.workbox;
       const promptNewVersionAvailable = (event) => {
         if (
-          confirm(
-            "Er is een nieuwe versie van Woordje beschikbaar. Wil je deze laden?"
-          )
+          confirm("Er is een nieuwe versie beschikbaar. Wil je deze laden?")
         ) {
           wb.addEventListener("controlling", (event) => {
             window.location.reload();
@@ -43,11 +45,11 @@ const Pwa = () => {
   return (
     <>
       <Head>
-        <meta name="application-name" content="Woordje" />
+        <meta name="application-name" content={brand.title} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Woordje" />
-        <meta name="apple-mobile-web-app-name" content="Woordje" />
+        <meta name="apple-mobile-web-app-title" content={brand.title} />
+        <meta name="apple-mobile-web-app-name" content={brand.title} />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#ffffff" />
         <meta
@@ -61,7 +63,7 @@ const Pwa = () => {
           sizes="512x512"
           href="/icons/favicon-512.png"
         />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href={`/${brand.manifest}`} />
         <meta name="google" content="notranslate" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
