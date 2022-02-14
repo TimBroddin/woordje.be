@@ -12,6 +12,21 @@ module.exports = withBundleAnalyzer(
       images: {
         domains: ["media.giphy.com"],
       },
+      i18n: {
+        locales: ["nl-NL", "nl-BE"],
+        defaultLocale: "nl-BE",
+
+        domains: [
+          {
+            domain: "www.woordje.be",
+            defaultLocale: "nl-BE",
+          },
+          {
+            domain: "www.woordol.nl",
+            defaultLocale: "nl-NL",
+          },
+        ],
+      },
       async rewrites() {
         return [
           {

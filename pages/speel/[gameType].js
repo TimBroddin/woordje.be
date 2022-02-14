@@ -1,9 +1,7 @@
 import { useCallback, useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import Head from "next/head";
 import Image from "next/image";
-import { Button, Text, Tooltip } from "@nextui-org/react";
 
 import toast, { Toaster } from "react-hot-toast";
 import useWindowSize from "react-use/lib/useWindowSize";
@@ -11,16 +9,18 @@ import Confetti from "react-confetti";
 import { NextSeo } from "next-seo";
 import { usePlausible } from "next-plausible";
 
+// HELPERS & HOOKS
 import { getCurrentWordFromAirTable } from "../../lib/airtable";
 import { getGameId } from "../../lib/gameId";
 import { getIsGameOverSelector, getIsVictorySelector } from "../../lib/helpers";
 import {
   getSolution as getSsrSolution,
   getRandomWord as getSsrRandomWord,
-  getDemoWords as getDemoWords,
+  getDemoWords as getSsrDemoWords,
 } from "../../lib/ssr";
-import { useGameState } from "../../lib/hooks";
+import { useGameState, useBrand, useCorrectedGameId } from "../../lib/hooks";
 
+// REDUX
 import { setSettings } from "../../redux/features/settings";
 import { getRandomWord, setRandomWord } from "../../redux/features/randomWord";
 import { addWin, addLoss } from "../../redux/features/statistics";
@@ -31,8 +31,8 @@ import {
 } from "../../redux/features/timer";
 import { setModal, hide as hideModal } from "../../redux/features/modal";
 
+// COMPONENTS
 import { Main, Board, Row } from "../../components/styled";
-
 import Header from "../../components/Header";
 import Letter from "../../components/Letter";
 import Keyboard from "../../components/Keyboard";
@@ -67,8 +67,7 @@ export default function Home({
   ssrDemoWords,
 }) {
   const dispatch = useDispatch();
-
-  const CORRECTED_GAME_ID = getGameId() - 1;
+  const CORRECTED_GAME_ID = useCorrectedGameId();
   const BOARD_SIZE = WORD_LENGTH + 1;
 
   const randomWord = useSelector((state) => state.randomWord);
@@ -85,6 +84,7 @@ export default function Home({
   const isGameOver = useSelector(getIsGameOverSelector);
   const isVictory = useSelector(getIsVictorySelector);
   const colorBlind = useSelector((state) => state.settings?.colorBlind);
+  const brand = useBrand();
   const plausible = usePlausible();
 
   useEffect(() => {
@@ -290,24 +290,23 @@ export default function Home({
   return WORD_LENGTH > 2 && WORD_LENGTH < 11 ? (
     <>
       <NextSeo
-        title={`Woordje.be #${CORRECTED_GAME_ID} - nederlandstalige Wordle - ${WORD_LENGTH} letters`}
-        description="Een dagelijks woordspelletje gebaseerd op Wordle. De Vlaamse Wordle, voor België en Nederland."
-        canonical="https://www.woordje.be/"
+        title={`${brand.title} #${CORRECTED_GAME_ID} - nederlandstalige Wordle - ${WORD_LENGTH} letters`}
+        description={`${brand.description}`}
+        canonical={brand.url}
         openGraph={{
-          url: "https://www.woordje.be/",
-          title: "Woordje.be",
-          description:
-            "Een dagelijks woordspelletje gebaseerd op Wordle. De Vlaamse Wordle, voor België en Nederland.",
+          url: brand.url,
+          title: `${brand.title} #${CORRECTED_GAME_ID} - nederlandstalige Wordle - ${WORD_LENGTH} letters`,
+          description: brand.description,
           images: [
             {
-              url: "https://www.woordje.be/og.png?v=2",
+              url: `${brand.url}/og.png?v=2`,
               width: 1200,
               height: 630,
-              alt: "Woordje.be",
+              alt: brand.title,
               type: "image/png",
             },
           ],
-          site_name: "Woordje.be",
+          site_name: brand.title,
         }}
         twitter={{
           handle: "@timbroddin",
@@ -460,7 +459,7 @@ export const getStaticProps = async (ctx) => {
           WORD_LENGTH: Woord.length,
           ssrSolution: await getSsrSolution(gameType),
           ssrRandomWord: getSsrRandomWord(Woord.length),
-          ssrDemoWords: getDemoWords(Woord.length),
+          ssrDemoWords: getSsrDemoWords(Woord.length),
         },
         revalidate: 60,
       };
@@ -477,7 +476,7 @@ export const getStaticProps = async (ctx) => {
         ssrSolution: await getSsrSolution(parseInt(gameType, 10)),
         WORD_LENGTH: parseInt(gameType, 10),
         ssrRandomWord: getSsrRandomWord(parseInt(gameType, 10)),
-        ssrDemoWords: getDemoWords(parseInt(gameType, 10)),
+        ssrDemoWords: getSsrDemoWords(parseInt(gameType, 10)),
       },
       revalidate: 60,
     };
@@ -486,10 +485,16 @@ export const getStaticProps = async (ctx) => {
 
 export async function getStaticPaths() {
   const items = ["3", "4", "5", "6", "7", "8", "9", "10", "vrttaal"];
+  const locales = ["nl-NL", "nl-BE"];
+  const paths = [];
 
-  const paths = items.map((item) => ({
-    params: { gameType: item },
-  }));
+  items.forEach((item) => {
+    locales.forEach((locale) => {
+      paths.push({
+        params: { gameType: item, locale },
+      });
+    });
+  });
 
   return { paths, fallback: "blocking" };
 }

@@ -2,10 +2,11 @@ import PlausibleProvider from "next-plausible";
 import { Provider } from "react-redux";
 import { createTheme, NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import Head from "next/head";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
+import { useBrand } from "../lib/hooks";
 import store from "../redux/store";
-import Seo from "../components/Seo";
 import Pwa from "../components/Pwa";
 import GlobalStyle from "../styles/globals";
 
@@ -28,6 +29,7 @@ const Gate = ({ children }) => {
 };
 
 function MyApp({ Component, pageProps }) {
+  const brand = useBrand();
   return (
     <NextThemesProvider
       defaultTheme="system"
@@ -37,13 +39,19 @@ function MyApp({ Component, pageProps }) {
         dark: darkTheme.className,
       }}>
       <NextUIProvider>
+        <Head>
+          <link
+            rel="alternate"
+            hrefLang={brand.alternate_lang}
+            href={brand.alternate_url}
+          />
+        </Head>
         <PlausibleProvider domain="woordje.be">
           <Provider store={store}>
             <>
               <GlobalStyle />
               <Pwa />
 
-              <Seo letters={pageProps?.WORD_LENGTH} />
               <Gate>
                 <Component {...pageProps} />
               </Gate>
