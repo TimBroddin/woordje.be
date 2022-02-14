@@ -46,7 +46,7 @@ function MyApp({ Component, pageProps }) {
             href={brand.alternate_url}
           />
         </Head>
-        <PlausibleProvider domain={"woordje.be"}>
+        <PlausibleProvider domain={brand}>
           <Provider store={store}>
             <>
               <GlobalStyle />

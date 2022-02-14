@@ -15,6 +15,7 @@ module.exports = withBundleAnalyzer(
       i18n: {
         locales: ["nl-NL", "nl-BE"],
         defaultLocale: "nl-BE",
+        localeDetection: false,
 
         domains: [
           {
