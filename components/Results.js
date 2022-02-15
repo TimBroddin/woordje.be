@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
-import styled from "styled-components";
+import { styled } from "../styles/stitches.config";
 import { motion } from "framer-motion";
 
 import NextLink from "next/link";
@@ -25,30 +25,29 @@ import { usePlausible } from "next-plausible";
 
 const LazyLoadMarkDown = dynamic(() => import("./Markdown"));
 
-const ShareText = styled.div`
-  margin-bottom: 20px;
-  font-size: 16px;
-  background: #fff;
-  color: #000;
-  user-select: all;
-  padding: 5px;
-  white-space: pre-wrap;
-  line-height: 17px;
-  border: 3px solid #000;
-  text-align: center;
-`;
+const ShareText = styled("div", {
+  marginBottom: "20px",
+  fontSize: "16px",
+  background: "#fff",
+  color: "#000",
+  userSelect: "all",
+  padding: "5px",
+  whiteSpace: "pre-wrap",
+  lineHeight: "17px",
+  border: "3px solid #000",
+  textAlign: "center",
+});
 
-const Streak = styled(motion.h4)`
-  font-size: 22px;
-  margin: 0;
-  margin-bottom: 10px;
-  backface-visibility: hidden;
-  text-align: center;
-`;
+const Streak = styled(motion.h4, {
+  fontSize: "22px",
+  margin: 0,
+  marginBottom: "10px",
+  textAlign: "center",
+});
 
-const IconImage = styled(Image)`
-  margin-right: 15px;
-`;
+const IconImage = styled(Image, {
+  marginRight: "15px",
+});
 
 const Icon = ({ src, alt, width = 20, height = 20 }) => (
   <IconImage src={src} width={width} height={height} alt={alt} />

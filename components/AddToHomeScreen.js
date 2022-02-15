@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import styled from "styled-components";
+import { styled } from "../styles/stitches.config";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { hide } from "../redux/features/installPopup";
@@ -16,53 +16,58 @@ const isIphone = () => {
   }
 };
 
-const Root = styled.div`
-  @media all and (display-mode: standalone), (display-mode: fullscreen) {
-    display: none;
-  }
-`;
-const Popup = styled(motion.div)`
-  position: fixed;
-  z-index: 99999;
-  max-width: 380px;
-  margin: auto;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-`;
-const Wrapper = styled.div`
-  display: flex;
-  background-color: #ffffff;
-  align-items: center;
-  justify-content: space-around;
-  flex-direction: row;
-  border-radius: 5px;
-  padding: 10px;
-  margin: 0 20px;
-  box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.2);
+const Root = styled("div", {
+  "@media all and (display-mode: standalone), (display-mode: fullscreen)": {
+    display: "none",
+  },
+});
 
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: -10px;
-    border-top: solid 10px #ffffff;
-    border-left: solid 10px transparent;
-    border-right: solid 10px transparent;
-  }
-`;
-const LabelWrapper = styled.div`
-  text-align: center;
-  color: #202020;
-`;
-const Label = styled.div`
-  font-size: 14px;
-`;
+const Popup = styled("motion.div", {
+  position: "fixed",
+  zIndex: 99999,
+  maxWidth: "380px",
+  margin: "auto",
+  bottom: "20px",
+  left: 0,
+  right: 0,
+});
 
-const CloseWrapper = styled.div``;
-const ShareIcon = styled.span`
-  margin: 10px 10px 0 10px;
-`;
-const CloseIcon = styled(Image)``;
+const Wrapper = styled("div", {
+  display: "flex",
+  backgroundColor: "#ffffff",
+  alignItems: "center",
+  justifyContent: "space-around",
+  flexDirection: "row",
+  borderRadius: "5px",
+  padding: "10px",
+  margin: "0 20px",
+  boxShadow: "0px 0px 40px 0px rgba(0, 0, 0, 0.2)",
+
+  "&::after": {
+    content: "",
+    position: "absolute",
+    bottom: "-10px",
+    borderTop: "solid 10px #ffffff",
+    borderLeft: "solid 10px transparent",
+    borderRight: "solid 10px transparent",
+  },
+});
+
+const LabelWrapper = styled("div", {
+  textAlign: "center",
+  color: "#202020",
+});
+
+const Label = styled("div", {
+  fontSize: "14px",
+});
+
+const CloseWrapper = styled("div");
+const ShareIcon = styled("span", {
+  margin: "10px 10px 0 10px",
+});
+
+const CloseIcon = Image;
 
 const AddToHomeScreen = ({ modalClosed }) => {
   const visible = useSelector((state) => state.installPopup.visible);

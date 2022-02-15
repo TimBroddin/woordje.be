@@ -8,6 +8,7 @@ import { persistStore } from "redux-persist";
 import { useBrand } from "../lib/hooks";
 import store from "../redux/store";
 import Pwa from "../components/Pwa";
+import globaStyles from "../styles/globals";
 import GlobalStyle from "../styles/globals";
 
 let persistor = persistStore(store);
@@ -30,6 +31,7 @@ const Gate = ({ children }) => {
 
 function MyApp({ Component, pageProps }) {
   const brand = useBrand();
+  GlobalStyle();
   return (
     <NextThemesProvider
       defaultTheme="system"
@@ -49,7 +51,6 @@ function MyApp({ Component, pageProps }) {
         <PlausibleProvider domain={brand.plausible}>
           <Provider store={store}>
             <>
-              <GlobalStyle />
               <Pwa />
 
               <Gate>

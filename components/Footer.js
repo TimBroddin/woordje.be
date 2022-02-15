@@ -1,6 +1,6 @@
 import NextLink from "next/link";
 import Image from "next/image";
-import styled from "styled-components";
+import { styled } from "../styles/stitches.config";
 import { usePlausible } from "next-plausible";
 import { useSelector, useDispatch } from "react-redux";
 import { useTheme as useNextTheme } from "next-themes";
@@ -27,27 +27,43 @@ import {
   useTheme,
 } from "@nextui-org/react";
 
-const Levels = styled.div`
-  margin: 24px 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-`;
+const Levels = styled("div", {
+  margin: "24px 0",
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "10px",
+});
 
-const Level = styled.a`
-  font-size: 16px;
-  background-color: ${(props) =>
-    props.$current ? "var(--color-level-active)" : "var(--color-level)"};
-  color: white;
-  text-decoration: none !important;
-  border-radius: var(--nextui-radii-md);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: ${(props) => (props.$wide ? "72px" : "36px")};
-  height: 36px;
-  padding: ${(props) => (props.$wide ? "10px" : "0")};
-`;
+const Level = styled("a", {
+  fontSize: "16px",
+  color: "white",
+  textDecoration: "none !important",
+  borderRadius: "var(--nextui-radii-md)",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "36px",
+  width: "36px",
+  padding: "0px",
+
+  variants: {
+    active: {
+      true: {
+        backgroundColor: "var(--color-level-active)",
+      },
+      false: {
+        backgroundColor: "var(--color-level)",
+      },
+    },
+    wide: {
+      true: {
+        width: "72px",
+        padding: "10px",
+      },
+      false: {},
+    },
+  },
+});
 
 const Footer = () => {
   const dispatch = useDispatch();
@@ -77,9 +93,7 @@ const Footer = () => {
                     key={`level-${level}`}
                     passHref>
                     <Level
-                      $current={
-                        WORD_LENGTH === level && gameType !== "vrttaal"
-                      }>
+                      active={WORD_LENGTH === level && gameType !== "vrttaal"}>
                       {level}
                     </Level>
                   </NextLink>
@@ -90,7 +104,7 @@ const Footer = () => {
                     href={`/speel/vrttaal`}
                     key={`level-vrttaal`}
                     passHref>
-                    <Level $current={gameType === "vrttaal"} $wide>
+                    <Level active={gameType === "vrttaal"} wide>
                       <Image
                         src="/images/vrttaal.svg"
                         width={100}

@@ -330,7 +330,7 @@ export default function Home({
         <Header />
 
         <Board
-          $loading={isLoading}
+          loading={isLoading}
           style={{ "--word-length": WORD_LENGTH, "--shrink-size": "4px" }}>
           {gameState &&
             gameState.guesses.map((match, i) => (
