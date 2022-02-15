@@ -89,13 +89,21 @@ const letterVariants = {
   },
 };
 
-const Letter = ({ focus, disabled, score, radius, children }) => {
+const Letter = ({ focus, disabled, score, radius, children, small }) => {
   return (
     <LetterContainer variants={letterVariants}>
-      <LetterFront focus={focus} style={radius} disabled={disabled}>
+      <LetterFront
+        focus={focus}
+        style={radius}
+        disabled={disabled}
+        small={small}>
         {children}
       </LetterFront>
-      <LetterBack style={radius} disabled={disabled} score={score}>
+      <LetterBack
+        style={radius}
+        disabled={disabled}
+        score={score}
+        small={small}>
         {children}
       </LetterBack>
     </LetterContainer>
