@@ -1,18 +1,11 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
-import { CssBaseline } from "@nextui-org/react";
-import { getCssText } from "../styles/stitches.config";
+import { CssBaseline, getCssText } from "@nextui-org/react";
 
 export default class MyDocument extends Document {
   render() {
     return (
       <Html lang="nl" translate="no">
-        <Head>
-          <style
-            id="woordje-stitches"
-            dangerouslySetInnerHTML={{ __html: getCssText() }}
-          />
-          {CssBaseline.flush()}
-        </Head>
+        <Head>{CssBaseline.flush()}</Head>
         <body>
           <Main />
           <NextScript />

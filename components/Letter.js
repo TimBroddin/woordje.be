@@ -1,4 +1,4 @@
-import { styled } from "../styles/stitches.config";
+import { styled } from "@nextui-org/react";
 import { motion } from "framer-motion";
 
 export const LetterContainer = styled(motion.div, {

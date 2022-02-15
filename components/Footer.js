@@ -1,6 +1,5 @@
 import NextLink from "next/link";
 import Image from "next/image";
-import { styled } from "../styles/stitches.config";
 import { usePlausible } from "next-plausible";
 import { useSelector, useDispatch } from "react-redux";
 import { useTheme as useNextTheme } from "next-themes";
@@ -25,6 +24,7 @@ import {
   Switch,
   Tooltip,
   useTheme,
+  styled,
 } from "@nextui-org/react";
 
 const Levels = styled("div", {

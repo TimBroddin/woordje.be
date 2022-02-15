@@ -1,5 +1,4 @@
-import { styled } from "../styles/stitches.config";
-import { Modal, Button, Text, Loading } from "@nextui-org/react";
+import { Modal, Button, Text, Loading, styled } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 

@@ -1,6 +1,5 @@
-import { Modal, Grid, Text, Card } from "@nextui-org/react";
+import { Modal, Grid, Text, Card, styled } from "@nextui-org/react";
 import { useSelector, useDispatch } from "react-redux";
-import { styled } from "../styles/stitches.config";
 
 import { hide } from "../redux/features/modal";
 import { getStatistics } from "../lib/helpers";

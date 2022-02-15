@@ -1,4 +1,4 @@
-import { globalCss } from "@stitches/react";
+import { globalCss } from "@nextui-org/react";
 
 const GlobalStyle = globalCss({
   ":root": {

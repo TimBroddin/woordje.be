@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { styled } from "../styles/stitches.config";
+import { styled } from "@nextui-org/react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { hide } from "../redux/features/installPopup";

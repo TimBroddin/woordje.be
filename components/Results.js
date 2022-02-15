@@ -7,12 +7,13 @@ import {
   Text,
   Container,
   Link,
+  styled,
 } from "@nextui-org/react";
+
 import dynamic from "next/dynamic";
 
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
-import { styled } from "../styles/stitches.config";
 import { motion } from "framer-motion";
 
 import NextLink from "next/link";
@@ -121,14 +122,17 @@ ${gameState.guesses
       }
     },
     [
-      BOARD_SIZE,
+      brand.share_html,
+      brand.share_text,
+      brand.share_hashtag,
       CORRECTED_GAME_ID,
-      WORD_LENGTH,
+      gameType,
       gameState,
+      BOARD_SIZE,
       streak,
       timer?.start,
       timer.value,
-      gameType,
+      WORD_LENGTH,
     ]
   );
 
@@ -213,6 +217,7 @@ ${gameState.guesses
             <Button
               size={"sm"}
               ghost
+              color="primary"
               css={{ width: "100%" }}
               icon={<Icon src={"/icons/twitter.svg"} alt="Twitter" />}
               onClick={(e) => {
@@ -231,6 +236,7 @@ ${gameState.guesses
             <Button
               size={"sm"}
               ghost
+              color="primary"
               css={{ width: "100%" }}
               icon={<Icon src={"/icons/facebook.svg"} alt="Facebook" />}
               onClick={(e) => {
@@ -251,6 +257,8 @@ ${gameState.guesses
             <Button
               size={"sm"}
               ghost
+              bordered
+              color="primary"
               css={{ width: "100%" }}
               icon={<Icon src={"/icons/whatsapp.svg"} alt="Whatsapp" />}
               onClick={(e) => {
@@ -269,6 +277,7 @@ ${gameState.guesses
             <Button
               size={"sm"}
               ghost
+              color="primary"
               css={{ width: "100%" }}
               icon={<Icon src={"/icons/linkedin.svg"} alt="Linkedin" />}
               onClick={(e) => {
