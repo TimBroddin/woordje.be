@@ -200,7 +200,7 @@ ${gameState.guesses
           {getShareText()}
         </ShareText>
         <Container justify="center" display="flex">
-          <Button ghost auto onClick={onCopyToClipboard}>
+          <Button bordered auto onClick={onCopyToClipboard}>
             📋 Kopieer
           </Button>
         </Container>

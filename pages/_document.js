@@ -6,13 +6,7 @@ export default class MyDocument extends Document {
   render() {
     return (
       <Html lang="nl" translate="no">
-        <Head>
-          <style
-            id="woordje-stitches"
-            dangerouslySetInnerHTML={{ __html: getCssText() }}
-          />
-          {CssBaseline.flush()}
-        </Head>
+        <Head>{CssBaseline.flush()}</Head>
         <body>
           <Main />
           <NextScript />
