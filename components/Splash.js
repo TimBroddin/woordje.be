@@ -2,7 +2,7 @@ import { Modal, Button, Text, Loading, styled } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 
-import { useBrand } from "../lib/hooks";
+import { useTranslations } from "../lib/i18n";
 import { hide } from "../redux/features/modal";
 import Letter from "./Letter";
 
@@ -74,7 +74,7 @@ const Examples = ({ words }) => {
 
 const Splash = ({ visible, words }) => {
   const dispatch = useDispatch();
-  const brand = useBrand();
+  const translations = useTranslations();
   const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
 
   const closeHandler = (e) => {
@@ -91,7 +91,7 @@ const Splash = ({ visible, words }) => {
         <Text size={18}>
           Welkom bij{" "}
           <Text b size={18}>
-            {brand.title}
+            {translations.title}
           </Text>
         </Text>
       </Modal.Header>

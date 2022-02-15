@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useTheme as useNextTheme } from "next-themes";
 import { useRouter } from "next/router";
 
-import { useBrand } from "../lib/hooks";
+import { useTranslations } from "../lib/i18n";
 import { Sun, Moon } from "../lib/icons";
 import Show from "../lib/iconly/Icons/Show";
 import Hide from "../lib/iconly/Icons/Hide";
@@ -70,7 +70,7 @@ const Footer = () => {
   const { setTheme } = useNextTheme();
   const { isDark, type } = useTheme();
   const { locale } = useRouter();
-  const brand = useBrand();
+  const translations = useTranslations();
   const randomWord = useSelector((state) => state.randomWord);
   const { gameType } = useSelector((state) => state.settings);
   const colorBlind = useSelector((state) => state.settings?.colorBlind);
@@ -192,7 +192,7 @@ const Footer = () => {
             </Card.Header>
             <Card.Body>
               <Text css={{ fontWeight: "$bold", color: "$white" }}>
-                Deze {brand.local} versie van{" "}
+                Deze {translations.local} versie van{" "}
                 <Link
                   css={{ color: "$white", textDecoration: "underline" }}
                   href="https://www.powerlanguage.co.uk/wordle/"
@@ -225,9 +225,9 @@ const Footer = () => {
         </Grid>
       </Grid.Container>
       <Text small css={{ margin: "$8", color: "$text" }}>
-        Check ook {brand.alternate_flag}{" "}
-        <Link href={brand.alternate_url} css={{ color: "$primary" }}>
-          {brand.alternate_title}
+        {translations.alternate_cta} {translations.alternate_flag}{" "}
+        <Link href={translations.alternate_url} css={{ color: "$primary" }}>
+          {translations.alternate_title}
         </Link>
         .
       </Text>

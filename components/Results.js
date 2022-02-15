@@ -18,7 +18,8 @@ import { motion } from "framer-motion";
 
 import NextLink from "next/link";
 import { copyToClipboard, getIsVictory } from "../lib/helpers";
-import { useGameState, useBrand, useCorrectedGameId } from "../lib/hooks";
+import { useGameState, useCorrectedGameId } from "../lib/hooks";
+import { useTranslations } from "../lib/i18n";
 import { getStreak } from "../lib/helpers";
 import { hide } from "../redux/features/modal";
 
@@ -56,7 +57,7 @@ const Icon = ({ src, alt, width = 20, height = 20 }) => (
 
 const Results = ({ solution, visible, toast }) => {
   const CORRECTED_GAME_ID = useCorrectedGameId();
-  const brand = useBrand();
+  const translations = useTranslations();
   const { WORD_LENGTH, BOARD_SIZE, gameType } = useSelector(
     (state) => state.settings
   );
@@ -72,7 +73,9 @@ const Results = ({ solution, visible, toast }) => {
   const getShareText = useCallback(
     (html = false, addHashtag = false) => {
       const header = [
-        `${html ? brand.share_html : brand.share_text} #${CORRECTED_GAME_ID}`,
+        `${
+          html ? translations.share_html : translations.share_text
+        } #${CORRECTED_GAME_ID}`,
       ];
       if (gameType === "vrttaal") {
         header.push(`VRT Taal`);
@@ -118,13 +121,13 @@ ${gameState.guesses
       if (html) {
         return text.replace(/\n/g, "<br>");
       } else {
-        return `${text}${addHashtag ? "\n" + brand.share_hashtag : ""}`;
+        return `${text}${addHashtag ? "\n" + translations.share_hashtag : ""}`;
       }
     },
     [
-      brand.share_html,
-      brand.share_text,
-      brand.share_hashtag,
+      translations.share_html,
+      translations.share_text,
+      translations.share_hashtag,
       CORRECTED_GAME_ID,
       gameType,
       gameState,
@@ -243,7 +246,7 @@ ${gameState.guesses
                 plausible("Share", { props: { method: "facebook" } });
                 window.open(
                   `https://www.facebook.com/share.php?u=${encodeURIComponent(
-                    `${brand.url}/share/${WORD_LENGTH}/${getEncodedState(
+                    `${translations.url}/share/${WORD_LENGTH}/${getEncodedState(
                       gameState
                     )}`
                   )}`,
@@ -284,7 +287,7 @@ ${gameState.guesses
                 plausible("Share", { props: { method: "linkedin" } });
                 window.open(
                   `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                    `${brand.url}/share/${WORD_LENGTH}/${getEncodedState(
+                    `${translations.url}/share/${WORD_LENGTH}/${getEncodedState(
                       gameState
                     )}`
                   )}`,

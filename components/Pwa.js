@@ -3,12 +3,12 @@ import Head from "next/head";
 import { useSelector } from "react-redux";
 import { usePlausible } from "next-plausible";
 
-import { useBrand } from "../lib/hooks";
+import { useTranslations } from "../lib/i18n";
 
 const Pwa = () => {
   const plausible = usePlausible();
   const [updateAvailable, setUpdateAvailable] = useState(false);
-  const brand = useBrand();
+  const translations = useTranslations();
 
   useEffect(() => {
     if (
@@ -45,11 +45,11 @@ const Pwa = () => {
   return (
     <>
       <Head>
-        <meta name="application-name" content={brand.title} />
+        <meta name="application-name" content={translations.title} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content={brand.title} />
-        <meta name="apple-mobile-web-app-name" content={brand.title} />
+        <meta name="apple-mobile-web-app-title" content={translations.title} />
+        <meta name="apple-mobile-web-app-name" content={translations.title} />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#ffffff" />
         <meta
@@ -63,7 +63,7 @@ const Pwa = () => {
           sizes="512x512"
           href="/icons/favicon-512.png"
         />
-        <link rel="manifest" href={`/${brand.manifest}`} />
+        <link rel="manifest" href={`/${translations.manifest}`} />
         <meta name="google" content="notranslate" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
