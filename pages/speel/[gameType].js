@@ -491,7 +491,8 @@ export async function getStaticPaths() {
   items.forEach((item) => {
     locales.forEach((locale) => {
       paths.push({
-        params: { gameType: item, locale },
+        params: { gameType: item },
+        locale,
       });
     });
   });
