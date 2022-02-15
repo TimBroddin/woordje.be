@@ -80,9 +80,9 @@ const Letter = styled("div", {
 
 const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
   const [gameState] = useGameState();
-  const brand = useBrand();
+  const translations = useTranslations();
 
-  const letterRows = brand.keyboard.map((row) => row.split(""));
+  const letterRows = translations.keyboard.map((row) => row.split(""));
 
   const used = {};
   if (gameState && gameState.guesses) {
