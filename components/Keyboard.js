@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useEffect } from "react";
-import { useGameState } from "../lib/hooks";
+import { useGameState, useBrand } from "../lib/hooks";
 
 const Wrapper = styled.div`
   margin-top: 10px;
@@ -63,10 +63,9 @@ const Letter = styled.div`
 
 const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
   const [gameState] = useGameState();
+  const brand = useBrand();
 
-  const letterRows = ["azertyuiop", "qsdfghjklm", "wxcvbn"].map((row) =>
-    row.split("")
-  );
+  const letterRows = brand.keyboard.map((row) => row.split(""));
 
   const used = {};
   if (gameState && gameState.guesses) {
