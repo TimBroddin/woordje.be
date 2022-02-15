@@ -224,12 +224,14 @@ const Footer = () => {
           </Card>
         </Grid>
       </Grid.Container>
-      <Text small css={{ margin: "$8", color: "$text" }}>
-        {translations.alternate_cta} {translations.alternate_flag}{" "}
-        <Link href={translations.alternate_url} css={{ color: "$primary" }}>
-          {translations.alternate_title}
-        </Link>
-        .
+      <Text>
+        <Text small css={{ margin: "$8", paddingBottom: "$8", color: "$text" }}>
+          {translations.alternate_cta} {translations.alternate_flag}{" "}
+          <Link href={translations.alternate_url} css={{ color: "$primary" }}>
+            {translations.alternate_title}
+          </Link>
+          .
+        </Text>
       </Text>
     </Container>
   );
