@@ -5,9 +5,10 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import Head from "next/head";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
-import { useBrand } from "../lib/hooks";
+import { useTranslations } from "../lib/i18n";
 import store from "../redux/store";
 import Pwa from "../components/Pwa";
+import globaStyles from "../styles/globals";
 import GlobalStyle from "../styles/globals";
 
 let persistor = persistStore(store);
@@ -29,7 +30,8 @@ const Gate = ({ children }) => {
 };
 
 function MyApp({ Component, pageProps }) {
-  const brand = useBrand();
+  const translations = useTranslations();
+  GlobalStyle();
   return (
     <NextThemesProvider
       defaultTheme="system"
@@ -42,14 +44,13 @@ function MyApp({ Component, pageProps }) {
         <Head>
           <link
             rel="alternate"
-            hrefLang={brand.alternate_lang}
-            href={brand.alternate_url}
+            hrefLang={translations.alternate_lang}
+            href={translations.alternate_url}
           />
         </Head>
-        <PlausibleProvider domain={brand.plausible}>
+        <PlausibleProvider domain={translations.plausible}>
           <Provider store={store}>
             <>
-              <GlobalStyle />
               <Pwa />
 
               <Gate>

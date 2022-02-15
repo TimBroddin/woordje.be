@@ -1,12 +1,11 @@
 import NextLink from "next/link";
 import Image from "next/image";
-import styled from "styled-components";
 import { usePlausible } from "next-plausible";
 import { useSelector, useDispatch } from "react-redux";
 import { useTheme as useNextTheme } from "next-themes";
 import { useRouter } from "next/router";
 
-import { useBrand } from "../lib/hooks";
+import { useTranslations } from "../lib/i18n";
 import { Sun, Moon } from "../lib/icons";
 import Show from "../lib/iconly/Icons/Show";
 import Hide from "../lib/iconly/Icons/Hide";
@@ -25,36 +24,53 @@ import {
   Switch,
   Tooltip,
   useTheme,
+  styled,
 } from "@nextui-org/react";
 
-const Levels = styled.div`
-  margin: 24px 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-`;
+const Levels = styled("div", {
+  margin: "24px 0",
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "10px",
+});
 
-const Level = styled.a`
-  font-size: 16px;
-  background-color: ${(props) =>
-    props.$current ? "var(--color-level-active)" : "var(--color-level)"};
-  color: white;
-  text-decoration: none !important;
-  border-radius: var(--nextui-radii-md);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: ${(props) => (props.$wide ? "72px" : "36px")};
-  height: 36px;
-  padding: ${(props) => (props.$wide ? "10px" : "0")};
-`;
+const Level = styled("a", {
+  fontSize: "16px",
+  color: "white",
+  textDecoration: "none !important",
+  borderRadius: "var(--nextui-radii-md)",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "36px",
+  width: "36px",
+  padding: "0px",
+
+  variants: {
+    active: {
+      true: {
+        backgroundColor: "var(--color-level-active)",
+      },
+      false: {
+        backgroundColor: "var(--color-level)",
+      },
+    },
+    wide: {
+      true: {
+        width: "72px",
+        padding: "10px",
+      },
+      false: {},
+    },
+  },
+});
 
 const Footer = () => {
   const dispatch = useDispatch();
   const { setTheme } = useNextTheme();
   const { isDark, type } = useTheme();
   const { locale } = useRouter();
-  const brand = useBrand();
+  const translations = useTranslations();
   const randomWord = useSelector((state) => state.randomWord);
   const { gameType } = useSelector((state) => state.settings);
   const colorBlind = useSelector((state) => state.settings?.colorBlind);
@@ -77,9 +93,7 @@ const Footer = () => {
                     key={`level-${level}`}
                     passHref>
                     <Level
-                      $current={
-                        WORD_LENGTH === level && gameType !== "vrttaal"
-                      }>
+                      active={WORD_LENGTH === level && gameType !== "vrttaal"}>
                       {level}
                     </Level>
                   </NextLink>
@@ -90,7 +104,7 @@ const Footer = () => {
                     href={`/speel/vrttaal`}
                     key={`level-vrttaal`}
                     passHref>
-                    <Level $current={gameType === "vrttaal"} $wide>
+                    <Level active={gameType === "vrttaal"} wide>
                       <Image
                         src="/images/vrttaal.svg"
                         width={100}
@@ -178,7 +192,7 @@ const Footer = () => {
             </Card.Header>
             <Card.Body>
               <Text css={{ fontWeight: "$bold", color: "$white" }}>
-                Deze {brand.local} versie van{" "}
+                Deze {translations.local} versie van{" "}
                 <Link
                   css={{ color: "$white", textDecoration: "underline" }}
                   href="https://www.powerlanguage.co.uk/wordle/"
@@ -210,12 +224,14 @@ const Footer = () => {
           </Card>
         </Grid>
       </Grid.Container>
-      <Text small css={{ margin: "$8", color: "$text" }}>
-        Check ook {brand.alternate_flag}{" "}
-        <Link href={brand.alternate_url} css={{ color: "$primary" }}>
-          {brand.alternate_title}
-        </Link>
-        .
+      <Text>
+        <Text small css={{ margin: "$8", paddingBottom: "$8", color: "$text" }}>
+          {translations.alternate_cta} {translations.alternate_flag}{" "}
+          <Link href={translations.alternate_url} css={{ color: "$primary" }}>
+            {translations.alternate_title}
+          </Link>
+          .
+        </Text>
       </Text>
     </Container>
   );

@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useCorrectedGameId } from "../../../lib/hooks";
 
 const Facebook = ({ length, hash }) => {
-  const { brand } = useSelector((state) => state.settings);
+  const { translations } = useSelector((state) => state.settings);
   const CORRECTED_GAME_ID = useCorrectedGameId();
   const router = useRouter();
   const lines = hash.match(new RegExp(`.{1,${length}}`, "g"));
@@ -22,7 +22,7 @@ const Facebook = ({ length, hash }) => {
     router.push("/");
   }, [router]);
 
-  const title = `${brand.title} #${CORRECTED_GAME_ID} ${
+  const title = `${translations.title} #${CORRECTED_GAME_ID} ${
     length !== 6 ? `(${length} tekens)` : ""
   } - ${tries}/${length + 1}`;
 
@@ -30,20 +30,20 @@ const Facebook = ({ length, hash }) => {
     <>
       <NextSeo
         title={title}
-        description={brand.description}
+        description={translations.description}
         openGraph={{
           title,
-          description: brand.description,
+          description: translations.description,
           images: [
             {
               url: `https://www.woordje.be/api/fb?length=${length}&hash=${hash}`,
               width: 1200,
               height: 630,
-              alt: brand.title,
+              alt: translations.title,
               type: "image/png",
             },
           ],
-          site_name: brand.title,
+          site_name: translations.title,
         }}
         twitter={{
           handle: "@timbroddin",

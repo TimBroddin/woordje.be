@@ -1,34 +1,33 @@
-import { Modal, Grid, Text, Card } from "@nextui-org/react";
+import { Modal, Grid, Text, Card, styled } from "@nextui-org/react";
 import { useSelector, useDispatch } from "react-redux";
-import styled from "styled-components";
 
 import { hide } from "../redux/features/modal";
 import { getStatistics } from "../lib/helpers";
 
-const DistributionValue = styled.div`
-  box-sizing: border-box;
-  padding: 5px;
-`;
+const DistributionValue = styled("div", {
+  boxSizing: "border-box",
+  padding: "5px",
+});
 
-const DistributionRow = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 5fr;
-  grid-auto-rows: 20px;
-  grid-gap: 5px;
-  align-items: center;
-`;
+const DistributionRow = styled("div", {
+  display: "grid",
+  gridTemplateColumns: "1fr 5fr",
+  gridAutoRows: "20px",
+  gridGap: "5px",
+  alignItems: "center",
+});
 
-const DistributionLabel = styled.div`
-  text-align: center;
-`;
+const DistributionLabel = styled("div", {
+  textAlign: "center",
+});
 
-const DistributionBarWrapper = styled.div``;
+const DistributionBarWrapper = styled("div");
 
-const DistributionBar = styled.div`
-  background: #d35400;
-  color: white;
-  padding: 1px;
-`;
+const DistributionBar = styled("div", {
+  background: "#d35400",
+  color: "white",
+  padding: "1px",
+});
 
 const Box = ({ title, num, pct, color, large, children }) => {
   return (

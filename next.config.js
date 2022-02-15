@@ -36,10 +36,6 @@ module.exports = withBundleAnalyzer(
           },
         ];
       },
-      experimental: {
-        // Enables the styled-components SWC transform
-        styledComponents: true,
-      },
       pwa: {
         dest: "public",
         register: false,

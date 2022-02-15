@@ -1,65 +1,81 @@
-import styled from "styled-components";
+import { styled } from "@nextui-org/react";
 import { useEffect } from "react";
 import { useGameState, useBrand } from "../lib/hooks";
 
-const Wrapper = styled.div`
-  margin-top: 10px;
-  padding: 0px 5px;
+const Wrapper = styled("div", {
+  marginTop: "10px",
+  padding: "0px 5px",
 
-  @media (min-width: 480px) {
-    margin-left: calc(-100vw / 2 + 480px / 2);
-    margin-right: calc(-100vw / 2 + 480px / 2);
-  }
-  @media (min-width: 768px) {
-    width: 768px;
-    margin-left: calc(-768px / 2 + 480px / 2);
-    margin-right: calc(-768px / 2 + 480px / 2);
-  }
-`;
-const Row = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 2px;
-`;
-const Letter = styled.div`
-  padding: 5px 2px;
-  flex-grow: 1;
-  flex-basis: 0;
-  max-width: ${(props) => (props.$isBigger ? "calc(20% + 10px)" : "10%")};
-  touch-action: manipulation;
-  -webkit-touch-callout: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  "@media (min-width: 480px)": {
+    marginLeft: "calc(-100vw / 2 + 480px / 2)",
+    marginRight: "calc(-100vw / 2 + 480px / 2)",
+  },
+  "@media (min-width: 768px)": {
+    width: "768px",
+    marginLeft: "calc(-768px / 2 + 480px / 2)",
+    marginRight: "calc(-768px / 2 + 480px / 2)",
+  },
+});
 
-  user-select: none;
-  > span {
-    display: block;
-    color: var(--nextui-colors-text);
-    font-weight: bold;
-    padding: 5px;
-    border: 1px solid var(--keyboard-border-color);
-    border-radius: var(--nextui-radii-sm);
-    flex: 1;
-    text-align: center;
-    height: 50px;
-    background-color: ${(props) =>
-      props.$score === "good"
-        ? "var(--color-good)"
-        : props.$score === "bad"
-        ? "var(--color-bad)"
-        : props.$score === "off"
-        ? "var(--color-off)"
-        : "var(--color-unknown)"};
-    cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    touch-action: manipulation;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+const Row = styled("div", {
+  display: "flex",
+  justifyContent: "center",
+  marginBottom: "2px",
+});
 
-    user-select: none;
-  }
-`;
+const Letter = styled("div", {
+  padding: "5px 2px",
+  flexGrow: 1,
+  flexBasis: 0,
+  touchAction: "manipulation",
+  "-webkit-touch-callout": "none",
+  "-webkit-tap-highlight-color": "rgba(0, 0, 0, 0)",
+  "user-select": "none",
+  maxWidth: "10%",
+
+  "> span": {
+    display: "block",
+    color: "var(--nextui-colors-text)",
+    fontWeight: "bold",
+    padding: "5px",
+    border: "1px solid var(--keyboard-border-color)",
+    borderRadius: "var(--nextui-radii-sm)",
+    flex: 1,
+    textAalign: "center",
+    height: "50px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "var(--color-unknown)",
+    variants: {},
+  },
+
+  variants: {
+    isBigger: {
+      true: {
+        maxWidth: "calc(20% + 10px)",
+      },
+      false: {},
+    },
+    score: {
+      good: {
+        "> span": {
+          backgroundColor: "var(--color-good)",
+        },
+      },
+      bad: {
+        "> span": {
+          backgroundColor: "var(--color-bad)",
+        },
+      },
+      off: {
+        "> span": {
+          backgroundColor: "var(--color-off)",
+        },
+      },
+    },
+  },
+});
 
 const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
   const [gameState] = useGameState();
@@ -120,8 +136,8 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
                   onPress(l);
                   return false;
                 }}
-                $score={used[l]}
-                $disabled={used[l] === "bad"}>
+                score={used[l]}
+                disabled={used[l] === "bad"}>
                 <span>{l.toUpperCase()}</span>
               </Letter>
             );
@@ -135,7 +151,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
 
                 return false;
               }}
-              $isBigger={true}>
+              isBigger={true}>
               <span>⌫</span>
             </Letter>
           )}
@@ -148,7 +164,7 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
 
                 return false;
               }}
-              $isBigger={true}>
+              isBigger={true}>
               <span>ENTER</span>
             </Letter>
           )}
