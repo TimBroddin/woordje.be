@@ -3,10 +3,11 @@ import {
   Modal,
   Button,
   Card,
-  Grid,
+  Col,
   Text,
   Container,
   Link,
+  Row,
   styled,
 } from "@nextui-org/react";
 
@@ -211,115 +212,114 @@ ${gameState.guesses
             📋 Kopieer
           </Button>
         </Container>
-        <Text h2 css={{ fontSize: "$sm" }}>
+        <Text h2 css={{ fontSize: "$sm", textAlign: "center" }}>
           Deel je score
         </Text>
 
-        <Grid.Container gap={1}>
-          <Grid sm={6}>
-            <Button
-              size={"sm"}
-              ghost
-              color="primary"
-              css={{ width: "100%" }}
-              icon={<Icon src={"/icons/twitter.svg"} alt="Twitter" />}
-              onClick={(e) => {
-                plausible("Share", { props: { method: "twitter" } });
-                window.open(
-                  `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                    getShareText(false, true)
-                  )}`,
-                  "_blank"
-                );
-              }}>
-              Twitter
-            </Button>
-          </Grid>
-          <Grid sm={6}>
-            <Button
-              size={"sm"}
-              ghost
-              color="primary"
-              css={{ width: "100%" }}
-              icon={<Icon src={"/icons/facebook.svg"} alt="Facebook" />}
-              onClick={(e) => {
-                plausible("Share", { props: { method: "facebook" } });
-                window.open(
-                  `https://www.facebook.com/share.php?u=${encodeURIComponent(
-                    `${translations.url}/share/${WORD_LENGTH}/${getEncodedState(
-                      gameState
-                    )}`
-                  )}`,
-                  "_blank"
-                );
-              }}>
-              Facebook
-            </Button>
-          </Grid>
-          <Grid sm={6}>
-            <Button
-              size={"sm"}
-              ghost
-              bordered
-              color="primary"
-              css={{ width: "100%" }}
-              icon={<Icon src={"/icons/whatsapp.svg"} alt="Whatsapp" />}
-              onClick={(e) => {
-                plausible("Share", { props: { method: "whatsapp" } });
-                window.open(
-                  `https://api.whatsapp.com/send?text=${encodeURIComponent(
-                    getShareText(false, true)
-                  )}`,
-                  "_blank"
-                );
-              }}>
-              Whatsapp
-            </Button>
-          </Grid>
-          <Grid sm={6}>
-            <Button
-              size={"sm"}
-              ghost
-              color="primary"
-              css={{ width: "100%" }}
-              icon={<Icon src={"/icons/linkedin.svg"} alt="Linkedin" />}
-              onClick={(e) => {
-                plausible("Share", { props: { method: "linkedin" } });
-                window.open(
-                  `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                    `${translations.url}/share/${WORD_LENGTH}/${getEncodedState(
-                      gameState
-                    )}`
-                  )}`,
-                  "_blank"
-                );
-              }}>
-              Linkedin
-            </Button>
-          </Grid>
+        <Container
+          justify="center"
+          display="flex"
+          wrap="wrap"
+          gap={2}
+          css={{ gap: "$2" }}>
+          <Button
+            size={"sm"}
+            ghost
+            color="primary"
+            css={{ width: "100%" }}
+            icon={<Icon src={"/icons/twitter.svg"} alt="Twitter" />}
+            onClick={(e) => {
+              plausible("Share", { props: { method: "twitter" } });
+              window.open(
+                `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                  getShareText(false, true)
+                )}`,
+                "_blank"
+              );
+            }}>
+            Twitter
+          </Button>
+
+          <Button
+            size={"sm"}
+            ghost
+            color="primary"
+            css={{ width: "100%" }}
+            icon={<Icon src={"/icons/facebook.svg"} alt="Facebook" />}
+            onClick={(e) => {
+              plausible("Share", { props: { method: "facebook" } });
+              window.open(
+                `https://www.facebook.com/share.php?u=${encodeURIComponent(
+                  `${translations.url}/share/${WORD_LENGTH}/${getEncodedState(
+                    gameState
+                  )}`
+                )}`,
+                "_blank"
+              );
+            }}>
+            Facebook
+          </Button>
+
+          <Button
+            size={"sm"}
+            ghost
+            bordered
+            color="primary"
+            css={{ width: "100%" }}
+            icon={<Icon src={"/icons/whatsapp.svg"} alt="Whatsapp" />}
+            onClick={(e) => {
+              plausible("Share", { props: { method: "whatsapp" } });
+              window.open(
+                `https://api.whatsapp.com/send?text=${encodeURIComponent(
+                  getShareText(false, true)
+                )}`,
+                "_blank"
+              );
+            }}>
+            Whatsapp
+          </Button>
+
+          <Button
+            size={"sm"}
+            ghost
+            color="primary"
+            css={{ width: "100%" }}
+            icon={<Icon src={"/icons/linkedin.svg"} alt="Linkedin" />}
+            onClick={(e) => {
+              plausible("Share", { props: { method: "linkedin" } });
+              window.open(
+                `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+                  `${translations.url}/share/${WORD_LENGTH}/${getEncodedState(
+                    gameState
+                  )}`
+                )}`,
+                "_blank"
+              );
+            }}>
+            Linkedin
+          </Button>
+
           {typeof window !== "undefined" &&
           window &&
           window.navigator?.share ? (
-            <Grid sm={12}>
-              <Button
-                size={"sm"}
-                icon={<Icon src={"/icons/share.svg"} alt="Share" />}
-                onClick={(e) => {
-                  if (window.navigator.share) {
-                    plausible("Share", { props: { method: "webshare" } });
-                    window.navigator
-                      .share({
-                        text: getShareText(false, true),
-                      })
-                      .then(() => {})
-                      .catch((e) => {});
-                  }
-                }}>
-                Andere ...
-              </Button>
-            </Grid>
+            <Button
+              size={"sm"}
+              icon={<Icon src={"/icons/share.svg"} alt="Share" />}
+              onClick={(e) => {
+                if (window.navigator.share) {
+                  plausible("Share", { props: { method: "webshare" } });
+                  window.navigator
+                    .share({
+                      text: getShareText(false, true),
+                    })
+                    .then(() => {})
+                    .catch((e) => {});
+                }
+              }}>
+              Andere ...
+            </Button>
           ) : null}
-        </Grid.Container>
+        </Container>
 
         <p>
           Probeer ook eens met{" "}
