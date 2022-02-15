@@ -212,9 +212,9 @@ const Footer = () => {
       </Grid.Container>
       <Text small css={{ margin: "$8", color: "$text" }}>
         Check ook {brand.alternate_flag}{" "}
-        <NextLink href={brand.alternate_url} passHref>
-          <Link css={{ color: "$primary" }}>{brand.alternate_title}</Link>
-        </NextLink>
+        <Link href={brand.alternate_url} css={{ color: "$primary" }}>
+          {brand.alternate_title}
+        </Link>
         .
       </Text>
     </Container>
