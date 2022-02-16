@@ -1,4 +1,4 @@
-import { styled } from "../styles/stitches.config";
+import { styled } from "@nextui-org/react";
 import { useEffect } from "react";
 import { useGameState } from "../lib/hooks";
 
@@ -7,7 +7,7 @@ const Wrapper = styled("div", {
   padding: "0px 5px",
 
   "@media (min-width: 480px)": {
-    marginLeft: "(calc(-100vw / 2 + 480px / 2)",
+    marginLeft: "calc(-100vw / 2 + 480px / 2)",
     marginRight: "calc(-100vw / 2 + 480px / 2)",
   },
   "@media (min-width: 768px)": {

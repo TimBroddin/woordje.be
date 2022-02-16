@@ -18,7 +18,8 @@ import {
   getRandomWord as getSsrRandomWord,
   getDemoWords as getSsrDemoWords,
 } from "../../lib/ssr";
-import { useGameState, useBrand, useCorrectedGameId } from "../../lib/hooks";
+import { useGameState, useCorrectedGameId } from "../../lib/hooks";
+import { useTranslations } from "../../lib/i18n";
 
 // REDUX
 import { setSettings } from "../../redux/features/settings";
@@ -84,7 +85,7 @@ export default function Home({
   const isGameOver = useSelector(getIsGameOverSelector);
   const isVictory = useSelector(getIsVictorySelector);
   const colorBlind = useSelector((state) => state.settings?.colorBlind);
-  const brand = useBrand();
+  const translations = useTranslations();
   const plausible = usePlausible();
 
   useEffect(() => {
@@ -290,23 +291,23 @@ export default function Home({
   return WORD_LENGTH > 2 && WORD_LENGTH < 11 ? (
     <>
       <NextSeo
-        title={`${brand.title} #${CORRECTED_GAME_ID} - nederlandstalige Wordle - ${WORD_LENGTH} letters`}
-        description={`${brand.description}`}
-        canonical={brand.url}
+        title={`${translations.title} #${CORRECTED_GAME_ID} - nederlandstalige Wordle - ${WORD_LENGTH} letters`}
+        description={`${translations.description}`}
+        canonical={translations.url}
         openGraph={{
-          url: brand.url,
-          title: `${brand.title} #${CORRECTED_GAME_ID} - nederlandstalige Wordle - ${WORD_LENGTH} letters`,
-          description: brand.description,
+          url: translations.url,
+          title: `${translations.title} #${CORRECTED_GAME_ID} - nederlandstalige Wordle - ${WORD_LENGTH} letters`,
+          description: translations.description,
           images: [
             {
-              url: `${brand.url}/og.png?v=2`,
+              url: `${translations.url}/og.png?v=2`,
               width: 1200,
               height: 630,
-              alt: brand.title,
+              alt: translations.title,
               type: "image/png",
             },
           ],
-          site_name: brand.title,
+          site_name: translations.title,
         }}
         twitter={{
           handle: "@timbroddin",
@@ -491,7 +492,8 @@ export async function getStaticPaths() {
   items.forEach((item) => {
     locales.forEach((locale) => {
       paths.push({
-        params: { gameType: item, locale },
+        params: { gameType: item },
+        locale,
       });
     });
   });

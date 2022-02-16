@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
-import { styled } from "../styles/stitches.config";
+import { styled } from "@nextui-org/react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { hide } from "../redux/features/installPopup";
-import { useBrand } from "../lib/hooks";
+import { useTranslations } from "../lib/i18n";
 import { getIsGameOverSelector } from "../lib/helpers";
 
 const isIphone = () => {
@@ -74,7 +74,7 @@ const AddToHomeScreen = ({ modalClosed }) => {
   const statistics = useSelector((state) => state.statistics);
   const isGameOver = useSelector(getIsGameOverSelector);
   const { currentModal } = useSelector((state) => state.modal);
-  const brand = useBrand();
+  const translations = useTranslations();
 
   const dispatch = useDispatch();
 
@@ -87,7 +87,7 @@ const AddToHomeScreen = ({ modalClosed }) => {
       <Popup initial={{ y: 10 }} animate={{ y: 0 }}>
         <Wrapper>
           <LabelWrapper>
-            <Label>Zet {brand.title} op je beginscherm</Label>
+            <Label>Zet {translations.title} op je beginscherm</Label>
             <Label>
               Tap
               <ShareIcon>

@@ -1,6 +1,5 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
-import { CssBaseline } from "@nextui-org/react";
-import { getCssText } from "../styles/stitches.config";
+import { CssBaseline, getCssText } from "@nextui-org/react";
 
 export default class MyDocument extends Document {
   render() {

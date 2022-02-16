@@ -1,4 +1,4 @@
-import { styled } from "../styles/stitches.config";
+import { styled } from "@nextui-org/react";
 import { motion } from "framer-motion";
 
 export const LetterContainer = styled(motion.div, {
@@ -89,13 +89,21 @@ const letterVariants = {
   },
 };
 
-const Letter = ({ focus, disabled, score, radius, children }) => {
+const Letter = ({ focus, disabled, score, radius, children, small }) => {
   return (
     <LetterContainer variants={letterVariants}>
-      <LetterFront focus={focus} style={radius} disabled={disabled}>
+      <LetterFront
+        focus={focus}
+        style={radius}
+        disabled={disabled}
+        small={small}>
         {children}
       </LetterFront>
-      <LetterBack style={radius} disabled={disabled} score={score}>
+      <LetterBack
+        style={radius}
+        disabled={disabled}
+        score={score}
+        small={small}>
         {children}
       </LetterBack>
     </LetterContainer>

@@ -2,7 +2,7 @@ import { Container, Row, Col, Button, Text, Tooltip } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import { usePlausible } from "next-plausible";
 
-import { useBrand } from "../lib/hooks";
+import { useTranslations } from "../lib/i18n";
 import InfoSquare from "../lib/iconly/Icons/InfoSquare";
 import Chart from "../lib/iconly/Icons/Chart";
 import { setModal } from "../redux/features/modal";
@@ -10,7 +10,7 @@ import { setModal } from "../redux/features/modal";
 const Header = () => {
   const dispatch = useDispatch();
   const { gameType, colorBlind } = useSelector((state) => state.settings);
-  const brand = useBrand();
+  const translations = useTranslations();
 
   const plausible = usePlausible();
   return (
@@ -23,8 +23,8 @@ const Header = () => {
         <Col>
           <Tooltip
             placement="bottom"
-            aria-label={`Klik hier voor uitleg over ${brand.title}`}
-            content={`Klik hier voor uitleg over ${brand.title}`}>
+            aria-label={`Klik hier voor uitleg over ${translations.title}`}
+            content={`Klik hier voor uitleg over ${translations.title}`}>
             <Button
               auto
               light
@@ -53,7 +53,7 @@ const Header = () => {
               lineHeight: "70px",
             }}
             weight="bold">
-            {brand.title}
+            {translations.title}
           </Text>
           {gameType === "vrttaal" ? <Text small>VRT Taal editie</Text> : null}
         </Col>
