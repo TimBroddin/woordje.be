@@ -263,7 +263,6 @@ ${gameState.guesses
           <Button
             size={"sm"}
             ghost
-            bordered
             color="primary"
             css={{ width: "100%" }}
             icon={<Icon src={"/icons/whatsapp.svg"} alt="Whatsapp" />}
@@ -304,6 +303,9 @@ ${gameState.guesses
           window.navigator?.share ? (
             <Button
               size={"sm"}
+              ghost
+              color="primary"
+              css={{ width: "100%" }}
               icon={<Icon src={"/icons/share.svg"} alt="Share" />}
               onClick={(e) => {
                 if (window.navigator.share) {
