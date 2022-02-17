@@ -36,6 +36,8 @@ module.exports = withBundleAnalyzer(
           },
         ];
       },
+      swcMinify: true,
+
       pwa: {
         dest: "public",
         register: false,
