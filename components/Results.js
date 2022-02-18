@@ -59,7 +59,7 @@ const Icon = ({ src, alt, width = 20, height = 20 }) => (
 const Results = ({ solution, visible, toast }) => {
   const CORRECTED_GAME_ID = useCorrectedGameId();
   const translations = useTranslations();
-  const { WORD_LENGTH, BOARD_SIZE, gameType } = useSelector(
+  const { WORD_LENGTH, BOARD_SIZE, gameType, hardMode } = useSelector(
     (state) => state.settings
   );
   const streak = useSelector(getStreak);
@@ -84,6 +84,9 @@ const Results = ({ solution, visible, toast }) => {
         if (WORD_LENGTH != 6) {
           header.push(`(${WORD_LENGTH} letters)`);
         }
+      }
+      if (hardMode) {
+        header.push(`💀 Extra moeilijk`);
       }
       header.push(
         `💡 ${
@@ -137,6 +140,7 @@ ${gameState.guesses
       timer?.start,
       timer.value,
       WORD_LENGTH,
+      hardMode,
     ]
   );
 
