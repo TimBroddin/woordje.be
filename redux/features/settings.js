@@ -6,6 +6,7 @@ const initialState = {
   colorBlind: false,
   pushNotifications: false,
   gameType: "normal",
+  hardMode: false,
 };
 
 export const settingsSlice = createSlice({
@@ -30,11 +31,19 @@ export const settingsSlice = createSlice({
     setPushNotifications: (state, action) => {
       state.pushNotifications = action.payload;
     },
+    setHardMode: (state, action) => {
+      state.hardMode = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setSettings, setWordSize, setBoardSize, setColorBlind } =
-  settingsSlice.actions;
+export const {
+  setSettings,
+  setWordSize,
+  setBoardSize,
+  setColorBlind,
+  setHardMode,
+} = settingsSlice.actions;
 
 export default settingsSlice.reducer;

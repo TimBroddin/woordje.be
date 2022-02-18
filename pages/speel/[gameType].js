@@ -83,8 +83,7 @@ export default function Home({
   const [solution, setSolution] = useState(ssrSolution);
   const { width, height } = useWindowSize();
   const isGameOver = useSelector(getIsGameOverSelector);
-  const isVictory = useSelector(getIsVictorySelector);
-  const colorBlind = useSelector((state) => state.settings?.colorBlind);
+  const { colorBlind, hardMode } = useSelector((state) => state.settings);
   const translations = useTranslations();
   const plausible = usePlausible();
 
@@ -150,6 +149,38 @@ export default function Home({
       fetchControllerRef.current = controller;
 
       setIsLoading(true);
+      // check if all previous guessed letters are used
+      if (hardMode) {
+        const neededLetters = [
+          ...new Set(
+            [].concat.apply(
+              [],
+              gameState.guesses.map((guess) =>
+                guess
+                  .filter((l) => l.score === "good" || l.score === "off")
+                  .map((l) => l.letter)
+              )
+            )
+          ),
+        ];
+
+        if (neededLetters.length) {
+          const leftOver = neededLetters.filter(
+            (l) => text.split("").indexOf(l) === -1
+          );
+          if (leftOver.length) {
+            toast.error(
+              "Je moet alle letters die je al hebt geraden gebruiken.",
+              { id: "toast", duration: 2000 }
+            );
+            fetchControllerRef.current = null;
+            setIsLoading(false);
+
+            return;
+          }
+        }
+      }
+
       toast.loading("Controleren...", { id: "toast", duration: Infinity });
       if (text === randomWord.value) {
         dispatch(getRandomWord());
@@ -176,7 +207,7 @@ export default function Home({
 
       if (error) {
         if (error === "unknown_word") {
-          toast.error("Ongeldig woord", { id: "toast", duration: 1000 });
+          toast.error("Ongeldig woord", { id: "toast", duration: 2000 });
         }
       } else {
         toast.dismiss("toast");
@@ -231,6 +262,7 @@ export default function Home({
       setGameState,
       dispatch,
       gameType,
+      hardMode,
     ]
   );
 
