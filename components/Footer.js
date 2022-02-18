@@ -183,9 +183,12 @@ const Footer = () => {
                       <Col span={5} css={{ color: "$red500" }}>
                         <Switch
                           checked={hardMode}
-                          onChange={(e) =>
-                            dispatch(setHardMode(e.target.checked))
-                          }
+                          onChange={(e) => {
+                            plausible("HardMode", {
+                              props: { value: e.target.checked },
+                            });
+                            dispatch(setHardMode(e.target.checked));
+                          }}
                           color="error"
                           iconOn={<Danger filled />}
                           iconOff={<Danger set="light" />}
