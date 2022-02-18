@@ -9,8 +9,9 @@ import { useTranslations } from "../lib/i18n";
 import { Sun, Moon } from "../lib/icons";
 import Show from "../lib/iconly/Icons/Show";
 import Hide from "../lib/iconly/Icons/Hide";
+import Danger from "../lib/iconly/Icons/Danger";
 
-import { setColorBlind } from "../redux/features/settings";
+import { setColorBlind, setHardMode } from "../redux/features/settings";
 import { getRandomWord } from "../redux/features/randomWord";
 import {
   Button,
@@ -72,8 +73,9 @@ const Footer = () => {
   const { locale } = useRouter();
   const translations = useTranslations();
   const randomWord = useSelector((state) => state.randomWord);
-  const { gameType } = useSelector((state) => state.settings);
-  const colorBlind = useSelector((state) => state.settings?.colorBlind);
+  const { gameType, colorBlind, hardMode } = useSelector(
+    (state) => state.settings
+  );
   const { WORD_LENGTH } = useSelector((state) => state.settings);
   const plausible = usePlausible();
 
@@ -141,7 +143,7 @@ const Footer = () => {
                 </Card.Header>
                 <Card.Body>
                   <Container gap={0}>
-                    <Row gap={0}>
+                    <Row gap={0} align="center">
                       <Col span={5} css={{ color: "$green600" }}>
                         <Switch
                           checked={colorBlind}
@@ -160,7 +162,7 @@ const Footer = () => {
                         </Tooltip>
                       </Col>
                     </Row>
-                    <Row>
+                    <Row align="center">
                       <Col span={5} css={{ color: "$yellow600" }}>
                         <Switch
                           checked={isDark}
@@ -175,6 +177,34 @@ const Footer = () => {
                       </Col>
                       <Col>
                         <Text>Donkere modus</Text>
+                      </Col>
+                    </Row>
+                    <Row align="center">
+                      <Col span={5} css={{ color: "$red500" }}>
+                        <Switch
+                          checked={hardMode}
+                          onChange={(e) => {
+                            plausible("HardMode", {
+                              props: { value: e.target.checked },
+                            });
+                            dispatch(setHardMode(e.target.checked));
+                          }}
+                          color="error"
+                          iconOn={<Danger filled />}
+                          iconOff={<Danger set="light" />}
+                          aria-label="Extra moeilijk"
+                        />
+                      </Col>
+                      <Col>
+                        <Text>
+                          <Tooltip
+                            color="primary"
+                            content={
+                              "Geraden letters moeten hergebruikt worden in volgende pogingen."
+                            }>
+                            Extra moeilijk
+                          </Tooltip>
+                        </Text>
                       </Col>
                     </Row>
                   </Container>
