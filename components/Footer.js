@@ -143,7 +143,7 @@ const Footer = () => {
                 </Card.Header>
                 <Card.Body>
                   <Container gap={0}>
-                    <Row gap={0} align="center">
+                    <Row>
                       <Col span={5} css={{ color: "$green600" }}>
                         <Switch
                           checked={colorBlind}
@@ -153,7 +153,7 @@ const Footer = () => {
                           iconOn={<Show set="bold" />}
                         />
                       </Col>
-                      <Col>
+                      <Col css={{ paddingTop: "3px" }}>
                         <Tooltip
                           aria-label="Handig voor kleurenblinden."
                           content="Handig voor kleurenblinden."
@@ -162,7 +162,7 @@ const Footer = () => {
                         </Tooltip>
                       </Col>
                     </Row>
-                    <Row align="center">
+                    <Row>
                       <Col span={5} css={{ color: "$yellow600" }}>
                         <Switch
                           checked={isDark}
@@ -175,11 +175,11 @@ const Footer = () => {
                           aria-label="Donkere modus"
                         />
                       </Col>
-                      <Col>
+                      <Col css={{ paddingTop: "3px" }}>
                         <Text>Donkere modus</Text>
                       </Col>
                     </Row>
-                    <Row align="center">
+                    <Row>
                       <Col span={5} css={{ color: "$red500" }}>
                         <Switch
                           checked={hardMode}
@@ -195,7 +195,7 @@ const Footer = () => {
                           aria-label="Extra moeilijk"
                         />
                       </Col>
-                      <Col>
+                      <Col css={{ paddingTop: "3px" }}>
                         <Text>
                           <Tooltip
                             color="primary"
