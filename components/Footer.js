@@ -143,7 +143,7 @@ const Footer = () => {
                 </Card.Header>
                 <Card.Body>
                   <Container gap={0}>
-                    <Row gap={0}>
+                    <Row gap={0} align="center">
                       <Col span={5} css={{ color: "$green600" }}>
                         <Switch
                           checked={colorBlind}
@@ -162,7 +162,7 @@ const Footer = () => {
                         </Tooltip>
                       </Col>
                     </Row>
-                    <Row>
+                    <Row align="center">
                       <Col span={5} css={{ color: "$yellow600" }}>
                         <Switch
                           checked={isDark}
@@ -179,7 +179,7 @@ const Footer = () => {
                         <Text>Donkere modus</Text>
                       </Col>
                     </Row>
-                    <Row>
+                    <Row align="center">
                       <Col span={5} css={{ color: "$red500" }}>
                         <Switch
                           checked={hardMode}
