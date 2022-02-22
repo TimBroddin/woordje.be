@@ -14,7 +14,7 @@ const setInputText = createAsyncThunk(
     if (
       gameState &&
       settings &&
-      !gameState.guesses[settings.WORD_LENGTH]?.length &&
+      !gameState.guesses[settings.wordLength]?.length &&
       inputText?.value?.length === 0 &&
       !timer.start
     ) {

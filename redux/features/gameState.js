@@ -12,10 +12,10 @@ export const gameStateSlice = createSlice({
   reducers: {
     setGameState: (
       state,
-      { payload: { gameId, WORD_LENGTH, gameType, guesses } }
+      { payload: { gameId, wordLength, gameType, guesses } }
     ) => {
       state.gameId = gameId;
-      state.guesses[customGameResolver(gameType, WORD_LENGTH)] = guesses;
+      state.guesses[customGameResolver(gameType, wordLength)] = guesses;
     },
     resetGameState: (state, action) => {
       state.gameId = action.payload;

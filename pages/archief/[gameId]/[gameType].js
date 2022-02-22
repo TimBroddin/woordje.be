@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 import Image from "next/image";
 
@@ -7,32 +7,30 @@ import { NextSeo } from "next-seo";
 import { usePlausible } from "next-plausible";
 
 // HELPERS & HOOKS
-import { getCurrentWordFromAirTable } from "../../lib/airtable";
-import { getSolution, getRandomWord, getDemoWords } from "../../lib/ssr";
-import { useCorrectedGameId } from "../../lib/hooks";
-import { useTranslations } from "../../lib/i18n";
-import { getTodaysGameId } from "../../lib/gameId";
+import { getCurrentWordFromAirTable } from "../../../lib/airtable";
+import { getSolution, getRandomWord, getDemoWords } from "../../../lib/ssr";
+import { useTranslations } from "../../../lib/i18n";
+import { useCorrectedGameId } from "../../../lib/hooks";
 
 // COMPONENTS
-import { Main } from "../../components/styled";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import Game from "../../components/Game";
+import { Main } from "../../../components/styled";
+import Header from "../../../components/Header";
+import Footer from "../../../components/Footer";
+import Game from "../../../components/Game";
 
 export default function Home({
   gameType,
+  gameId,
   wordLength,
   ssrSolution,
   ssrRandomWord,
   ssrDemoWords,
 }) {
-  const dispatch = useDispatch();
-  const correctedGameId = useCorrectedGameId();
   const boardSize = wordLength + 1;
 
-  const { colorBlind, hardMode } = useSelector((state) => state.settings);
+  const { colorBlind } = useSelector((state) => state.settings);
   const translations = useTranslations();
-  const plausible = usePlausible();
+  const correctedGameId = useCorrectedGameId(gameId);
 
   useEffect(() => {
     if (typeof document !== "undefined") {
@@ -47,12 +45,12 @@ export default function Home({
   return wordLength > 2 && wordLength < 11 ? (
     <>
       <NextSeo
-        title={`${translations.title} #${correctedGameId} - nederlandstalige Wordle - ${wordLength} letters`}
+        title={`${translations.title} #${gameId} - nederlandstalige Wordle - ${wordLength} letters`}
         description={`${translations.description}`}
         canonical={translations.url}
         openGraph={{
           url: translations.url,
-          title: `${translations.title} #${correctedGameId} - nederlandstalige Wordle - ${wordLength} letters`,
+          title: `${translations.title} #${gameId} - nederlandstalige Wordle - ${wordLength} letters`,
           description: translations.description,
           images: [
             {
@@ -72,10 +70,14 @@ export default function Home({
       />
 
       <Main>
-        <Header />
+        <Header
+          customTitle={`Archief`}
+          subtitle={`${translations.title} #${correctedGameId}`}
+          titleSize={40}
+        />
 
         <Game
-          gameId={correctedGameId}
+          gameId={gameId}
           wordLength={wordLength}
           gameType={gameType}
           ssrDemoWords={ssrDemoWords}
@@ -99,18 +101,18 @@ export default function Home({
 }
 
 export const getStaticProps = async (ctx) => {
-  const { gameType, locale } = ctx.params;
-
+  const { gameType, gameId } = ctx.params;
   if (gameType === "vrttaal") {
     try {
       const { Woord } = await getCurrentWordFromAirTable();
       return {
         props: {
           gameType: gameType,
+          gameId: parseInt(gameId, 10),
           wordLength: Woord.length,
-          ssrSolution: await getSsrSolution(gameType, locale),
-          ssrRandomWord: getSsrRandomWord(Woord.length),
-          ssrDemoWords: getSsrDemoWords(Woord.length),
+          ssrSolution: Woord,
+          ssrRandomWord: getRandomWord(Woord.length),
+          ssrDemoWords: getDemoWords(Woord.length),
         },
         revalidate: 60,
       };
@@ -126,10 +128,13 @@ export const getStaticProps = async (ctx) => {
         gameType: `normal-${gameType}`,
         ssrSolution: await getSolution(
           parseInt(gameType, 10),
-          getTodaysGameId(),
-          locale
+          parseInt(gameId, 10),
+          true,
+          ctx.locale
         ),
         wordLength: parseInt(gameType, 10),
+        gameId: parseInt(gameId, 10),
+
         ssrRandomWord: getRandomWord(parseInt(gameType, 10)),
         ssrDemoWords: getDemoWords(parseInt(gameType, 10)),
       },
@@ -139,18 +144,5 @@ export const getStaticProps = async (ctx) => {
 };
 
 export async function getStaticPaths() {
-  const items = ["3", "4", "5", "6", "7", "8", "9", "10", "vrttaal"];
-  const locales = ["nl-NL", "nl-BE"];
-  const paths = [];
-
-  items.forEach((item) => {
-    locales.forEach((locale) => {
-      paths.push({
-        params: { gameType: item },
-        locale,
-      });
-    });
-  });
-
-  return { paths, fallback: "blocking" };
+  return { paths: [], fallback: "blocking" };
 }

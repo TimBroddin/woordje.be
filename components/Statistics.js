@@ -67,7 +67,7 @@ const Statistics = ({ visible }) => {
   const pctLost = totalGames ? (lost / totalGames) * 100 : 0;
 
   const maxDistributionValue = Math.max(...Object.values(distribution));
-  const distributionValues = Array.from({ length: settings.BOARD_SIZE }).map(
+  const distributionValues = Array.from({ length: settings.boardSize }).map(
     (_, idx) => {
       return {
         amount: idx + 1,
@@ -97,7 +97,7 @@ const Statistics = ({ visible }) => {
           {settings.gameType === "vrttaal" ? (
             <Text b>het VRT Taal woord</Text>
           ) : (
-            <Text b>{settings.WORD_LENGTH} tekens</Text>
+            <Text b>{settings.wordLength} tekens</Text>
           )}
         </Text>
       </Modal.Header>

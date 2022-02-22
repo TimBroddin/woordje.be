@@ -12,7 +12,7 @@ const Board = styled(motion.div, {
 });
 
 const Examples = ({ words }) => {
-  const { WORD_LENGTH } = useSelector((state) => state.settings);
+  const { wordLength } = useSelector((state) => state.settings);
 
   const board = {
     show: {
@@ -33,7 +33,7 @@ const Examples = ({ words }) => {
 
   if (words && words.length) {
     return (
-      <div style={{ "--word-length": WORD_LENGTH }}>
+      <div style={{ "--word-length": wordLength }}>
         <Board initial="hidden" animate="show" variants={board}>
           {words[0].split("").map((letter, index) => (
             <Letter key={index} small score={index === 0 ? "good" : "bad"}>
@@ -75,7 +75,7 @@ const Examples = ({ words }) => {
 const Splash = ({ visible, words }) => {
   const dispatch = useDispatch();
   const translations = useTranslations();
-  const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
+  const { wordLength, boardSize } = useSelector((state) => state.settings);
 
   const closeHandler = (e) => {
     dispatch(hide());
@@ -97,7 +97,7 @@ const Splash = ({ visible, words }) => {
       </Modal.Header>
       <Modal.Body>
         <Text>
-          Raad het {WORD_LENGTH}-letterwoord in {BOARD_SIZE} beurten, of minder.
+          Raad het {wordLength}-letterwoord in {boardSize} beurten, of minder.
         </Text>
 
         <Text>

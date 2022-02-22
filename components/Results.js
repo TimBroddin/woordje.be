@@ -19,7 +19,7 @@ import { motion } from "framer-motion";
 
 import NextLink from "next/link";
 import { copyToClipboard, getIsVictory } from "../lib/helpers";
-import { useGameState, useCorrectedGameId } from "../lib/hooks";
+import { useCorrectedGameId, useGameState } from "../lib/hooks";
 import { useTranslations } from "../lib/i18n";
 import { getStreak } from "../lib/helpers";
 import { hide } from "../redux/features/modal";
@@ -57,11 +57,11 @@ const Icon = ({ src, alt, width = 20, height = 20 }) => (
 );
 
 const Results = ({ solution, visible, toast }) => {
-  const CORRECTED_GAME_ID = useCorrectedGameId();
   const translations = useTranslations();
-  const { WORD_LENGTH, BOARD_SIZE, gameType, hardMode } = useSelector(
+  const { wordLength, boardSize, gameType, hardMode, gameId } = useSelector(
     (state) => state.settings
   );
+  const correctedGameId = useCorrectedGameId(gameId);
   const streak = useSelector(getStreak);
   const timer = useSelector((state) => state.timer);
   const [gameState, setGameState] = useGameState();
@@ -76,13 +76,13 @@ const Results = ({ solution, visible, toast }) => {
       const header = [
         `${
           html ? translations.share_html : translations.share_text
-        } #${CORRECTED_GAME_ID}`,
+        } #${correctedGameId}`,
       ];
       if (gameType === "vrttaal") {
         header.push(`VRT Taal`);
       } else {
-        if (WORD_LENGTH != 6) {
-          header.push(`(${WORD_LENGTH} letters)`);
+        if (wordLength != 6) {
+          header.push(`(${wordLength} letters)`);
         }
       }
       if (hardMode) {
@@ -91,7 +91,7 @@ const Results = ({ solution, visible, toast }) => {
       header.push(
         `💡 ${
           getIsVictory(gameState) ? gameState.guesses.length : "X"
-        }/${BOARD_SIZE}`
+        }/${boardSize}`
       );
       if (streak > 1) {
         header.push(`🎳 ${streak}`);
@@ -132,14 +132,14 @@ ${gameState.guesses
       translations.share_html,
       translations.share_text,
       translations.share_hashtag,
-      CORRECTED_GAME_ID,
+      correctedGameId,
       gameType,
       gameState,
-      BOARD_SIZE,
+      boardSize,
       streak,
       timer?.start,
       timer.value,
-      WORD_LENGTH,
+      wordLength,
       hardMode,
     ]
   );
@@ -254,7 +254,7 @@ ${gameState.guesses
               plausible("Share", { props: { method: "facebook" } });
               window.open(
                 `https://www.facebook.com/share.php?u=${encodeURIComponent(
-                  `${translations.url}/share/${WORD_LENGTH}/${getEncodedState(
+                  `${translations.url}/share/${wordLength}/${getEncodedState(
                     gameState
                   )}`
                 )}`,
@@ -292,7 +292,7 @@ ${gameState.guesses
               plausible("Share", { props: { method: "linkedin" } });
               window.open(
                 `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                  `${translations.url}/share/${WORD_LENGTH}/${getEncodedState(
+                  `${translations.url}/share/${wordLength}/${getEncodedState(
                     gameState
                   )}`
                 )}`,
@@ -330,7 +330,7 @@ ${gameState.guesses
         <p>
           Probeer ook eens met{" "}
           {[3, 4, 5, 6, 7, 8, 9, 10]
-            .filter((x) => x !== WORD_LENGTH)
+            .filter((x) => x !== wordLength)
             .map((x, i) => (
               <span key={`link-${x}`}>
                 <NextLink passHref href={`/speel/${x}`}>

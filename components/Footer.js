@@ -25,46 +25,8 @@ import {
   Switch,
   Tooltip,
   useTheme,
-  styled,
 } from "@nextui-org/react";
-
-const Levels = styled("div", {
-  margin: "24px 0",
-  display: "flex",
-  flexWrap: "wrap",
-  gap: "10px",
-});
-
-const Level = styled("a", {
-  fontSize: "16px",
-  color: "white",
-  textDecoration: "none !important",
-  borderRadius: "var(--nextui-radii-md)",
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  height: "36px",
-  width: "36px",
-  padding: "0px",
-
-  variants: {
-    active: {
-      true: {
-        backgroundColor: "var(--color-level-active)",
-      },
-      false: {
-        backgroundColor: "var(--color-level)",
-      },
-    },
-    wide: {
-      true: {
-        width: "72px",
-        padding: "10px",
-      },
-      false: {},
-    },
-  },
-});
+import { Levels, Level } from "./styled";
 
 const Footer = () => {
   const dispatch = useDispatch();
@@ -76,7 +38,7 @@ const Footer = () => {
   const { gameType, colorBlind, hardMode } = useSelector(
     (state) => state.settings
   );
-  const { WORD_LENGTH } = useSelector((state) => state.settings);
+  const { wordLength } = useSelector((state) => state.settings);
   const plausible = usePlausible();
 
   return (
@@ -95,7 +57,7 @@ const Footer = () => {
                     key={`level-${level}`}
                     passHref>
                     <Level
-                      active={WORD_LENGTH === level && gameType !== "vrttaal"}>
+                      active={wordLength === level && gameType !== "vrttaal"}>
                       {level}
                     </Level>
                   </NextLink>
@@ -117,6 +79,12 @@ const Footer = () => {
                   </NextLink>
                 ) : null}
               </Levels>
+              <Text small>
+                Nog meer? Bekijk{" "}
+                <NextLink href={"/archief"} passHref>
+                  <Link>het archief</Link>
+                </NextLink>
+              </Text>
             </Card.Body>
           </Card>
         </Grid>

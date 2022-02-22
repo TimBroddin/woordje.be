@@ -1,32 +1,34 @@
 import woorden from "../../data/woorden.json";
-import { getGameId } from "../../lib/gameId";
+import { getTodaysGameId } from "../../lib/gameId";
 import { getCurrentWordFromAirTable } from "../../lib/airtable";
+import { gameIdToIndex } from "../../lib/helpers";
+import { currentLocale } from "../../lib/ssr";
 
-const getGameType = async (l) => {
-  const GAME_ID = getGameId();
-
+const getGameType = async (l, gameId, locale) => {
   if (l === "vrttaal") {
     const { Woord } = await getCurrentWordFromAirTable();
     return {
-      WORD_LENGTH: Woord.length,
+      wordLength: Woord.length,
       WORD: Woord.toLowerCase(),
     };
   } else {
     return {
-      WORD_LENGTH: parseInt(l),
-      WORD: woorden[parseInt(l)][GAME_ID],
+      wordLength: parseInt(l),
+      WORD: woorden[parseInt(l)][gameIdToIndex(gameId, locale)],
     };
   }
 };
 
 export default async function handler(req, res) {
-  const { WORD_LENGTH, WORD } = await getGameType(req.query.l);
+  const gameId = parseInt(req.query.gameId);
+  const locale = currentLocale(req);
+  const { wordLength, WORD } = await getGameType(req.query.l, gameId, locale);
   const word = req.query?.word.toLowerCase().slice(0, WORD.length);
 
   // if the word doesn't match, assert it's a
   // dictionary word
   if (word !== WORD) {
-    const matchingWords = woorden[WORD_LENGTH].filter((w) => word === w);
+    const matchingWords = woorden[wordLength].filter((w) => word === w);
 
     if (!matchingWords.length) {
       res.status(200).json({ error: "unknown_word" });

@@ -7,9 +7,9 @@ const initialState = {
 const getRandomWord = createAsyncThunk(
   "randomWord/getRandomWord",
   async (_, thunkAPI) => {
-    const { WORD_LENGTH } = thunkAPI.getState().settings;
+    const { wordLength } = thunkAPI.getState().settings;
 
-    const res = await fetch(`/api/random?l=${WORD_LENGTH}`);
+    const res = await fetch(`/api/random?l=${wordLength}`);
     const word = await res.text();
 
     return word;

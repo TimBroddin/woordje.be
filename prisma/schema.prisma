@@ -1,0 +1,22 @@
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+model Stats {
+  gameId    Int
+  letters   Int
+  wins      Int
+  loses     Int
+  updatedAt DateTime @updatedAt
+
+
+
+  @@id([gameId, letters])
+}

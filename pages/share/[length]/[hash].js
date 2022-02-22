@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NextSeo } from "next-seo";
-import { getGameId } from "../../../lib/gameId";
+import { getTodaysGameId } from "../../../lib/gameId";
 import { useRouter } from "next/router";
 import { useCorrectedGameId } from "../../../lib/hooks";
 
