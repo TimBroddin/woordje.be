@@ -10,13 +10,11 @@ generator client {
 }
 
 model Stats {
-  gameId    Int
-  letters   Int
-  wins      Int
-  loses     Int
-  updatedAt DateTime @updatedAt
-
-
-
-  @@id([gameId, letters])
+  id         Int      @id @default(autoincrement())
+  gameId     Int
+  wordLength Int
+  customGame String?
+  tries      Int
+  won        Boolean
+  createdAt  DateTime @default(now())
 }

@@ -9,7 +9,7 @@ import { usePlausible } from "next-plausible";
 import { GraphQLClient } from "graphql-request";
 
 // HELPERS & HOOKS
-import { getIsGameOverSelector } from "@/lib/helpers";
+import { getIsGameOverSelector, logResult } from "@/lib/helpers";
 
 import { useGameState, useSolution } from "@/lib/hooks";
 
@@ -203,13 +203,13 @@ export default function Game({
         dispatch(setInputText(""));
         if (!match.some((i) => i.score !== "good")) {
           setShowConfetti(true);
-          plausible("win", {
-            props: {
-              length: wordLength,
-              tries: `${gameState.guesses.length + 1}/${boardSize}`,
-              game: `${gameId}x${wordLength}`,
-            },
-          });
+          logResult(
+            gameId,
+            wordLength,
+            gameType === "vrttaal" ? "vrttaal" : null,
+            gameState.guesses.length + 1
+          );
+
           dispatch(stopTimer());
           dispatch(
             addWin({
@@ -224,13 +224,13 @@ export default function Game({
         } else if (gameState.guesses.length + 1 === boardSize) {
           dispatch(stopTimer());
 
-          plausible("lose", {
-            props: {
-              length: wordLength,
-              game: `${gameId}x${wordLength}`,
-            },
-          });
-          console.log({ gameId, gameType, wordLength });
+          logResult(
+            gameId,
+            wordLength,
+            gameType === "vrttaal" ? "vrttaal" : null,
+            gameState.guesses.length + 1
+          );
+
           dispatch(addLoss({ gameId, gameType, wordLength }));
         }
 

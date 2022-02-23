@@ -1,14 +1,14 @@
 import { gql } from "apollo-server-micro";
 
 export const RANDOM_WORD_QUERY = gql`
-  query getRandomWords($amount: Int, $wordLength: Int) {
-    getRandomWords(amount: $amount, wordLength: $wordLength)
+  query randomWords($amount: Int, $wordLength: Int) {
+    randomWords(amount: $amount, wordLength: $wordLength)
   }
 `;
 
 export const SOLUTION_QUERY = gql`
-  query getSolution($gameId: Int, $wordLength: Int = 6, $customGame: String) {
-    getSolution(
+  query solution($gameId: Int, $wordLength: Int = 6, $customGame: String) {
+    solution(
       gameId: $gameId
       wordLength: $wordLength
       customGame: $customGame
@@ -35,5 +35,21 @@ export const CHECK_QUERY = gql`
       letter
       score
     }
+  }
+`;
+
+export const LOG_RESULT_MUTATION = gql`
+  mutation logResult(
+    $gameId: Int!
+    $customGame: String
+    $wordLength: Int!
+    $tries: Int!
+  ) {
+    logResult(
+      gameId: $gameId
+      customGame: $customGame
+      wordLength: $wordLength
+      tries: $tries
+    )
   }
 `;

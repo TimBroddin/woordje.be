@@ -100,7 +100,7 @@ const Footer = ({ gameId }) => {
 
                 <NextLink href={"/"} passHref>
                   <Button
-                    color="primary"
+                    color="gradient"
                     ghost
                     auto
                     css={{ margin: "$2" }}
@@ -110,7 +110,7 @@ const Footer = ({ gameId }) => {
                 </NextLink>
                 <NextLink href={"/archief"} passHref>
                   <Button
-                    color="primary"
+                    color="gradient"
                     ghost
                     auto
                     css={{ margin: "$2" }}
