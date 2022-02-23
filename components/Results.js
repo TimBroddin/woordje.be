@@ -19,7 +19,7 @@ import { motion } from "framer-motion";
 
 import NextLink from "next/link";
 import { copyToClipboard, getIsVictory } from "@/lib/helpers";
-import { useCorrectedGameId, useGameState } from "@/lib/hooks";
+import { useCorrectedGameId, useGameState, useSolution } from "@/lib/hooks";
 import { useTranslations } from "@/lib/i18n";
 import { getStreak } from "@/lib/helpers";
 import { hide } from "@/redux/features/modal";
@@ -56,7 +56,7 @@ const Icon = ({ src, alt, width = 20, height = 20 }) => (
   <IconImage src={src} width={width} height={height} alt={alt} />
 );
 
-const Results = ({ solution, visible, toast }) => {
+const Results = ({ visible, toast }) => {
   const translations = useTranslations();
   const { wordLength, boardSize, gameType, hardMode, gameId } = useSelector(
     (state) => state.settings
@@ -67,6 +67,11 @@ const Results = ({ solution, visible, toast }) => {
   const [gameState, setGameState] = useGameState();
   const plausible = usePlausible();
   const dispatch = useDispatch();
+  const { solution } = useSolution(
+    gameId,
+    wordLength,
+    gameType === "vrttaal" ? "vrttaal" : null
+  );
 
   const closeHandler = (e) => {
     dispatch(hide());
@@ -188,7 +193,7 @@ ${gameState.guesses
         </Text>
       </Modal.Header>
       <Modal.Body>
-        {solution.meaning ? (
+        {solution?.meaning ? (
           <Card>
             <Text>
               <Text b>Betekenis:</Text>{" "}

@@ -10,6 +10,8 @@ import store from "@/redux/store";
 import Pwa from "@/components/Pwa";
 import globaStyles from "../styles/globals";
 import GlobalStyle from "../styles/globals";
+import useSWR, { SWRConfig } from "swr";
+import { request } from "graphql-request";
 
 let persistor = persistStore(store);
 
@@ -54,7 +56,13 @@ function MyApp({ Component, pageProps }) {
               <Pwa />
 
               <Gate>
-                <Component {...pageProps} />
+                <SWRConfig
+                  value={{
+                    fetcher: ({ query, variables }) =>
+                      request("/api/graphql", query, variables),
+                  }}>
+                  <Component {...pageProps} />
+                </SWRConfig>
               </Gate>
             </>
           </Provider>
