@@ -80,12 +80,11 @@ const Footer = ({ gameId }) => {
                     </NextLink>
                   ) : null}
                 </Levels>
-                <Text small>
-                  Een dag overgeslagen? Bekijk{" "}
-                  <NextLink href={"/archief"} passHref>
-                    <Link>het archief</Link>
-                  </NextLink>
-                </Text>
+                <NextLink href={"/archief"} passHref>
+                  <Button color="gradient" ghost auto as="a">
+                    Archief
+                  </Button>
+                </NextLink>
               </Card.Body>
             </Card>
           ) : (

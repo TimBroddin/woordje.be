@@ -88,18 +88,14 @@ const Results = ({ visible, toast }) => {
       const header = [
         `${
           html ? translations.share_html : translations.share_text
-        } #${displayGameId}`,
+        } #${displayGameId} x ${
+          gameType === "vrttaal" ? "vrttaal" : wordLength
+        }`,
       ];
       if (isArchive) {
         header.push("archief");
       }
-      if (gameType === "vrttaal") {
-        header.push(`VRT Taal`);
-      } else {
-        if (wordLength != 6) {
-          header.push(`${wordLength} letters`);
-        }
-      }
+
       if (hardMode) {
         header.push(`💀 Extra moeilijk`);
       }

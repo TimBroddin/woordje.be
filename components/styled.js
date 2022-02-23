@@ -33,6 +33,10 @@ export const Levels = styled("div", {
   display: "flex",
   flexWrap: "wrap",
   gap: "10px",
+
+  "@media (max-width: 768px)": {
+    justifyContent: "space-between",
+  },
 });
 
 export const Note = styled("div", {

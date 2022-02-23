@@ -14,7 +14,6 @@ const fetchAmount = async function (gameId, letters, field = "win") {
     { headers: { Authorization: `Bearer ${process.env.PLAUSIBLE_API_KEY}` } }
   );
   const json = await res.json();
-  console.log(json);
   return json?.results?.visitors?.value;
 };
 
@@ -43,9 +42,7 @@ const getEvents = async function () {
       const date = new Date();
 
       if (!row || row.updatedAt < date.setHours(date.getHours() - 12)) {
-        console.log(`${gameId}x${letter}`);
         const { wins, loses } = await getWinsAndLoses(gameId, letter);
-        console.log(`${gameId}x${letter} - ${wins}/${loses}`);
         await prisma.stats.upsert({
           where: {
             gameId_letters: {
