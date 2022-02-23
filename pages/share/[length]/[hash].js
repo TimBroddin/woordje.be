@@ -1,13 +1,12 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NextSeo } from "next-seo";
-import { getTodaysGameId } from "../../../lib/gameId";
 import { useRouter } from "next/router";
-import { useCorrectedGameId } from "../../../lib/hooks";
+import { useDisplayGameId } from "../../../lib/hooks";
 
 const Facebook = ({ length, hash }) => {
   const { translations } = useSelector((state) => state.settings);
-  const CORRECTED_GAME_ID = useCorrectedGameId();
+  const CORRECTED_GAME_ID = useDisplayGameId();
   const router = useRouter();
   const lines = hash.match(new RegExp(`.{1,${length}}`, "g"));
   const tries =

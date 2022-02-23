@@ -9,5 +9,6 @@
       "@/styles/*": ["styles/*"],
       "@/queries/*": ["queries/*"]
     }
-  }
+  },
+  "exclude": ["node_modules"]
 }

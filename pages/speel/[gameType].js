@@ -14,7 +14,7 @@ import {
   getDemoWords,
   getRandomWords,
 } from "@/lib/server";
-import { useCorrectedGameId } from "@/lib/hooks";
+import { useDisplayGameId, useCurrentGameId } from "@/lib/hooks";
 import { useTranslations } from "@/lib/i18n";
 import { getTodaysGameId } from "@/lib/gameId";
 
@@ -32,7 +32,8 @@ export default function Home({
   ssrDemoWords,
 }) {
   const dispatch = useDispatch();
-  const correctedGameId = useCorrectedGameId();
+  const gameId = useCurrentGameId();
+  const displayGameId = useDisplayGameId();
   const boardSize = wordLength + 1;
 
   const { colorBlind } = useSelector((state) => state.settings);
@@ -52,12 +53,12 @@ export default function Home({
   return wordLength > 2 && wordLength < 11 ? (
     <>
       <NextSeo
-        title={`${translations.title} #${correctedGameId} - nederlandstalige Wordle - ${wordLength} letters`}
+        title={`${translations.title} #${displayGameId} - nederlandstalige Wordle - ${wordLength} letters`}
         description={`${translations.description}`}
         canonical={translations.url}
         openGraph={{
           url: translations.url,
-          title: `${translations.title} #${correctedGameId} - nederlandstalige Wordle - ${wordLength} letters`,
+          title: `${translations.title} #${displayGameId} - nederlandstalige Wordle - ${wordLength} letters`,
           description: translations.description,
           images: [
             {
@@ -80,7 +81,7 @@ export default function Home({
         <Header />
 
         <Game
-          gameId={correctedGameId}
+          gameId={gameId}
           wordLength={wordLength}
           gameType={gameType}
           ssrDemoWords={ssrDemoWords}
@@ -108,8 +109,6 @@ export const getStaticProps = async (ctx) => {
 
   const { gameType } = params;
 
-  console.log({ today: getTodaysGameId(), locale });
-
   if (gameType === "vrttaal") {
     try {
       const { Woord } = await getCurrentWordFromAirTable();
@@ -118,6 +117,7 @@ export const getStaticProps = async (ctx) => {
           gameType: gameType,
           wordLength: Woord.length,
           ssrSolution: Woord,
+          customGame: "vrttaal",
           ssrRandomWord: getRandomWord(Woord.length),
           ssrDemoWords: getRandomWords(3, Woord.length),
         },
@@ -131,6 +131,7 @@ export const getStaticProps = async (ctx) => {
     }
   } else {
     const wordLength = parseInt(gameType);
+
     return {
       props: {
         gameType: `normal-${gameType}`,

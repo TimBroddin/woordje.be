@@ -252,7 +252,6 @@ export default function Game({
       dispatch,
       gameType,
       hardMode,
-      locale,
     ]
   );
 

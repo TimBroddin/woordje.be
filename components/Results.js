@@ -19,7 +19,13 @@ import { motion } from "framer-motion";
 
 import NextLink from "next/link";
 import { copyToClipboard, getIsVictory } from "@/lib/helpers";
-import { useCorrectedGameId, useGameState, useSolution } from "@/lib/hooks";
+import {
+  useDisplayGameId,
+  useGameState,
+  useSolution,
+  useArchive,
+  useIsArchive,
+} from "@/lib/hooks";
 import { useTranslations } from "@/lib/i18n";
 import { getStreak } from "@/lib/helpers";
 import { hide } from "@/redux/features/modal";
@@ -61,7 +67,8 @@ const Results = ({ visible, toast }) => {
   const { wordLength, boardSize, gameType, hardMode, gameId } = useSelector(
     (state) => state.settings
   );
-  const correctedGameId = useCorrectedGameId(gameId);
+  const displayGameId = useDisplayGameId(gameId);
+  const isArchive = useIsArchive(gameId);
   const streak = useSelector(getStreak);
   const timer = useSelector((state) => state.timer);
   const [gameState, setGameState] = useGameState();
@@ -81,13 +88,16 @@ const Results = ({ visible, toast }) => {
       const header = [
         `${
           html ? translations.share_html : translations.share_text
-        } #${gameId}`,
+        } #${displayGameId}`,
       ];
+      if (isArchive) {
+        header.push("archief");
+      }
       if (gameType === "vrttaal") {
         header.push(`VRT Taal`);
       } else {
         if (wordLength != 6) {
-          header.push(`(${wordLength} letters)`);
+          header.push(`${wordLength} letters`);
         }
       }
       if (hardMode) {
@@ -137,7 +147,7 @@ ${gameState.guesses
       translations.share_html,
       translations.share_text,
       translations.share_hashtag,
-      gameId,
+      displayGameId,
       gameType,
       gameState,
       boardSize,
@@ -146,6 +156,7 @@ ${gameState.guesses
       timer.value,
       wordLength,
       hardMode,
+      isArchive,
     ]
   );
 

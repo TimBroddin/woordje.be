@@ -7,29 +7,25 @@ import { useSelector } from "react-redux";
 
 import { Main, Levels, Level, Note } from "@/components/styled";
 import Header from "@/components/Header";
-import { useCorrectedGameId } from "@/lib/hooks";
+import { useDisplayGameId } from "@/lib/hooks";
 import { useTranslations } from "@/lib/i18n";
 
-const GameCard = ({ gameId }) => {
+const GameCard = ({ displayGameId }) => {
   const statistics = useSelector((state) => state.statistics);
-  const correctedGameId = useCorrectedGameId(gameId);
   const translations = useTranslations();
-  const { locale } = useRouter();
-
-  console.log(statistics);
 
   return (
-    <Grid xs={12} sm={6} key={`word-${gameId}`}>
+    <Grid xs={12} sm={6} key={`word-${displayGameId}`}>
       <Card>
         <Card.Header>
-          <Text key={gameId} h1 css={{ fontSize: 16 }}>
-            {translations.title} #{gameId}
+          <Text key={displayGameId} h1 css={{ fontSize: 16 }}>
+            {translations.title} #{displayGameId}
           </Text>
         </Card.Header>
         <Card.Body>
           <Levels>
             {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => {
-              const tries = statistics?.[level]?.[correctedGameId];
+              const tries = statistics?.[level]?.[displayGameId];
               const won = tries !== null && tries >= 0;
               const lost = tries === -1;
               const played = won || lost;
@@ -46,7 +42,9 @@ const GameCard = ({ gameId }) => {
                         } over.`
                       : `Je speelde dit level nog niet.`
                   }>
-                  <NextLink href={`/archief/${gameId}x${level}`} passHref>
+                  <NextLink
+                    href={`/archief/${displayGameId}x${level}`}
+                    passHref>
                     <Level active={false} won={won} lost={lost}>
                       {level}
                     </Level>
@@ -62,7 +60,7 @@ const GameCard = ({ gameId }) => {
 };
 
 const Archive = () => {
-  const currentGameId = useCorrectedGameId();
+  const currentDisplayGameId = useDisplayGameId();
   const translations = useTranslations();
 
   return (
@@ -108,10 +106,10 @@ const Archive = () => {
           </Text>
         </Note>
         <Grid.Container gap={2}>
-          {Array.from({ length: currentGameId }, (x, i) => i + 1)
+          {Array.from({ length: currentDisplayGameId }, (x, i) => i + 1)
             .reverse()
             .map((gameId) => (
-              <GameCard gameId={gameId} key={`word-${gameId}`} />
+              <GameCard displayGameId={gameId} key={`word-${gameId}`} />
             ))}
         </Grid.Container>
       </Main>
