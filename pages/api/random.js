@@ -1,4 +1,4 @@
-import { getRandomWord } from "../../lib/ssr";
+import { getRandomWord } from "@/lib/server";
 
 export default function handler(req, res) {
   const wordLength = parseInt(req.query?.l);

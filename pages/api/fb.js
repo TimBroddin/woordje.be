@@ -1,4 +1,4 @@
-import { getScreenshot } from "../../lib/og/chromium";
+import { getScreenshot } from "@/lib/og/chromium";
 
 const handler = async (req, res) => {
   const {

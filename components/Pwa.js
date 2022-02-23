@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useSelector } from "react-redux";
 import { usePlausible } from "next-plausible";
 
-import { useTranslations } from "../lib/i18n";
+import { useTranslations } from "@/lib/i18n";
 
 const Pwa = () => {
   const plausible = usePlausible();

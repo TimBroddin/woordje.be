@@ -4,15 +4,6 @@ import { usePlausible } from "next-plausible";
 import { useSelector, useDispatch } from "react-redux";
 import { useTheme as useNextTheme } from "next-themes";
 import { useRouter } from "next/router";
-
-import { useTranslations } from "../lib/i18n";
-import { Sun, Moon } from "../lib/icons";
-import Show from "../lib/iconly/Icons/Show";
-import Hide from "../lib/iconly/Icons/Hide";
-import Danger from "../lib/iconly/Icons/Danger";
-
-import { setColorBlind, setHardMode } from "../redux/features/settings";
-import { getRandomWord } from "../redux/features/randomWord";
 import {
   Button,
   Card,
@@ -26,7 +17,15 @@ import {
   Tooltip,
   useTheme,
 } from "@nextui-org/react";
-import { Levels, Level } from "./styled";
+
+import { useTranslations } from "@/lib/i18n";
+import { Sun, Moon } from "@/lib/icons";
+import Show from "@/lib/iconly/Icons/Show";
+import Hide from "@/lib/iconly/Icons/Hide";
+import Danger from "@/lib/iconly/Icons/Danger";
+import { setColorBlind, setHardMode } from "@/redux/features/settings";
+import { getRandomWord } from "@/redux/features/randomWord";
+import { Levels, Level } from "@/components/styled";
 
 const Footer = () => {
   const dispatch = useDispatch();
@@ -80,7 +79,7 @@ const Footer = () => {
                 ) : null}
               </Levels>
               <Text small>
-                Nog meer? Bekijk{" "}
+                Een dag overgeslagen? Bekijk{" "}
                 <NextLink href={"/archief"} passHref>
                   <Link>het archief</Link>
                 </NextLink>

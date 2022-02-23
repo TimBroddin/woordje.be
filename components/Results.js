@@ -18,11 +18,11 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 import NextLink from "next/link";
-import { copyToClipboard, getIsVictory } from "../lib/helpers";
-import { useCorrectedGameId, useGameState } from "../lib/hooks";
-import { useTranslations } from "../lib/i18n";
-import { getStreak } from "../lib/helpers";
-import { hide } from "../redux/features/modal";
+import { copyToClipboard, getIsVictory } from "@/lib/helpers";
+import { useCorrectedGameId, useGameState } from "@/lib/hooks";
+import { useTranslations } from "@/lib/i18n";
+import { getStreak } from "@/lib/helpers";
+import { hide } from "@/redux/features/modal";
 
 import { usePlausible } from "next-plausible";
 
@@ -76,7 +76,7 @@ const Results = ({ solution, visible, toast }) => {
       const header = [
         `${
           html ? translations.share_html : translations.share_text
-        } #${correctedGameId}`,
+        } #${gameId}`,
       ];
       if (gameType === "vrttaal") {
         header.push(`VRT Taal`);
@@ -132,7 +132,7 @@ ${gameState.guesses
       translations.share_html,
       translations.share_text,
       translations.share_hashtag,
-      correctedGameId,
+      gameId,
       gameType,
       gameState,
       boardSize,

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { customGameResolver } from "../../lib/customGames";
+import { customGameResolver } from "@/lib/customGames";
 
 const initialState = {
   gameId: null,

@@ -7,16 +7,17 @@ import { NextSeo } from "next-seo";
 import { usePlausible } from "next-plausible";
 
 // HELPERS & HOOKS
-import { getCurrentWordFromAirTable } from "../../../lib/airtable";
-import { getSolution, getRandomWord, getDemoWords } from "../../../lib/ssr";
-import { useTranslations } from "../../../lib/i18n";
-import { useCorrectedGameId } from "../../../lib/hooks";
+import { getCurrentWordFromAirTable } from "@/lib/airtable";
+import { getSolution, getRandomWord, getDemoWords } from "@/lib/server";
+import { useTranslations } from "@/lib/i18n";
+import { useCorrectedGameId } from "@/lib/hooks";
 
 // COMPONENTS
-import { Main } from "../../../components/styled";
-import Header from "../../../components/Header";
-import Footer from "../../../components/Footer";
-import Game from "../../../components/Game";
+import { Main } from "@/components/styled";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import Game from "@/components/Game";
+import { getTodaysGameId } from "@/lib/gameId";
 
 export default function Home({
   gameType,
@@ -30,7 +31,6 @@ export default function Home({
 
   const { colorBlind } = useSelector((state) => state.settings);
   const translations = useTranslations();
-  const correctedGameId = useCorrectedGameId(gameId);
 
   useEffect(() => {
     if (typeof document !== "undefined") {
@@ -72,7 +72,7 @@ export default function Home({
       <Main>
         <Header
           customTitle={`Archief`}
-          subtitle={`${translations.title} #${correctedGameId}`}
+          subtitle={`${translations.title} #${gameId}`}
           titleSize={40}
         />
 
@@ -101,7 +101,9 @@ export default function Home({
 }
 
 export const getStaticProps = async (ctx) => {
-  const { gameType, gameId } = ctx.params;
+  const { query } = ctx.params;
+  const [gameId, gameType] = query.split("x");
+
   if (gameType === "vrttaal") {
     try {
       const { Woord } = await getCurrentWordFromAirTable();
@@ -129,7 +131,6 @@ export const getStaticProps = async (ctx) => {
         ssrSolution: await getSolution(
           parseInt(gameType, 10),
           parseInt(gameId, 10),
-          true,
           ctx.locale
         ),
         wordLength: parseInt(gameType, 10),
@@ -144,5 +145,23 @@ export const getStaticProps = async (ctx) => {
 };
 
 export async function getStaticPaths() {
-  return { paths: [], fallback: "blocking" };
+  const locales = ["nl-BE", "nl-NL"];
+  const levels = ["3", "4", "5", "6", "7", "8", "9", "10"];
+  const paths = [];
+
+  for (let locale of locales) {
+    const maxGameId =
+      locale === "nl-BE" ? getTodaysGameId() : getTodaysGameId() - 36;
+    for (let level of levels) {
+      for (let i = 1; i <= maxGameId; i++) {
+        paths.push({
+          params: { query: `${i}x${level}`, locale: locale },
+        });
+      }
+    }
+  }
+
+  console.log(paths);
+
+  return { paths, fallback: "blocking" };
 }

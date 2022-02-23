@@ -1,5 +1,6 @@
 import { useCallback, useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 import toast, { Toaster } from "react-hot-toast";
 import useWindowSize from "react-use/lib/useWindowSize";
@@ -7,44 +8,43 @@ import Confetti from "react-confetti";
 import { usePlausible } from "next-plausible";
 
 // HELPERS & HOOKS
-import { getIsGameOverSelector } from "../lib/helpers";
+import { getIsGameOverSelector } from "@/lib/helpers";
 
-import { useGameState } from "../lib/hooks";
+import { useGameState } from "@/lib/hooks";
 
 // REDUX
-import { setSettings } from "../redux/features/settings";
-import { getRandomWord, setRandomWord } from "../redux/features/randomWord";
-import { addWin, addLoss } from "../redux/features/statistics";
-import { setInputText } from "../redux/features/inputText";
-import {
-  stop as stopTimer,
-  reset as resetTimer,
-} from "../redux/features/timer";
-import { setModal } from "../redux/features/modal";
+import { setSettings } from "@/redux/features/settings";
+import { getRandomWord, setRandomWord } from "@/redux/features/randomWord";
+import { addWin, addLoss } from "@/redux/features/statistics";
+import { setInputText } from "@/redux/features/inputText";
+import { stop as stopTimer, reset as resetTimer } from "@/redux/features/timer";
+import { setModal } from "@/redux/features/modal";
 
 // COMPONENTS
-import { Board, Row } from "./styled";
-import Letter from "./Letter";
-import Keyboard from "./Keyboard";
-import Results from "./Results";
-import Splash from "./Splash";
-import Statistics from "./Statistics";
-import AddToHomeScreen from "./AddToHomeScreen";
+import { Board, Row } from "@/components/styled";
+import Letter from "@/components/Letter";
+import Keyboard from "@/components/Keyboard";
+import Results from "@/components/Results";
+import Splash from "@/components/Splash";
+import Statistics from "@/components/Statistics";
+import AddToHomeScreen from "@/components/AddToHomeScreen";
 
 const STAGGER = 0.15;
 
-async function check(word, gameType, wordLength, gameId, opts) {
+async function check(word, gameType, wordLength, gameId, locale, opts) {
   const res = await fetch(
     `/api/check?word=${encodeURIComponent(word)}&l=${
       gameType === "vrttaal" ? gameType : wordLength
-    }&gameId=${gameId}`,
+    }&gameId=${gameId}&locale=${locale}`,
     opts
   );
   return await res.json();
 }
 
-async function getSolution(l, gameId) {
-  const res = await fetch(`/api/solution?l=${l}&gameId=${gameId}`);
+async function getSolution(l, gameId, locale) {
+  const res = await fetch(
+    `/api/solution?l=${l}&gameId=${gameId}&locale=${locale}`
+  );
   return await res.json();
 }
 
@@ -57,6 +57,7 @@ export default function Game({
   ssrDemoWords,
 }) {
   const dispatch = useDispatch();
+  const { locale } = useRouter();
   const boardSize = wordLength + 1;
 
   const randomWord = useSelector((state) => state.randomWord);
@@ -75,10 +76,12 @@ export default function Game({
   const plausible = usePlausible();
 
   useEffect(() => {
-    getSolution(gameType === "vrttaal" ? "vrttaal" : wordLength, gameId).then(
-      (solution) => setSolution(solution)
-    );
-  }, [wordLength, gameType, gameId]);
+    getSolution(
+      gameType === "vrttaal" ? "vrttaal" : wordLength,
+      gameId,
+      locale
+    ).then((solution) => setSolution(solution));
+  }, [wordLength, gameType, locale, gameId]);
 
   useEffect(() => {
     setShowConfetti(false);
@@ -95,14 +98,16 @@ export default function Game({
 
   useEffect(() => {
     if (isGameOver) {
-      getSolution(gameType === "vrttaal" ? "vrttaal" : wordLength, gameId).then(
-        (solution) => setSolution(solution)
-      );
+      getSolution(
+        gameType === "vrttaal" ? "vrttaal" : wordLength,
+        gameId,
+        locale
+      ).then((solution) => setSolution(solution));
       setTimeout(() => {
         dispatch(setModal("results"));
       }, wordLength * STAGGER * 1000);
     }
-  }, [dispatch, isGameOver, wordLength, gameType, gameId]);
+  }, [dispatch, isGameOver, locale, wordLength, gameType, gameId]);
 
   useEffect(() => {
     dispatch(resetTimer());
@@ -175,9 +180,16 @@ export default function Game({
 
       let serverResponse;
       try {
-        serverResponse = await check(text, gameType, wordLength, gameId, {
-          signal: controller.signal,
-        });
+        serverResponse = await check(
+          text,
+          gameType,
+          wordLength,
+          gameId,
+          locale,
+          {
+            signal: controller.signal,
+          }
+        );
       } catch (err) {
         if (err.name === "AbortError") {
           toast.dismiss("toast");
@@ -251,6 +263,7 @@ export default function Game({
       dispatch,
       gameType,
       hardMode,
+      locale,
     ]
   );
 

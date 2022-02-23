@@ -2,9 +2,9 @@ import { Modal, Button, Text, Loading, styled } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 
-import { useTranslations } from "../lib/i18n";
-import { hide } from "../redux/features/modal";
-import Letter from "./Letter";
+import { useTranslations } from "@/lib/i18n";
+import { hide } from "@/redux/features/modal";
+import Letter from "@/components/Letter";
 
 const Board = styled(motion.div, {
   display: "flex",

@@ -1,8 +1,8 @@
 import { Modal, Grid, Text, Card, styled } from "@nextui-org/react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { hide } from "../redux/features/modal";
-import { getStatistics } from "../lib/helpers";
+import { hide } from "@/redux/features/modal";
+import { getStatistics } from "@/lib/helpers";
 
 const DistributionValue = styled("div", {
   boxSizing: "border-box",

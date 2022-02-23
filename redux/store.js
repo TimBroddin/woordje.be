@@ -5,14 +5,14 @@ import { persistReducer } from "redux-persist";
 import thunk from "redux-thunk";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 
-import gameState from "./features/gameState";
-import settings from "./features/settings";
-import randomWord from "./features/randomWord";
-import statistics from "./features/statistics";
-import timer from "./features/timer";
-import inputText from "./features/inputText";
-import installPopup from "./features/installPopup";
-import modal from "./features/modal";
+import gameState from "@/redux/features/gameState";
+import settings from "@/redux/features/settings";
+import randomWord from "@/redux/features/randomWord";
+import statistics from "@/redux/features/statistics";
+import timer from "@/redux/features/timer";
+import inputText from "@/redux/features/inputText";
+import installPopup from "@/redux/features/installPopup";
+import modal from "@/redux/features/modal";
 
 const persistConfig = {
   key: "root",

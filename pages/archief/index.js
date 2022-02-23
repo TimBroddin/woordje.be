@@ -1,18 +1,69 @@
-import { Card, Text, Grid } from "@nextui-org/react";
+import { Card, Text, Grid, Tooltip } from "@nextui-org/react";
 import { NextSeo } from "next-seo";
 import NextLink from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
-import { Main, Levels, Level } from "../../components/styled";
-import Header from "../../components/Header";
-import { useCorrectedGameId } from "../../lib/hooks";
-import { useTranslations } from "../../lib/i18n";
+import { Main, Levels, Level, Note } from "@/components/styled";
+import Header from "@/components/Header";
+import { useCorrectedGameId } from "@/lib/hooks";
+import { useTranslations } from "@/lib/i18n";
+
+const GameCard = ({ gameId }) => {
+  const statistics = useSelector((state) => state.statistics);
+  const correctedGameId = useCorrectedGameId(gameId);
+  const translations = useTranslations();
+  const { locale } = useRouter();
+
+  console.log(statistics);
+
+  return (
+    <Grid xs={12} sm={6} key={`word-${gameId}`}>
+      <Card>
+        <Card.Header>
+          <Text key={gameId} h1 css={{ fontSize: 16 }}>
+            {translations.title} #{gameId}
+          </Text>
+        </Card.Header>
+        <Card.Body>
+          <Levels>
+            {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => {
+              const tries = statistics?.[level]?.[correctedGameId];
+              const won = tries !== null && tries >= 0;
+              const lost = tries === -1;
+              const played = won || lost;
+
+              return (
+                <Tooltip
+                  key={`level-${level}`}
+                  content={
+                    lost
+                      ? "Je verloor dit level."
+                      : won
+                      ? `Je deed hier ${tries} ${
+                          tries === 1 ? "poging" : "pogingen"
+                        } over.`
+                      : `Je speelde dit level nog niet.`
+                  }>
+                  <NextLink href={`/archief/${gameId}x${level}`} passHref>
+                    <Level active={false} won={won} lost={lost}>
+                      {level}
+                    </Level>
+                  </NextLink>
+                </Tooltip>
+              );
+            })}
+          </Levels>
+        </Card.Body>
+      </Card>
+    </Grid>
+  );
+};
 
 const Archive = () => {
   const currentGameId = useCorrectedGameId();
   const translations = useTranslations();
-  const { locale } = useRouter();
 
   return (
     <>
@@ -42,51 +93,26 @@ const Archive = () => {
       />
 
       <Main>
-        <Header showStats={false} showInfo={false} customTitle="Archief" />
+        <Header
+          showStats={false}
+          showInfo={false}
+          showHome={true}
+          emptyRight={true}
+          customTitle="Archief"
+        />
+        <Note type="primary" css={{ marginBottom: "$8" }}>
+          <Text>
+            Hier kan je alle vorige spellen opnieuw spelen. Eenmaal gespeeld
+            blijft je score onthouden. Het is niet mogelijk om je score nog te
+            verbeteren.
+          </Text>
+        </Note>
         <Grid.Container gap={2}>
           {Array.from({ length: currentGameId }, (x, i) => i + 1)
             .reverse()
-            .map((gameId) => {
-              return (
-                <Grid xs={12} sm={6} key={`word-${gameId}`}>
-                  <Card>
-                    <Card.Header>
-                      <Text key={gameId} h1 css={{ fontSize: 16 }}>
-                        {translations.title} #{gameId}
-                      </Text>
-                    </Card.Header>
-                    <Card.Body>
-                      <Levels>
-                        {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
-                          <NextLink
-                            href={`/archief/${gameId}/${level}`}
-                            key={`level-${level}`}
-                            passHref>
-                            <Level active={false}>{level}</Level>
-                          </NextLink>
-                        ))}
-                        {process.env.NEXT_PUBLIC_VRTTAAL === "1" &&
-                        locale === "nl-BE" ? (
-                          <NextLink
-                            href={`/archief/${gameId}/vrttaal`}
-                            key={`level-vrttaal`}
-                            passHref>
-                            <Level wide active={false}>
-                              <Image
-                                src="/images/vrttaal.svg"
-                                width={100}
-                                height={48}
-                                alt="VRT Taal"
-                              />
-                            </Level>
-                          </NextLink>
-                        ) : null}
-                      </Levels>
-                    </Card.Body>
-                  </Card>
-                </Grid>
-              );
-            })}
+            .map((gameId) => (
+              <GameCard gameId={gameId} key={`word-${gameId}`} />
+            ))}
         </Grid.Container>
       </Main>
     </>

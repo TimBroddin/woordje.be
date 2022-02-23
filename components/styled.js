@@ -35,6 +35,24 @@ export const Levels = styled("div", {
   gap: "10px",
 });
 
+export const Note = styled("div", {
+  borderRadius: "$xs",
+  padding: "$8",
+  margin: "$0",
+
+  variants: {
+    type: {
+      primary: {
+        backgroundColor: "$primary",
+        "> p": {
+          color: "$white",
+          margin: "$0",
+        },
+      },
+    },
+  },
+});
+
 export const Level = styled("a", {
   fontSize: "16px",
   color: "white",
@@ -46,18 +64,27 @@ export const Level = styled("a", {
   height: "36px",
   width: "36px",
   padding: "0px",
+  backgroundColor: "var(--color-level)",
 
   "&:hover": {
     backgroundColor: "var(--color-level-active)",
   },
 
   variants: {
+    won: {
+      true: {
+        backgroundColor: "var(--nextui-colors-success)",
+      },
+    },
+    lost: {
+      true: {
+        backgroundColor: "var(--nextui-colors-error)",
+      },
+    },
+
     active: {
       true: {
         backgroundColor: "var(--color-level-active)",
-      },
-      false: {
-        backgroundColor: "var(--color-level)",
       },
     },
     wide: {

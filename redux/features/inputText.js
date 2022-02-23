@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { start } from "./timer";
+import { start } from "@/redux/features/timer";
 
 const initialState = {
   value: "",

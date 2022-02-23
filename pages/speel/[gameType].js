@@ -7,17 +7,17 @@ import { NextSeo } from "next-seo";
 import { usePlausible } from "next-plausible";
 
 // HELPERS & HOOKS
-import { getCurrentWordFromAirTable } from "../../lib/airtable";
-import { getSolution, getRandomWord, getDemoWords } from "../../lib/ssr";
-import { useCorrectedGameId } from "../../lib/hooks";
-import { useTranslations } from "../../lib/i18n";
-import { getTodaysGameId } from "../../lib/gameId";
+import { getCurrentWordFromAirTable } from "@/lib/airtable";
+import { getSolution, getRandomWord, getDemoWords } from "@/lib/server";
+import { useCorrectedGameId } from "@/lib/hooks";
+import { useTranslations } from "@/lib/i18n";
+import { getTodaysGameId } from "@/lib/gameId";
 
 // COMPONENTS
-import { Main } from "../../components/styled";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import Game from "../../components/Game";
+import { Main } from "@/components/styled";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import Game from "@/components/Game";
 
 export default function Home({
   gameType,
@@ -99,8 +99,11 @@ export default function Home({
 }
 
 export const getStaticProps = async (ctx) => {
-  const { gameType, locale } = ctx.params;
+  const { locale, params } = ctx;
 
+  const { gameType } = params;
+
+  console.log({ today: getTodaysGameId(), locale });
   if (gameType === "vrttaal") {
     try {
       const { Woord } = await getCurrentWordFromAirTable();
@@ -108,9 +111,9 @@ export const getStaticProps = async (ctx) => {
         props: {
           gameType: gameType,
           wordLength: Woord.length,
-          ssrSolution: await getSsrSolution(gameType, locale),
-          ssrRandomWord: getSsrRandomWord(Woord.length),
-          ssrDemoWords: getSsrDemoWords(Woord.length),
+          ssrSolution: await getSolution(gameType, "nl-BE"),
+          ssrRandomWord: getRandomWord(Woord.length),
+          ssrDemoWords: getDemoWords(Woord.length),
         },
         revalidate: 60,
       };
@@ -127,7 +130,7 @@ export const getStaticProps = async (ctx) => {
         ssrSolution: await getSolution(
           parseInt(gameType, 10),
           getTodaysGameId(),
-          locale
+          "nl-BE" // woorking with getTodaysGameId() which is locale independent
         ),
         wordLength: parseInt(gameType, 10),
         ssrRandomWord: getRandomWord(parseInt(gameType, 10)),

@@ -1,7 +1,7 @@
 import { styled } from "@nextui-org/react";
 import { useEffect } from "react";
-import { useGameState } from "../lib/hooks";
-import { useTranslations } from "../lib/i18n";
+import { useGameState } from "@/lib/hooks";
+import { useTranslations } from "@/lib/i18n";
 
 const Wrapper = styled("div", {
   marginTop: "10px",

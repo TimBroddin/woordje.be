@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { customGameResolver } from "../../lib/customGames";
+import { customGameResolver } from "@/lib/customGames";
 
 const data = {
   winDistribution: [], // array consisting of  tries per gameId, lose = -1

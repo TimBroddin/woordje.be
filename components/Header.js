@@ -1,15 +1,20 @@
 import { Container, Row, Col, Button, Text, Tooltip } from "@nextui-org/react";
+import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { usePlausible } from "next-plausible";
 
-import { useTranslations } from "../lib/i18n";
-import InfoSquare from "../lib/iconly/Icons/InfoSquare";
-import Chart from "../lib/iconly/Icons/Chart";
-import { setModal } from "../redux/features/modal";
+import { useTranslations } from "@/lib/i18n";
+import InfoSquare from "@/lib/iconly/Icons/InfoSquare";
+import Chart from "@/lib/iconly/Icons/Chart";
+import Home from "@/lib/iconly/Icons/Home";
+
+import { setModal } from "@/redux/features/modal";
 
 const Header = ({
   showInfo = true,
   showStats = true,
+  showHome = false,
+  emptyRight = false,
   customTitle,
   titleSize = 60,
   titleColor,
@@ -18,6 +23,7 @@ const Header = ({
   const dispatch = useDispatch();
   const { gameType, colorBlind } = useSelector((state) => state.settings);
   const translations = useTranslations();
+  const router = useRouter();
 
   const plausible = usePlausible();
   return (
@@ -27,6 +33,27 @@ const Header = ({
       alignContent="space-between"
       css={{ marginBottom: "$8" }}>
       <Row justify="space-between" align="center">
+        {showHome && (
+          <Col>
+            <Button
+              auto
+              light
+              animated={false}
+              onClick={(e) => {
+                router.push("/");
+              }}
+              aria-label="Home"
+              icon={
+                <Home
+                  set={colorBlind ? "bold" : "two-tone"}
+                  primaryColor="var(--color-icon-left)"
+                  secondaryColor="var(--nextui-colors-blue500)"
+                  size="large"
+                />
+              }
+            />
+          </Col>
+        )}
         {showInfo && (
           <Col>
             <Tooltip
@@ -96,6 +123,7 @@ const Header = ({
             </Tooltip>
           </Col>
         )}
+        {emptyRight && <Col />}
       </Row>
     </Container>
   );

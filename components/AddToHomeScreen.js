@@ -1,10 +1,10 @@
 import { useSelector, useDispatch } from "react-redux";
 import { styled } from "@nextui-org/react";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { hide } from "../redux/features/installPopup";
-import { useTranslations } from "../lib/i18n";
-import { getIsGameOverSelector } from "../lib/helpers";
+
+import { hide } from "@/redux/features/installPopup";
+import { useTranslations } from "@/lib/i18n";
+import { getIsGameOverSelector } from "@/lib/helpers";
 
 const isIphone = () => {
   if (typeof window !== "undefined") {

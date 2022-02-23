@@ -1,8 +1,7 @@
-import woorden from "../../data/woorden.json";
-import { getTodaysGameId } from "../../lib/gameId";
-import { getCurrentWordFromAirTable } from "../../lib/airtable";
-import { gameIdToIndex } from "../../lib/helpers";
-import { currentLocale } from "../../lib/ssr";
+import woorden from "@/data/woorden.json";
+import { getTodaysGameId } from "@/lib/gameId";
+import { getCurrentWordFromAirTable } from "@/lib/airtable";
+import { gameIdToIndex } from "@/lib/helpers";
 
 const getGameType = async (l, gameId, locale) => {
   if (l === "vrttaal") {
@@ -21,7 +20,7 @@ const getGameType = async (l, gameId, locale) => {
 
 export default async function handler(req, res) {
   const gameId = parseInt(req.query.gameId);
-  const locale = currentLocale(req);
+  const locale = req.query.locale;
   const { wordLength, WORD } = await getGameType(req.query.l, gameId, locale);
   const word = req.query?.word.toLowerCase().slice(0, WORD.length);
 

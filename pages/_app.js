@@ -5,9 +5,9 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import Head from "next/head";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
-import { useTranslations } from "../lib/i18n";
-import store from "../redux/store";
-import Pwa from "../components/Pwa";
+import { useTranslations } from "@/lib/i18n";
+import store from "@/redux/store";
+import Pwa from "@/components/Pwa";
 import globaStyles from "../styles/globals";
 import GlobalStyle from "../styles/globals";
 
