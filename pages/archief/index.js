@@ -106,7 +106,7 @@ const Archive = () => {
           </Text>
         </Note>
         <Grid.Container gap={2}>
-          {Array.from({ length: currentDisplayGameId }, (x, i) => i + 1)
+          {Array.from({ length: currentDisplayGameId - 1 }, (x, i) => i + 1)
             .reverse()
             .map((gameId) => (
               <GameCard displayGameId={gameId} key={`word-${gameId}`} />

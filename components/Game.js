@@ -402,7 +402,6 @@ export default function Game({
           : null}
       </Board>
       <Keyboard
-        gameState={gameState}
         onPress={(l) => {
           dispatch(
             setInputText(

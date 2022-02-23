@@ -26,8 +26,9 @@ import Danger from "@/lib/iconly/Icons/Danger";
 import { setColorBlind, setHardMode } from "@/redux/features/settings";
 import { getRandomWord } from "@/redux/features/randomWord";
 import { Levels, Level } from "@/components/styled";
+import { useIsArchive } from "@/lib/hooks";
 
-const Footer = () => {
+const Footer = ({ gameId }) => {
   const dispatch = useDispatch();
   const { setTheme } = useNextTheme();
   const { isDark, type } = useTheme();
@@ -39,53 +40,88 @@ const Footer = () => {
   );
   const { wordLength } = useSelector((state) => state.settings);
   const plausible = usePlausible();
-
+  const isArchive = useIsArchive(gameId);
   return (
     <Container gap={1}>
       <Grid.Container gap={2}>
         <Grid xs={12} sm={6}>
-          <Card role="region">
-            <Card.Header>
-              <Text b>Aantal letters</Text>
-            </Card.Header>
-            <Card.Body>
-              <Levels>
-                {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
-                  <NextLink
-                    href={`/speel/${level}`}
-                    key={`level-${level}`}
-                    passHref>
-                    <Level
-                      active={wordLength === level && gameType !== "vrttaal"}>
-                      {level}
-                    </Level>
+          {!isArchive ? (
+            <Card role="region">
+              <Card.Header>
+                <Text b>Aantal letters</Text>
+              </Card.Header>
+              <Card.Body>
+                <Levels>
+                  {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
+                    <NextLink
+                      href={`/speel/${level}`}
+                      key={`level-${level}`}
+                      passHref>
+                      <Level
+                        active={wordLength === level && gameType !== "vrttaal"}>
+                        {level}
+                      </Level>
+                    </NextLink>
+                  ))}
+                  {process.env.NEXT_PUBLIC_VRTTAAL === "1" &&
+                  locale === "nl-BE" ? (
+                    <NextLink
+                      href={`/speel/vrttaal`}
+                      key={`level-vrttaal`}
+                      passHref>
+                      <Level active={gameType === "vrttaal"} wide>
+                        <Image
+                          src="/images/vrttaal.svg"
+                          width={100}
+                          height={48}
+                          alt="VRT Taal"
+                        />
+                      </Level>
+                    </NextLink>
+                  ) : null}
+                </Levels>
+                <Text small>
+                  Een dag overgeslagen? Bekijk{" "}
+                  <NextLink href={"/archief"} passHref>
+                    <Link>het archief</Link>
                   </NextLink>
-                ))}
-                {process.env.NEXT_PUBLIC_VRTTAAL === "1" &&
-                locale === "nl-BE" ? (
-                  <NextLink
-                    href={`/speel/vrttaal`}
-                    key={`level-vrttaal`}
-                    passHref>
-                    <Level active={gameType === "vrttaal"} wide>
-                      <Image
-                        src="/images/vrttaal.svg"
-                        width={100}
-                        height={48}
-                        alt="VRT Taal"
-                      />
-                    </Level>
-                  </NextLink>
-                ) : null}
-              </Levels>
-              <Text small>
-                Een dag overgeslagen? Bekijk{" "}
-                <NextLink href={"/archief"} passHref>
-                  <Link>het archief</Link>
+                </Text>
+              </Card.Body>
+            </Card>
+          ) : (
+            <Card role="region">
+              <Card.Header>
+                <Text b>Ander Woordje?</Text>
+              </Card.Header>
+              <Card.Body>
+                <Text css={{ marginBottom: "$2" }}>
+                  Dit is een {translations.title} uit het archief. Een andere
+                  spelen?
+                </Text>
+
+                <NextLink href={"/"} passHref>
+                  <Button
+                    color="primary"
+                    ghost
+                    auto
+                    css={{ margin: "$2" }}
+                    as="a">
+                    Vandaag
+                  </Button>
                 </NextLink>
-              </Text>
-            </Card.Body>
-          </Card>
+                <NextLink href={"/archief"} passHref>
+                  <Button
+                    color="primary"
+                    ghost
+                    auto
+                    css={{ margin: "$2" }}
+                    as="a">
+                    Archief
+                  </Button>
+                </NextLink>
+              </Card.Body>
+            </Card>
+          )}
         </Grid>
         <Grid xs={12} sm={6}>
           <Container gap={0}>

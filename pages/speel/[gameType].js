@@ -89,7 +89,7 @@ export default function Home({
           ssrSolution={ssrSolution}
         />
 
-        <Footer wordLength={wordLength} boardSize={boardSize} />
+        <Footer gameId={gameId} wordLength={wordLength} boardSize={boardSize} />
       </Main>
     </>
   ) : (

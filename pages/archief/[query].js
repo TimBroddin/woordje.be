@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import Image from "next/image";
 
 import { NextSeo } from "next-seo";
-import { usePlausible } from "next-plausible";
 
 // HELPERS & HOOKS
 import { getCurrentWordFromAirTable } from "@/lib/airtable";
@@ -42,7 +41,7 @@ export default function Home({
     }
   }, [colorBlind]);
 
-  return wordLength > 2 && wordLength < 11 ? (
+  return wordLength > 2 && wordLength < 11 && gameId < getTodaysGameId() ? (
     <>
       <NextSeo
         title={`${translations.title} #${displayGameId} - nederlandstalige Wordle - ${wordLength} letters`}
@@ -72,7 +71,7 @@ export default function Home({
       <Main>
         <Header
           customTitle={`Archief`}
-          subtitle={`${translations.title} #${displayGameId}`}
+          subtitle={`${translations.title} #${displayGameId} x ${wordLength}`}
           titleSize={40}
         />
 
@@ -85,7 +84,7 @@ export default function Home({
           ssrSolution={ssrSolution}
         />
 
-        <Footer wordLength={wordLength} boardSize={boardSize} />
+        <Footer gameId={gameId} wordLength={wordLength} boardSize={boardSize} />
       </Main>
     </>
   ) : (
@@ -159,8 +158,6 @@ export async function getStaticPaths() {
       }
     }
   }
-
-  console.log(paths);
 
   return { paths, fallback: "blocking" };
 }
