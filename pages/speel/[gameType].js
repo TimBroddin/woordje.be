@@ -8,7 +8,12 @@ import { usePlausible } from "next-plausible";
 
 // HELPERS & HOOKS
 import { getCurrentWordFromAirTable } from "@/lib/airtable";
-import { getSolution, getRandomWord, getDemoWords } from "@/lib/server";
+import {
+  getSolution,
+  getRandomWord,
+  getDemoWords,
+  getRandomWords,
+} from "@/lib/server";
 import { useCorrectedGameId } from "@/lib/hooks";
 import { useTranslations } from "@/lib/i18n";
 import { getTodaysGameId } from "@/lib/gameId";
@@ -30,7 +35,7 @@ export default function Home({
   const correctedGameId = useCorrectedGameId();
   const boardSize = wordLength + 1;
 
-  const { colorBlind, hardMode } = useSelector((state) => state.settings);
+  const { colorBlind } = useSelector((state) => state.settings);
   const translations = useTranslations();
   const plausible = usePlausible();
 
@@ -104,6 +109,7 @@ export const getStaticProps = async (ctx) => {
   const { gameType } = params;
 
   console.log({ today: getTodaysGameId(), locale });
+
   if (gameType === "vrttaal") {
     try {
       const { Woord } = await getCurrentWordFromAirTable();
@@ -111,9 +117,9 @@ export const getStaticProps = async (ctx) => {
         props: {
           gameType: gameType,
           wordLength: Woord.length,
-          ssrSolution: await getSolution(gameType, "nl-BE"),
+          ssrSolution: Woord,
           ssrRandomWord: getRandomWord(Woord.length),
-          ssrDemoWords: getDemoWords(Woord.length),
+          ssrDemoWords: getRandomWords(3, Woord.length),
         },
         revalidate: 60,
       };
@@ -124,17 +130,14 @@ export const getStaticProps = async (ctx) => {
       };
     }
   } else {
+    const wordLength = parseInt(gameType);
     return {
       props: {
         gameType: `normal-${gameType}`,
-        ssrSolution: await getSolution(
-          parseInt(gameType, 10),
-          getTodaysGameId(),
-          "nl-BE" // woorking with getTodaysGameId() which is locale independent
-        ),
-        wordLength: parseInt(gameType, 10),
-        ssrRandomWord: getRandomWord(parseInt(gameType, 10)),
-        ssrDemoWords: getDemoWords(parseInt(gameType, 10)),
+        ssrSolution: await getSolution(getTodaysGameId(), wordLength),
+        wordLength,
+        ssrRandomWord: getRandomWord(wordLength),
+        ssrDemoWords: getRandomWords(3, wordLength),
       },
       revalidate: 60,
     };

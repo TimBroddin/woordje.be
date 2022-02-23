@@ -6,11 +6,12 @@ import toast, { Toaster } from "react-hot-toast";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import { usePlausible } from "next-plausible";
+import { GraphQLClient } from "graphql-request";
 
 // HELPERS & HOOKS
 import { getIsGameOverSelector } from "@/lib/helpers";
 
-import { useGameState } from "@/lib/hooks";
+import { useGameState, useSolution } from "@/lib/hooks";
 
 // REDUX
 import { setSettings } from "@/redux/features/settings";
@@ -28,24 +29,22 @@ import Results from "@/components/Results";
 import Splash from "@/components/Splash";
 import Statistics from "@/components/Statistics";
 import AddToHomeScreen from "@/components/AddToHomeScreen";
+import { CHECK_QUERY } from "../queries";
 
 const STAGGER = 0.15;
 
-async function check(word, gameType, wordLength, gameId, locale, opts) {
-  const res = await fetch(
-    `/api/check?word=${encodeURIComponent(word)}&l=${
-      gameType === "vrttaal" ? gameType : wordLength
-    }&gameId=${gameId}&locale=${locale}`,
-    opts
-  );
-  return await res.json();
-}
-
-async function getSolution(l, gameId, locale) {
-  const res = await fetch(
-    `/api/solution?l=${l}&gameId=${gameId}&locale=${locale}`
-  );
-  return await res.json();
+async function check(variables, signal) {
+  const client = new GraphQLClient("/api/graphql");
+  try {
+    const res = await client.request({
+      document: CHECK_QUERY,
+      variables,
+      signal,
+    });
+    return { match: res.check };
+  } catch (e) {
+    return { error: e.message.split(":")?.[0], match: [] };
+  }
 }
 
 export default function Game({
@@ -69,19 +68,15 @@ export default function Game({
   const [gameState, setGameState] = useGameState();
   const { currentModal } = useSelector((state) => state.modal);
 
-  const [solution, setSolution] = useState(ssrSolution);
   const { width, height } = useWindowSize();
   const isGameOver = useSelector(getIsGameOverSelector);
   const { colorBlind, hardMode } = useSelector((state) => state.settings);
   const plausible = usePlausible();
-
-  useEffect(() => {
-    getSolution(
-      gameType === "vrttaal" ? "vrttaal" : wordLength,
-      gameId,
-      locale
-    ).then((solution) => setSolution(solution));
-  }, [wordLength, gameType, locale, gameId]);
+  const { solution } = useSolution(
+    gameId,
+    wordLength,
+    gameType === "vrttaal" ? "vrttaal" : null
+  );
 
   useEffect(() => {
     setShowConfetti(false);
@@ -98,11 +93,6 @@ export default function Game({
 
   useEffect(() => {
     if (isGameOver) {
-      getSolution(
-        gameType === "vrttaal" ? "vrttaal" : wordLength,
-        gameId,
-        locale
-      ).then((solution) => setSolution(solution));
       setTimeout(() => {
         dispatch(setModal("results"));
       }, wordLength * STAGGER * 1000);
@@ -181,14 +171,13 @@ export default function Game({
       let serverResponse;
       try {
         serverResponse = await check(
-          text,
-          gameType,
-          wordLength,
-          gameId,
-          locale,
           {
-            signal: controller.signal,
-          }
+            text,
+            customGame: gameType === "vrttaal" ? "vrttaal" : null,
+            wordLength,
+            gameId,
+          },
+          controller.signal
         );
       } catch (err) {
         if (err.name === "AbortError") {
@@ -202,10 +191,10 @@ export default function Game({
         fetchControllerRef.current = null;
       }
 
-      let { error, match } = serverResponse;
+      const { match, error } = serverResponse;
 
       if (error) {
-        if (error === "unknown_word") {
+        if (error === "unknown word") {
           toast.error("Ongeldig woord", { id: "toast", duration: 2000 });
         }
       } else {
@@ -435,7 +424,7 @@ export default function Game({
       <Statistics visible={currentModal === "statistics"} />
       <Results
         visible={currentModal === "results" && isGameOver}
-        solution={solution}
+        initialSolution={solution}
         toast={toast}
       />
     </>
