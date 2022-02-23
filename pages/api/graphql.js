@@ -1,6 +1,6 @@
 import { ApolloServer } from "apollo-server-micro";
 import { typeDefs } from "@/lib/graphql/schema";
-import { createResolvers } from "@/lib/graphql/resolvers";
+import { resolvers } from "@/lib/graphql/resolvers";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { PrismaClient } from "@prisma/client";
 
@@ -8,9 +8,10 @@ const prisma = new PrismaClient();
 
 const apolloServer = new ApolloServer({
   typeDefs,
-  resolvers: createResolvers(prisma),
+  resolvers: resolvers,
   playground: true,
   plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+  context: { prisma },
 });
 
 const startServer = apolloServer.start();
