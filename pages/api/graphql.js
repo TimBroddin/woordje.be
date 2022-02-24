@@ -2,10 +2,8 @@ import { ApolloServer } from "apollo-server-micro";
 import { typeDefs } from "@/lib/graphql/schema";
 import { resolvers } from "@/lib/graphql/resolvers";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import cache from "memory-cache";
-
-const prisma = new PrismaClient();
 
 const apolloServer = new ApolloServer({
   typeDefs,
