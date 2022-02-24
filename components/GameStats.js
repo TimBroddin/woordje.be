@@ -36,7 +36,9 @@ const GameStats = ({}) => {
       <Collapse.Group>
         <Collapse
           title=""
-          subtitle={`${stats?.wins}% van de spelers raadde dit woord.`}>
+          subtitle={`${Math.round(
+            stats?.wins
+          )}% van de spelers raadde dit woord.`}>
           <Container gap={1} css={{ color: "$text" }}>
             {distribution?.map((amount, k) => {
               return (
