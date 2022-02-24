@@ -13,12 +13,12 @@ import timer from "@/redux/features/timer";
 import inputText from "@/redux/features/inputText";
 import installPopup from "@/redux/features/installPopup";
 import modal from "@/redux/features/modal";
-import ssr from "@/redux/features/ssr";
+import gameStats from "@/redux/features/gameStats";
 
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ["randomWord", "timer", "ssr"],
+  blacklist: ["randomWord", "timer", "gameStats"],
 };
 
 const reducers = combineReducers({
@@ -30,7 +30,7 @@ const reducers = combineReducers({
   inputText,
   modal,
   installPopup,
-  ssr,
+  gameStats,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

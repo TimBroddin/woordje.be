@@ -58,6 +58,7 @@ function MyApp({ Component, pageProps }) {
               <Gate>
                 <SWRConfig
                   value={{
+                    revalidateOnFocus: false,
                     fetcher: ({ query, variables }) =>
                       request("/api/graphql", query, variables),
                   }}>

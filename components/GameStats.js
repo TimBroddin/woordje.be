@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   Card,
   Collapse,
@@ -9,6 +10,7 @@ import {
 } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import { useStats, useSsr } from "@/lib/hooks";
+import { getIsGameOverSelector } from "@/lib/helpers";
 
 const Bar = styled("div", {
   background: "$secondary",
@@ -18,16 +20,12 @@ const Bar = styled("div", {
 });
 
 const GameStats = ({}) => {
-  const { wordLength, gameType, gameId } = useSelector(
-    (state) => state.settings
-  );
-  const { statistics: initialStats } = useSsr();
-  const { stats } = useStats({ gameId, wordLength, gameType }, initialStats);
-
+  const { wordLength } = useSelector((state) => state.settings);
+  const stats = useSelector((state) => state.gameStats?.value);
   const distribution = [];
   for (let i = 1; i <= wordLength + 1; i++) {
     distribution.push(
-      stats?.distribution.find((d) => d.tries === i)?.amount || 0
+      stats?.distribution?.find((d) => d.tries === i)?.amount || 0
     );
   }
 

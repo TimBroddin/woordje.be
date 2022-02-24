@@ -20,6 +20,7 @@ import { addWin, addLoss } from "@/redux/features/statistics";
 import { setInputText } from "@/redux/features/inputText";
 import { stop as stopTimer, reset as resetTimer } from "@/redux/features/timer";
 import { setModal } from "@/redux/features/modal";
+import { getStats, setStats } from "@/redux/features/gameStats";
 
 // COMPONENTS
 import { Board, Row } from "@/components/styled";
@@ -51,7 +52,11 @@ export default function Game({ gameId, gameType, wordLength }) {
   const dispatch = useDispatch();
   const { locale } = useRouter();
   const boardSize = wordLength + 1;
-  const { randomWord: ssrRandomWord, demoWords: ssrDemoWords } = useSsr();
+  const {
+    randomWord: ssrRandomWord,
+    demoWords: ssrDemoWords,
+    statistics: ssrStatistics,
+  } = useSsr();
   const randomWord = useSelector((state) => state.randomWord);
 
   const inputText = useSelector((state) => state.inputText).value;
@@ -94,6 +99,10 @@ export default function Game({ gameId, gameType, wordLength }) {
   useEffect(() => {
     dispatch(setRandomWord(ssrRandomWord));
   }, [dispatch, ssrRandomWord]);
+
+  useEffect(() => {
+    dispatch(setStats(ssrStatistics));
+  }, [dispatch, ssrStatistics]);
 
   useEffect(() => {
     if (fetchControllerRef.current) {
@@ -191,12 +200,6 @@ export default function Game({ gameId, gameType, wordLength }) {
         dispatch(setInputText(""));
         if (!match.some((i) => i.score !== "good")) {
           setShowConfetti(true);
-          logResult(
-            gameId,
-            wordLength,
-            gameType === "vrttaal" ? "vrttaal" : "normal",
-            gameState.guesses.length + 1
-          );
 
           dispatch(stopTimer());
           dispatch(
@@ -207,16 +210,25 @@ export default function Game({ gameId, gameType, wordLength }) {
               guesses: gameState.guesses.length + 1,
             })
           );
+          await logResult(
+            gameId,
+            wordLength,
+            gameType === "vrttaal" ? "vrttaal" : "normal",
+            gameState.guesses.length + 1
+          );
+          dispatch(getStats());
         } else if (gameState.guesses.length + 1 === boardSize) {
           dispatch(stopTimer());
 
-          logResult(
+          dispatch(addLoss({ gameId, gameType, wordLength }));
+
+          await logResult(
             gameId,
             wordLength,
             gameType === "vrttaal" ? "vrttaal" : "normal",
             gameState.guesses.length + 2
           ); // and stay down!
-          dispatch(addLoss({ gameId, gameType, wordLength }));
+          dispatch(getStats());
         }
 
         setGameState({
