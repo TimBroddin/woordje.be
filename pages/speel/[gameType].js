@@ -19,7 +19,7 @@ import { useTranslations } from "@/lib/i18n";
 import { getTodaysGameId } from "@/lib/gameId";
 
 // Providers
-import { SsrContextProvider } from "@/lib/context/SSRContext";
+import { SsrContextProvider } from "@/lib/context/Ssr";
 
 // COMPONENTS
 import { Main } from "@/components/styled";
@@ -46,7 +46,6 @@ export default function Home({ gameType, wordLength, ssr }) {
       }
     }
   }, [colorBlind]);
-
   return wordLength > 2 && wordLength < 11 ? (
     <SsrContextProvider value={ssr}>
       <NextSeo
@@ -108,13 +107,17 @@ export const getStaticProps = async (ctx) => {
           wordLength: Woord.length,
           ssrSolution: Woord,
           customGame: "vrttaal",
-          ssrRandomWord: getRandomWord(Woord.length),
-          ssrDemoWords: getRandomWords(3, Woord.length),
-          ssrStatistics: await getStatistics(
-            getTodaysGameId(),
-            Woord.length,
-            "vrttaal"
-          ),
+
+          ssr: {
+            solution: Woord,
+            randomWord: getRandomWord(Woord.length),
+            demoWords: getRandomWords(3, Woord.length),
+            statistics: await getStatistics(
+              getTodaysGameId(),
+              Woord.length,
+              "vrttaal"
+            ),
+          },
         },
         revalidate: 60,
       };

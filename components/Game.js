@@ -92,7 +92,6 @@ export default function Game({ gameId, gameType, wordLength }) {
   }, [gameId, dispatch]);
 
   useEffect(() => {
-    console.log(ssrRandomWord);
     dispatch(setRandomWord(ssrRandomWord));
   }, [dispatch, ssrRandomWord]);
 

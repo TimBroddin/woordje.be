@@ -7,9 +7,17 @@ import { NextSeo } from "next-seo";
 
 // HELPERS & HOOKS
 import { getCurrentWordFromAirTable } from "@/lib/airtable";
-import { getSolution, getRandomWord, getRandomWords } from "@/lib/server";
+import {
+  getSolution,
+  getRandomWord,
+  getRandomWords,
+  getStatistics,
+} from "@/lib/server";
 import { useTranslations } from "@/lib/i18n";
 import { useDisplayGameId } from "@/lib/hooks";
+
+// CONTEXT
+import { SsrContextProvider } from "@/lib/context/Ssr";
 
 // COMPONENTS
 import { Main } from "@/components/styled";
@@ -18,14 +26,7 @@ import Footer from "@/components/Footer";
 import Game from "@/components/Game";
 import { getTodaysGameId } from "@/lib/gameId";
 
-export default function Home({
-  gameType,
-  gameId,
-  wordLength,
-  ssrSolution,
-  ssrRandomWord,
-  ssrDemoWords,
-}) {
+export default function Home({ gameType, gameId, wordLength, ssr }) {
   const boardSize = wordLength + 1;
   const displayGameId = useDisplayGameId(gameId);
   const { colorBlind } = useSelector((state) => state.settings);
@@ -42,7 +43,7 @@ export default function Home({
   }, [colorBlind]);
 
   return wordLength > 2 && wordLength < 11 && gameId < getTodaysGameId() ? (
-    <>
+    <SsrContextProvider value={ssr}>
       <NextSeo
         title={`${translations.title} #${displayGameId} - nederlandstalige Wordle - ${wordLength} letters`}
         description={`${translations.description}`}
@@ -75,18 +76,11 @@ export default function Home({
           titleSize={40}
         />
 
-        <Game
-          gameId={gameId}
-          wordLength={wordLength}
-          gameType={gameType}
-          ssrDemoWords={ssrDemoWords}
-          ssrRandomWord={ssrRandomWord}
-          ssrSolution={ssrSolution}
-        />
+        <Game gameId={gameId} wordLength={wordLength} gameType={gameType} />
 
         <Footer gameId={gameId} wordLength={wordLength} boardSize={boardSize} />
       </Main>
-    </>
+    </SsrContextProvider>
   ) : (
     <Main>
       <Image
@@ -103,6 +97,8 @@ export const getStaticProps = async (ctx) => {
   const { params, locale } = ctx;
   const { query } = params;
   const [gameId, gameType] = query.split("x");
+  const correctedGameId =
+    locale === "nl-NL" ? parseInt(gameId) + 36 : parseInt(gameId);
 
   if (gameType === "vrttaal") {
     try {
@@ -115,6 +111,17 @@ export const getStaticProps = async (ctx) => {
           ssrSolution: Woord,
           ssrRandomWord: getRandomWord(Woord.length),
           ssrDemoWords: getDemoWords(Woord.length),
+
+          ssr: {
+            solution: Woord,
+            randomWord: getRandomWord(Woord.length),
+            demoWords: getRandomWords(3, Woord.length),
+            statistics: await getStatistics(
+              correctedGameId,
+              Woord.length,
+              "vrttaal"
+            ),
+          },
         },
         revalidate: 60,
       };
@@ -126,16 +133,23 @@ export const getStaticProps = async (ctx) => {
     }
   } else {
     const wordLength = parseInt(gameType);
-    const correctedGameId =
-      locale === "nl-NL" ? parseInt(gameId) + 36 : parseInt(gameId);
+
     return {
       props: {
         gameType: `normal-${gameType}`,
-        ssrSolution: await getSolution(correctedGameId, wordLength),
         wordLength,
         gameId: correctedGameId,
-        ssrRandomWord: getRandomWord(wordLength),
-        ssrDemoWords: getRandomWords(3, wordLength),
+
+        ssr: {
+          solution: await getSolution(correctedGameId, wordLength),
+          randomWord: getRandomWord(wordLength),
+          demoWords: getRandomWords(3, wordLength),
+          statistics: await getStatistics(
+            correctedGameId,
+            wordLength,
+            "normal"
+          ),
+        },
       },
       revalidate: 60,
     };
