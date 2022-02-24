@@ -26,6 +26,7 @@ import Danger from "@/lib/iconly/Icons/Danger";
 import { setColorBlind, setHardMode } from "@/redux/features/settings";
 import { getRandomWord } from "@/redux/features/randomWord";
 import { Levels, Level } from "@/components/styled";
+import GameStats from "@/components/GameStats";
 import { useIsArchive } from "@/lib/hooks";
 
 const Footer = ({ gameId }) => {
@@ -44,6 +45,9 @@ const Footer = ({ gameId }) => {
   return (
     <Container gap={1}>
       <Grid.Container gap={2}>
+        <Grid xs={12} sm={12}>
+          <GameStats />
+        </Grid>
         <Grid xs={12} sm={6}>
           {!isArchive ? (
             <Card role="region">

@@ -206,7 +206,7 @@ export default function Game({
           logResult(
             gameId,
             wordLength,
-            gameType === "vrttaal" ? "vrttaal" : null,
+            gameType === "vrttaal" ? "vrttaal" : "normal",
             gameState.guesses.length + 1
           );
 
@@ -219,18 +219,15 @@ export default function Game({
               guesses: gameState.guesses.length + 1,
             })
           );
-
-          // increment streak
         } else if (gameState.guesses.length + 1 === boardSize) {
           dispatch(stopTimer());
 
           logResult(
             gameId,
             wordLength,
-            gameType === "vrttaal" ? "vrttaal" : null,
-            gameState.guesses.length + 1
-          );
-
+            gameType === "vrttaal" ? "vrttaal" : "normal",
+            gameState.guesses.length + 2
+          ); // and stay down!
           dispatch(addLoss({ gameId, gameType, wordLength }));
         }
 
@@ -246,7 +243,6 @@ export default function Game({
       wordLength,
       gameId,
       gameState.guesses,
-      plausible,
       randomWord,
       setGameState,
       dispatch,

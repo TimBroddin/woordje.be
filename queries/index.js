@@ -41,15 +41,27 @@ export const CHECK_QUERY = gql`
 export const LOG_RESULT_MUTATION = gql`
   mutation logResult(
     $gameId: Int!
-    $customGame: String
+    $gameType: String!
     $wordLength: Int!
     $tries: Int!
   ) {
     logResult(
       gameId: $gameId
-      customGame: $customGame
+      gameType: $gameType
       wordLength: $wordLength
       tries: $tries
     )
+  }
+`;
+
+export const STATS_QUERY = gql`
+  query stats($gameId: Int!, $wordLength: Int!, $gameType: String!) {
+    stats(gameId: $gameId, wordLength: $wordLength, gameType: $gameType) {
+      wins
+      distribution {
+        tries
+        amount
+      }
+    }
   }
 `;

@@ -10,11 +10,24 @@ generator client {
 }
 
 model Stats {
-  id         Int      @id @default(autoincrement())
   gameId     Int
   wordLength Int
-  customGame String?
+  gameType   String
+  wins       Int
+  total      Int
+  updatedAt  DateTime @updatedAt
+
+
+  @@id([gameId, wordLength, gameType])
+}
+
+model StatsDistribution {
+  gameId     Int
+  wordLength Int
+  gameType   String
   tries      Int
-  won        Boolean
-  createdAt  DateTime @default(now())
+  amount     Int
+  updatedAt  DateTime @updatedAt
+
+  @@id([gameId, wordLength, gameType, tries])
 }
