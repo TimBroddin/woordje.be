@@ -9,8 +9,6 @@ import {
   Row,
 } from "@nextui-org/react";
 import { useSelector } from "react-redux";
-import { useStats, useSsr } from "@/lib/hooks";
-import { getIsGameOverSelector } from "@/lib/helpers";
 
 const Bar = styled("div", {
   background: "$secondary",

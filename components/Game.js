@@ -11,7 +11,7 @@ import { GraphQLClient } from "graphql-request";
 // HELPERS & HOOKS
 import { getIsGameOverSelector, logResult } from "@/lib/helpers";
 
-import { useGameState, useSsr } from "@/lib/hooks";
+import { useGameState, useStaticProps } from "@/lib/hooks";
 
 // REDUX
 import { setSettings } from "@/redux/features/settings";
@@ -56,7 +56,7 @@ export default function Game({ gameId, gameType, wordLength }) {
     randomWord: ssrRandomWord,
     demoWords: ssrDemoWords,
     statistics: ssrStatistics,
-  } = useSsr();
+  } = useStaticProps();
   const randomWord = useSelector((state) => state.randomWord);
 
   const inputText = useSelector((state) => state.inputText).value;

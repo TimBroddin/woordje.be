@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useTranslations } from "@/lib/i18n";
 import { hide } from "@/redux/features/modal";
 import Letter from "@/components/Letter";
-import { useSsr } from "@/lib/hooks";
+import { useStaticProps } from "@/lib/hooks";
 
 const Board = styled(motion.div, {
   display: "flex",
@@ -77,7 +77,7 @@ const Splash = ({ visible }) => {
   const dispatch = useDispatch();
   const translations = useTranslations();
   const { wordLength, boardSize } = useSelector((state) => state.settings);
-  const { demoWords } = useSsr();
+  const { demoWords } = useStaticProps();
   const closeHandler = (e) => {
     dispatch(hide());
   };

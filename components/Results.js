@@ -25,7 +25,7 @@ import {
   useSolution,
   useArchive,
   useIsArchive,
-  useSsr,
+  useStaticProps,
 } from "@/lib/hooks";
 import { useTranslations } from "@/lib/i18n";
 import { getStreak } from "@/lib/helpers";
@@ -75,7 +75,7 @@ const Results = ({ visible, toast }) => {
   const [gameState, setGameState] = useGameState();
   const plausible = usePlausible();
   const dispatch = useDispatch();
-  const { solution: initialSolution } = useSsr();
+  const { solution: initialSolution } = useStaticProps();
   const { solution } = useSolution(
     {
       gameId,

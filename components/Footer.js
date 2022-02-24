@@ -159,12 +159,12 @@ const Footer = ({ gameId }) => {
                           iconOn={<Show set="bold" />}
                         />
                       </Col>
-                      <Col css={{ paddingTop: "3px" }}>
+                      <Col css={{ paddingTop: "3px", color: "$text" }}>
                         <Tooltip
                           aria-label="Handig voor kleurenblinden."
                           content="Handig voor kleurenblinden."
                           color="primary">
-                          <Text>Hoog contrast</Text>
+                          Hoog contrast
                         </Tooltip>
                       </Col>
                     </Row>
@@ -201,16 +201,14 @@ const Footer = ({ gameId }) => {
                           aria-label="Extra moeilijk"
                         />
                       </Col>
-                      <Col css={{ paddingTop: "3px" }}>
-                        <Text>
-                          <Tooltip
-                            color="primary"
-                            content={
-                              "Geraden letters moeten hergebruikt worden in volgende pogingen."
-                            }>
-                            Extra moeilijk
-                          </Tooltip>
-                        </Text>
+                      <Col css={{ paddingTop: "3px", color: "$text" }}>
+                        <Tooltip
+                          color="primary"
+                          content={
+                            "Geraden letters moeten hergebruikt worden in volgende pogingen."
+                          }>
+                          Extra moeilijk
+                        </Tooltip>
                       </Col>
                     </Row>
                   </Container>

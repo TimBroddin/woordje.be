@@ -19,7 +19,7 @@ import { useTranslations } from "@/lib/i18n";
 import { getTodaysGameId } from "@/lib/gameId";
 
 // Providers
-import { SsrContextProvider } from "@/lib/context/Ssr";
+import { StaticPropsProvider } from "@/lib/context/StaticProps";
 
 // COMPONENTS
 import { Main } from "@/components/styled";
@@ -47,7 +47,7 @@ export default function Home({ gameType, wordLength, ssr }) {
     }
   }, [colorBlind]);
   return wordLength > 2 && wordLength < 11 ? (
-    <SsrContextProvider value={ssr}>
+    <StaticPropsProvider value={ssr}>
       <NextSeo
         title={`${translations.title} #${displayGameId} - nederlandstalige Wordle - ${wordLength} letters`}
         description={`${translations.description}`}
@@ -80,7 +80,7 @@ export default function Home({ gameType, wordLength, ssr }) {
 
         <Footer gameId={gameId} wordLength={wordLength} boardSize={boardSize} />
       </Main>
-    </SsrContextProvider>
+    </StaticPropsProvider>
   ) : (
     <Main>
       <Image
