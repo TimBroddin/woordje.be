@@ -11,7 +11,7 @@ import { GraphQLClient } from "graphql-request";
 // HELPERS & HOOKS
 import { getIsGameOverSelector, logResult } from "@/lib/helpers";
 
-import { useGameState, useSolution } from "@/lib/hooks";
+import { useGameState, useSsr } from "@/lib/hooks";
 
 // REDUX
 import { setSettings } from "@/redux/features/settings";
@@ -47,18 +47,11 @@ async function check(variables, signal) {
   }
 }
 
-export default function Game({
-  gameId,
-  gameType,
-  wordLength,
-  ssrSolution,
-  ssrRandomWord,
-  ssrDemoWords,
-}) {
+export default function Game({ gameId, gameType, wordLength }) {
   const dispatch = useDispatch();
   const { locale } = useRouter();
   const boardSize = wordLength + 1;
-
+  const { randomWord: ssrRandomWord, demoWords: ssrDemoWords } = useSsr();
   const randomWord = useSelector((state) => state.randomWord);
 
   const inputText = useSelector((state) => state.inputText).value;
@@ -72,11 +65,6 @@ export default function Game({
   const isGameOver = useSelector(getIsGameOverSelector);
   const { colorBlind, hardMode } = useSelector((state) => state.settings);
   const plausible = usePlausible();
-  const { solution } = useSolution(
-    gameId,
-    wordLength,
-    gameType === "vrttaal" ? "vrttaal" : null
-  );
 
   useEffect(() => {
     setShowConfetti(false);
@@ -104,6 +92,7 @@ export default function Game({
   }, [gameId, dispatch]);
 
   useEffect(() => {
+    console.log(ssrRandomWord);
     dispatch(setRandomWord(ssrRandomWord));
   }, [dispatch, ssrRandomWord]);
 
@@ -414,11 +403,10 @@ export default function Game({
         onSubmit={onSubmit}
       />
 
-      <Splash visible={currentModal === "splash"} words={ssrDemoWords} />
+      <Splash visible={currentModal === "splash"} />
       <Statistics visible={currentModal === "statistics"} />
       <Results
         visible={currentModal === "results" && isGameOver}
-        initialSolution={solution}
         toast={toast}
       />
     </>

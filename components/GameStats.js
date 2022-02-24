@@ -8,7 +8,7 @@ import {
   Row,
 } from "@nextui-org/react";
 import { useSelector } from "react-redux";
-import { useStats } from "@/lib/hooks";
+import { useStats, useSsr } from "@/lib/hooks";
 
 const Bar = styled("div", {
   background: "$secondary",
@@ -21,16 +21,15 @@ const GameStats = ({}) => {
   const { wordLength, gameType, gameId } = useSelector(
     (state) => state.settings
   );
-  const { stats } = useStats(gameId, wordLength, gameType);
-  console.log(stats);
+  const { statistics: initialStats } = useSsr();
+  const { stats } = useStats({ gameId, wordLength, gameType }, initialStats);
+
   const distribution = [];
   for (let i = 1; i <= wordLength + 1; i++) {
     distribution.push(
       stats?.distribution.find((d) => d.tries === i)?.amount || 0
     );
   }
-
-  console.log(distribution);
 
   return (
     <Card>

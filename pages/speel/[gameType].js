@@ -11,12 +11,15 @@ import { getCurrentWordFromAirTable } from "@/lib/airtable";
 import {
   getSolution,
   getRandomWord,
-  getDemoWords,
   getRandomWords,
+  getStatistics,
 } from "@/lib/server";
 import { useDisplayGameId, useCurrentGameId } from "@/lib/hooks";
 import { useTranslations } from "@/lib/i18n";
 import { getTodaysGameId } from "@/lib/gameId";
+
+// Providers
+import { SsrContextProvider } from "@/lib/context/SSRContext";
 
 // COMPONENTS
 import { Main } from "@/components/styled";
@@ -24,13 +27,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Game from "@/components/Game";
 
-export default function Home({
-  gameType,
-  wordLength,
-  ssrSolution,
-  ssrRandomWord,
-  ssrDemoWords,
-}) {
+export default function Home({ gameType, wordLength, ssr }) {
   const dispatch = useDispatch();
   const gameId = useCurrentGameId();
   const displayGameId = useDisplayGameId();
@@ -51,7 +48,7 @@ export default function Home({
   }, [colorBlind]);
 
   return wordLength > 2 && wordLength < 11 ? (
-    <>
+    <SsrContextProvider value={ssr}>
       <NextSeo
         title={`${translations.title} #${displayGameId} - nederlandstalige Wordle - ${wordLength} letters`}
         description={`${translations.description}`}
@@ -80,18 +77,11 @@ export default function Home({
       <Main>
         <Header />
 
-        <Game
-          gameId={gameId}
-          wordLength={wordLength}
-          gameType={gameType}
-          ssrDemoWords={ssrDemoWords}
-          ssrRandomWord={ssrRandomWord}
-          ssrSolution={ssrSolution}
-        />
+        <Game gameId={gameId} wordLength={wordLength} gameType={gameType} />
 
         <Footer gameId={gameId} wordLength={wordLength} boardSize={boardSize} />
       </Main>
-    </>
+    </SsrContextProvider>
   ) : (
     <Main>
       <Image
@@ -120,6 +110,11 @@ export const getStaticProps = async (ctx) => {
           customGame: "vrttaal",
           ssrRandomWord: getRandomWord(Woord.length),
           ssrDemoWords: getRandomWords(3, Woord.length),
+          ssrStatistics: await getStatistics(
+            getTodaysGameId(),
+            Woord.length,
+            "vrttaal"
+          ),
         },
         revalidate: 60,
       };
@@ -135,10 +130,18 @@ export const getStaticProps = async (ctx) => {
     return {
       props: {
         gameType: `normal-${gameType}`,
-        ssrSolution: await getSolution(getTodaysGameId(), wordLength),
         wordLength,
-        ssrRandomWord: getRandomWord(wordLength),
-        ssrDemoWords: getRandomWords(3, wordLength),
+
+        ssr: {
+          solution: await getSolution(getTodaysGameId(), wordLength),
+          randomWord: getRandomWord(wordLength),
+          demoWords: getRandomWords(3, wordLength),
+          statistics: await getStatistics(
+            getTodaysGameId(),
+            wordLength,
+            "normal"
+          ),
+        },
       },
       revalidate: 60,
     };

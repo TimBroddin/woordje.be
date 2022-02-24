@@ -76,7 +76,6 @@ const Statistics = ({ visible }) => {
     value: distribution[-1] || 0,
     pct: distribution[-1] ? (distribution[-1] / maxDistributionValue) * 100 : 0,
   });
-  console.log(distributionValues, maxDistributionValue, distribution);
   return (
     <Modal
       closeButton

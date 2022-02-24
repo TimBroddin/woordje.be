@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useTranslations } from "@/lib/i18n";
 import { hide } from "@/redux/features/modal";
 import Letter from "@/components/Letter";
+import { useSsr } from "@/lib/hooks";
 
 const Board = styled(motion.div, {
   display: "flex",
@@ -72,11 +73,11 @@ const Examples = ({ words }) => {
   }
 };
 
-const Splash = ({ visible, words }) => {
+const Splash = ({ visible }) => {
   const dispatch = useDispatch();
   const translations = useTranslations();
   const { wordLength, boardSize } = useSelector((state) => state.settings);
-
+  const { demoWords } = useSsr();
   const closeHandler = (e) => {
     dispatch(hide());
   };
@@ -109,7 +110,7 @@ const Splash = ({ visible, words }) => {
         <Text h2 size={24} margin={"36px 0 10px 0"}>
           Voorbeelden
         </Text>
-        <Examples words={words} />
+        <Examples words={demoWords} />
 
         <Button onClick={closeHandler}>Start</Button>
       </Modal.Body>

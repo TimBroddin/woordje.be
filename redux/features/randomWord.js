@@ -15,7 +15,7 @@ const getRandomWord = createAsyncThunk(
       wordLength,
       amount: 1,
     });
-    const word = res.getRandomWords?.[0];
+    const word = res.randomWords?.[0];
 
     return word;
   }

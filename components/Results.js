@@ -25,6 +25,7 @@ import {
   useSolution,
   useArchive,
   useIsArchive,
+  useSsr,
 } from "@/lib/hooks";
 import { useTranslations } from "@/lib/i18n";
 import { getStreak } from "@/lib/helpers";
@@ -74,10 +75,14 @@ const Results = ({ visible, toast }) => {
   const [gameState, setGameState] = useGameState();
   const plausible = usePlausible();
   const dispatch = useDispatch();
+  const { solution: initialSolution } = useSsr();
   const { solution } = useSolution(
-    gameId,
-    wordLength,
-    gameType === "vrttaal" ? "vrttaal" : null
+    {
+      gameId,
+      wordLength,
+      gameType: "vrttaal" ? "vrttaal" : null,
+    },
+    initialSolution
   );
 
   const closeHandler = (e) => {
