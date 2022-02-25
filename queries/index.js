@@ -1,4 +1,4 @@
-const gql = (query) => query;
+const gql = (query) => query.join("");
 
 export const RANDOM_WORD_QUERY = gql`
   query randomWords($amount: Int, $wordLength: Int) {

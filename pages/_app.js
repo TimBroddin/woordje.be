@@ -61,8 +61,10 @@ function MyApp({ Component, pageProps }) {
                   <SWRConfig
                     value={{
                       revalidateOnFocus: false,
-                      fetcher: ({ query, variables }) =>
-                        request("/api/graphql", query, variables),
+                      fetcher: ({ query, variables }) => {
+                        console.log("API");
+                        return request("/api/graphql", query, variables);
+                      },
                     }}>
                     <Component {...pageProps} />
                   </SWRConfig>

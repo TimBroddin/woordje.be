@@ -15,12 +15,23 @@ const Bar = styled("div", {
   color: "white",
   borderRadius: "$sm !important",
   overflow: "hidden",
+
+  variants: {
+    mine: {
+      true: {
+        background: "$success",
+      },
+    },
+  },
 });
 
 const GameStats = ({}) => {
-  const { wordLength } = useSelector((state) => state.settings);
+  const { wordLength, gameId } = useSelector((state) => state.settings);
   const stats = useSelector((state) => state.gameStats?.value);
   const distribution = [];
+  const ownStats = useSelector((state) => state.statistics);
+  const ownScore = ownStats?.[wordLength]?.[gameId];
+
   for (let i = 1; i <= wordLength + 1; i++) {
     distribution.push(
       stats?.distribution?.find((d) => d.tries === i)?.amount || 0
@@ -47,6 +58,7 @@ const GameStats = ({}) => {
                   </Col>
                   <Col span={8}>
                     <Bar
+                      mine={ownScore === k + 1}
                       css={{
                         width: `${amount}%`,
                       }}>
