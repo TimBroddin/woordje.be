@@ -210,25 +210,27 @@ export default function Game({ gameId, gameType, wordLength }) {
               guesses: gameState.guesses.length + 1,
             })
           );
-          await logResult(
+          logResult(
             gameId,
             wordLength,
             gameType === "vrttaal" ? "vrttaal" : "normal",
             gameState.guesses.length + 1
-          );
-          dispatch(getStats());
+          ).then(() => {
+            dispatch(getStats());
+          });
         } else if (gameState.guesses.length + 1 === boardSize) {
           dispatch(stopTimer());
 
           dispatch(addLoss({ gameId, gameType, wordLength }));
 
-          await logResult(
+          logResult(
             gameId,
             wordLength,
             gameType === "vrttaal" ? "vrttaal" : "normal",
             gameState.guesses.length + 2
-          ); // and stay down!
-          dispatch(getStats());
+          ).then(() => {
+            dispatch(getStats());
+          });
         }
 
         setGameState({
