@@ -55,17 +55,23 @@ const GameStats = ({}) => {
                   key={`gameStatsDistribution-${k}`}
                   gap={1}
                   css={{ marginBottom: "$4" }}>
-                  <Col span={4} css={{ textAlign: "right" }}>
+                  <Col span={5} css={{ textAlign: "right" }}>
                     <Text b>{k + 1}</Text> {k === 0 ? "poging" : "pogingen"}
                   </Col>
-                  <Col span={8}>
+                  <Col span={7}>
                     <Bar
                       mine={ownScore === k + 1}
                       css={{
                         width: `${(amount / maxDistributionValue) * 100}%`,
                       }}>
                       {amount && (
-                        <Text css={{ color: "$background", margin: "$2" }}>
+                        <Text
+                          css={{
+                            color: "$background",
+                            margin: "$2",
+                            padding: "$2 $0",
+                            fontSize: "11px",
+                          }}>
                           {amount}%
                         </Text>
                       )}

@@ -15,7 +15,7 @@ const GameCard = ({ displayGameId }) => {
   const translations = useTranslations();
 
   return (
-    <Grid xs={12} sm={6} key={`word-${displayGameId}`}>
+    <Grid xs={6} sm={6} key={`word-${displayGameId}`}>
       <Card>
         <Card.Header>
           <Text key={displayGameId} h1 css={{ fontSize: 16 }}>

@@ -33,16 +33,13 @@ export const Levels = styled("div", {
   display: "flex",
   flexWrap: "wrap",
   gap: "10px",
-
-  "@media (max-width: 768px)": {
-    justifyContent: "space-between",
-  },
 });
 
 export const Note = styled("div", {
   borderRadius: "$xs",
   padding: "$8",
-  margin: "$0",
+
+  margin: "$8",
 
   variants: {
     type: {
