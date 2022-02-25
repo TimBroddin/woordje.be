@@ -1,5 +1,5 @@
 import { styled } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 export const Main = styled("main", {
   color: "#fff",
@@ -22,7 +22,7 @@ export const Board = styled("div", {
   },
 });
 
-export const Row = styled(motion.div, {
+export const Row = styled(m.div, {
   display: "flex",
   justifyContent: "center",
   alignIitems: "center",

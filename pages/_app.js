@@ -12,6 +12,7 @@ import globaStyles from "../styles/globals";
 import GlobalStyle from "../styles/globals";
 import useSWR, { SWRConfig } from "swr";
 import { request } from "graphql-request";
+import { LazyMotion, domAnimation } from "framer-motion";
 
 let persistor = persistStore(store);
 
@@ -35,41 +36,43 @@ function MyApp({ Component, pageProps }) {
   const translations = useTranslations();
   GlobalStyle();
   return (
-    <NextThemesProvider
-      defaultTheme="system"
-      attribute="class"
-      value={{
-        light: lightTheme.className,
-        dark: darkTheme.className,
-      }}>
-      <NextUIProvider>
-        <Head>
-          <link
-            rel="alternate"
-            hrefLang={translations.alternate_lang}
-            href={translations.alternate_url}
-          />
-        </Head>
-        <PlausibleProvider domain={translations.plausible}>
-          <Provider store={store}>
-            <>
-              <Pwa />
+    <LazyMotion features={domAnimation}>
+      <NextThemesProvider
+        defaultTheme="system"
+        attribute="class"
+        value={{
+          light: lightTheme.className,
+          dark: darkTheme.className,
+        }}>
+        <NextUIProvider>
+          <Head>
+            <link
+              rel="alternate"
+              hrefLang={translations.alternate_lang}
+              href={translations.alternate_url}
+            />
+          </Head>
+          <PlausibleProvider domain={translations.plausible}>
+            <Provider store={store}>
+              <>
+                <Pwa />
 
-              <Gate>
-                <SWRConfig
-                  value={{
-                    revalidateOnFocus: false,
-                    fetcher: ({ query, variables }) =>
-                      request("/api/graphql", query, variables),
-                  }}>
-                  <Component {...pageProps} />
-                </SWRConfig>
-              </Gate>
-            </>
-          </Provider>
-        </PlausibleProvider>
-      </NextUIProvider>
-    </NextThemesProvider>
+                <Gate>
+                  <SWRConfig
+                    value={{
+                      revalidateOnFocus: false,
+                      fetcher: ({ query, variables }) =>
+                        request("/api/graphql", query, variables),
+                    }}>
+                    <Component {...pageProps} />
+                  </SWRConfig>
+                </Gate>
+              </>
+            </Provider>
+          </PlausibleProvider>
+        </NextUIProvider>
+      </NextThemesProvider>
+    </LazyMotion>
   );
 }
 

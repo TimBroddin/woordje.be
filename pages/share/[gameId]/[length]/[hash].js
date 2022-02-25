@@ -2,11 +2,12 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import { useDisplayGameId } from "../../../lib/hooks";
+import { useDisplayGameId } from "../../../../lib/hooks";
+import { useTranslations } from "@/lib/i18n";
 
-const Facebook = ({ length, hash }) => {
-  const { translations } = useSelector((state) => state.settings);
-  const CORRECTED_GAME_ID = useDisplayGameId();
+const Facebook = ({ length, hash, gameId }) => {
+  const translations = useTranslations();
+  const displayGameId = useDisplayGameId(gameId);
   const router = useRouter();
   const lines = hash.match(new RegExp(`.{1,${length}}`, "g"));
   const tries =
@@ -18,24 +19,24 @@ const Facebook = ({ length, hash }) => {
       : "X";
 
   useEffect(() => {
-    router.push("/");
+    //router.push("/");
   }, [router]);
 
-  const title = `${translations.title} #${CORRECTED_GAME_ID} ${
-    length !== 6 ? `(${length} tekens)` : ""
-  } - ${tries}/${length + 1}`;
+  const title = `${
+    translations.title
+  } #${displayGameId} x ${length} - ${tries}/${length + 1}`;
 
   return (
     <>
       <NextSeo
         title={title}
-        description={translations.description}
+        description={lines.join("\n")}
         openGraph={{
           title,
-          description: translations.description,
+          description: lines.join("\n"),
           images: [
             {
-              url: `https://www.woordje.be/api/fb?length=${length}&hash=${hash}`,
+              url: `https://www.woordje.be/og.png`,
               width: 1200,
               height: 630,
               alt: translations.title,
@@ -58,6 +59,7 @@ export async function getServerSideProps(context) {
     props: {
       length: parseInt(context.query.length),
       hash: context.query.hash,
+      gameId: context.query.gameId,
     }, // will be passed to the page component as props
   };
 }

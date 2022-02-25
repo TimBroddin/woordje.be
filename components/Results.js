@@ -15,7 +15,7 @@ import dynamic from "next/dynamic";
 
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 import NextLink from "next/link";
 import { copyToClipboard, getIsVictory } from "@/lib/helpers";
@@ -48,7 +48,7 @@ const ShareText = styled("div", {
   textAlign: "center",
 });
 
-const Streak = styled(motion.h4, {
+const Streak = styled(m.h4, {
   fontSize: "22px",
   margin: 0,
   marginBottom: "10px",
@@ -166,7 +166,7 @@ ${gameState.guesses
       .map((line) =>
         line
           .map((item) =>
-            item.score === "good" ? "V" : item.score === "off" ? "X" : "0"
+            item.score === "good" ? "🟩" : item.score === "off" ? "🟨" : "⬛️"
           )
           .join("")
       )
@@ -271,9 +271,9 @@ ${gameState.guesses
               plausible("Share", { props: { method: "facebook" } });
               window.open(
                 `https://www.facebook.com/share.php?u=${encodeURIComponent(
-                  `${translations.url}/share/${wordLength}/${getEncodedState(
-                    gameState
-                  )}`
+                  `${
+                    translations.url
+                  }/share/${gameId}/${wordLength}/${getEncodedState(gameState)}`
                 )}`,
                 "_blank"
               );
@@ -309,9 +309,9 @@ ${gameState.guesses
               plausible("Share", { props: { method: "linkedin" } });
               window.open(
                 `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                  `${translations.url}/share/${wordLength}/${getEncodedState(
-                    gameState
-                  )}`
+                  `${
+                    translations.url
+                  }/share/${gameId}/${wordLength}/${getEncodedState(gameState)}`
                 )}`,
                 "_blank"
               );

@@ -1,5 +1,5 @@
 import { Modal, Button, Text, Loading, styled } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 
 import { useTranslations } from "@/lib/i18n";
@@ -7,7 +7,7 @@ import { hide } from "@/redux/features/modal";
 import Letter from "@/components/Letter";
 import { useStaticProps } from "@/lib/hooks";
 
-const Board = styled(motion.div, {
+const Board = styled(m.div, {
   display: "flex",
   justifyContent: "center",
 });
