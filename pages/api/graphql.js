@@ -3,14 +3,16 @@ import { typeDefs } from "@/lib/graphql/schema";
 import { resolvers } from "@/lib/graphql/resolvers";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import prisma from "@/lib/prisma";
-import cache from "memory-cache";
 
 const apolloServer = new ApolloServer({
   typeDefs,
-  resolvers: resolvers,
+  resolvers,
   playground: true,
   plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
-  context: { prisma, cache },
+  context: ({ req }) => ({
+    prisma,
+    ip: req.headers["x-real-ip"] ?? req.connection.remoteAddress,
+  }),
 });
 
 const startServer = apolloServer.start();
