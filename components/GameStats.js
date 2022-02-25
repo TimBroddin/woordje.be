@@ -49,7 +49,7 @@ const GameStats = () => {
           title=""
           subtitle={`${Math.round(
             stats && stats.wins ? stats?.wins : initialStatistics.wins
-          )}% van de spelers raadde dit woord.`}>
+          )}% van alle spelers raadde dit woord.`}>
           <Container gap={1} css={{ color: "$text" }}>
             {distribution?.map((amount, k) => {
               return (
