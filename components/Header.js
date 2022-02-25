@@ -34,7 +34,7 @@ const Header = ({
       css={{ marginBottom: "$8" }}>
       <Row justify="space-between" align="center">
         {showHome && (
-          <Col>
+          <Col span={2}>
             <Button
               auto
               light
@@ -55,7 +55,7 @@ const Header = ({
           </Col>
         )}
         {showInfo && (
-          <Col>
+          <Col span={2}>
             <Tooltip
               placement="bottom"
               aria-label={`Klik hier voor uitleg over ${translations.title}`}
@@ -80,10 +80,10 @@ const Header = ({
             </Tooltip>
           </Col>
         )}
-        <Col css={{ textAlign: "center" }}>
+        <Col span={8} css={{ textAlign: "center" }}>
           <Text
             h1
-            size={titleSize ?? 60}
+            size={titleSize ?? 55}
             css={{
               textGradient: titleColor ?? "45deg, $blue500 -20%, $pink500 50%",
               lineHeight: "70px",
@@ -95,7 +95,7 @@ const Header = ({
           {subtitle && <Text small>{subtitle}</Text>}
         </Col>
         {showStats && (
-          <Col>
+          <Col span={2}>
             <Tooltip
               style={{ float: "right" }}
               placement="bottom"
@@ -123,7 +123,7 @@ const Header = ({
             </Tooltip>
           </Col>
         )}
-        {emptyRight && <Col />}
+        {emptyRight && <Col span={2} />}
       </Row>
     </Container>
   );

@@ -73,7 +73,6 @@ export default function Home({ gameType, gameId, wordLength, ssr }) {
         <Header
           customTitle={`Archief`}
           subtitle={`${translations.title} #${displayGameId} x ${wordLength}`}
-          titleSize={40}
         />
 
         <Game gameId={gameId} wordLength={wordLength} gameType={gameType} />
@@ -123,12 +122,12 @@ export const getStaticProps = async (ctx) => {
             ),
           },
         },
-        revalidate: 60,
+        revalidate: 300,
       };
     } catch (e) {
       return {
         props: {},
-        revalidate: 60,
+        revalidate: 300,
       };
     }
   } else {
@@ -151,7 +150,7 @@ export const getStaticProps = async (ctx) => {
           ),
         },
       },
-      revalidate: 60,
+      revalidate: 300,
     };
   }
 };
@@ -160,7 +159,7 @@ export async function getStaticPaths() {
   const locales = ["nl-BE", "nl-NL"];
   const levels = ["3", "4", "5", "6", "7", "8", "9", "10"];
   const paths = [];
-  /*
+
   for (let locale of locales) {
     const maxGameId =
       locale === "nl-BE" ? getTodaysGameId() : getTodaysGameId() - 36;
@@ -172,7 +171,6 @@ export async function getStaticPaths() {
       }
     }
   }
-  */
 
   return { paths, fallback: "blocking" };
 }
