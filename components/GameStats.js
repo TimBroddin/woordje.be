@@ -9,6 +9,7 @@ import {
   Row,
 } from "@nextui-org/react";
 import { useSelector } from "react-redux";
+import { useStaticProps } from "@/lib/hooks";
 
 const Bar = styled("div", {
   background: "$secondary",
@@ -25,9 +26,10 @@ const Bar = styled("div", {
   },
 });
 
-const GameStats = ({}) => {
+const GameStats = () => {
   const { wordLength, gameId } = useSelector((state) => state.settings);
   const stats = useSelector((state) => state.gameStats?.value);
+  const { statistics: initialStatistics } = useStaticProps();
   const distribution = [];
   const ownStats = useSelector((state) => state.statistics);
   const ownScore = ownStats?.[wordLength]?.[gameId];
@@ -46,7 +48,7 @@ const GameStats = ({}) => {
         <Collapse
           title=""
           subtitle={`${Math.round(
-            stats?.wins
+            stats && stats.wins ? stats?.wins : initialStatistics.wins
           )}% van de spelers raadde dit woord.`}>
           <Container gap={1} css={{ color: "$text" }}>
             {distribution?.map((amount, k) => {

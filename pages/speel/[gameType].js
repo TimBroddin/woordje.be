@@ -129,7 +129,6 @@ export const getStaticProps = async (ctx) => {
     }
   } else {
     const wordLength = parseInt(gameType);
-
     return {
       props: {
         gameType: `normal-${gameType}`,

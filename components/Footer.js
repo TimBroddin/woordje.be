@@ -27,7 +27,7 @@ import { setColorBlind, setHardMode } from "@/redux/features/settings";
 import { getRandomWord } from "@/redux/features/randomWord";
 import { Levels, Level } from "@/components/styled";
 import GameStats from "@/components/GameStats";
-import { useIsArchive } from "@/lib/hooks";
+import { useIsArchive, useStaticProps } from "@/lib/hooks";
 
 const Footer = ({ gameId }) => {
   const dispatch = useDispatch();
@@ -36,9 +36,11 @@ const Footer = ({ gameId }) => {
   const { locale } = useRouter();
   const translations = useTranslations();
   const randomWord = useSelector((state) => state.randomWord);
+  const { randomWord: initialRandomWord } = useStaticProps();
   const { gameType, colorBlind, hardMode } = useSelector(
     (state) => state.settings
   );
+
   const { wordLength } = useSelector((state) => state.settings);
   const plausible = usePlausible();
   const isArchive = useIsArchive(gameId);
@@ -138,7 +140,11 @@ const Footer = ({ gameId }) => {
                   <Text b>Willekeurig woord</Text>
                 </Card.Header>
                 <Card.Body>
-                  <Text>{randomWord.value}</Text>
+                  <Text>
+                    {randomWord && randomWord.value && randomWord.value.length
+                      ? randomWord.value
+                      : initialRandomWord}
+                  </Text>
                 </Card.Body>
               </Card>
             </Row>
