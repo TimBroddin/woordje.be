@@ -38,6 +38,8 @@ const GameStats = ({}) => {
     );
   }
 
+  const maxDistributionValue = Math.max(...distribution);
+
   return (
     <Card>
       <Collapse.Group>
@@ -60,7 +62,7 @@ const GameStats = ({}) => {
                     <Bar
                       mine={ownScore === k + 1}
                       css={{
-                        width: `${amount}%`,
+                        width: `${(amount / maxDistributionValue) * 100}%`,
                       }}>
                       {amount && (
                         <Text css={{ color: "$background", margin: "$2" }}>
