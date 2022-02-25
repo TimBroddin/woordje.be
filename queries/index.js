@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-micro";
+const gql = (query) => query;
 
 export const RANDOM_WORD_QUERY = gql`
   query randomWords($amount: Int, $wordLength: Int) {

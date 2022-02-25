@@ -12,7 +12,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { hide } from "@/redux/features/modal";
 import { getStatistics } from "@/lib/helpers";
-import { isNumber } from "lodash";
 
 const Bar = styled("div", {
   background: "$secondary",
