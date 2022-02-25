@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { start } from "./timer";
+import { start } from "@/redux/features/timer";
 
 const initialState = {
   value: "",
@@ -14,7 +14,7 @@ const setInputText = createAsyncThunk(
     if (
       gameState &&
       settings &&
-      !gameState.guesses[settings.WORD_LENGTH]?.length &&
+      !gameState.guesses[settings.wordLength]?.length &&
       inputText?.value?.length === 0 &&
       !timer.start
     ) {

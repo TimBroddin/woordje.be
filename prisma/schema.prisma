@@ -1,0 +1,32 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["dataProxy"]
+}
+
+model Stats {
+  gameId     Int
+  wordLength Int
+  gameType   String
+  wins       Int
+  total      Int
+  updatedAt  DateTime @updatedAt
+
+
+  @@id([gameId, wordLength, gameType])
+}
+
+model StatsDistribution {
+  gameId     Int
+  wordLength Int
+  gameType   String
+  tries      Int
+  amount     Int
+  updatedAt  DateTime @updatedAt
+
+  @@id([gameId, wordLength, gameType, tries])
+}

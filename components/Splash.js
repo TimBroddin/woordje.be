@@ -1,18 +1,19 @@
 import { Modal, Button, Text, Loading, styled } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 
-import { useTranslations } from "../lib/i18n";
-import { hide } from "../redux/features/modal";
-import Letter from "./Letter";
+import { useTranslations } from "@/lib/i18n";
+import { hide } from "@/redux/features/modal";
+import Letter from "@/components/Letter";
+import { useStaticProps } from "@/lib/hooks";
 
-const Board = styled(motion.div, {
+const Board = styled(m.div, {
   display: "flex",
   justifyContent: "center",
 });
 
 const Examples = ({ words }) => {
-  const { WORD_LENGTH } = useSelector((state) => state.settings);
+  const { wordLength } = useSelector((state) => state.settings);
 
   const board = {
     show: {
@@ -33,7 +34,7 @@ const Examples = ({ words }) => {
 
   if (words && words.length) {
     return (
-      <div style={{ "--word-length": WORD_LENGTH }}>
+      <div style={{ "--word-length": wordLength }}>
         <Board initial="hidden" animate="show" variants={board}>
           {words[0].split("").map((letter, index) => (
             <Letter key={index} small score={index === 0 ? "good" : "bad"}>
@@ -72,11 +73,11 @@ const Examples = ({ words }) => {
   }
 };
 
-const Splash = ({ visible, words }) => {
+const Splash = ({ visible }) => {
   const dispatch = useDispatch();
   const translations = useTranslations();
-  const { WORD_LENGTH, BOARD_SIZE } = useSelector((state) => state.settings);
-
+  const { wordLength, boardSize } = useSelector((state) => state.settings);
+  const { demoWords } = useStaticProps();
   const closeHandler = (e) => {
     dispatch(hide());
   };
@@ -97,7 +98,7 @@ const Splash = ({ visible, words }) => {
       </Modal.Header>
       <Modal.Body>
         <Text>
-          Raad het {WORD_LENGTH}-letterwoord in {BOARD_SIZE} beurten, of minder.
+          Raad het {wordLength}-letterwoord in {boardSize} beurten, of minder.
         </Text>
 
         <Text>
@@ -109,7 +110,7 @@ const Splash = ({ visible, words }) => {
         <Text h2 size={24} margin={"36px 0 10px 0"}>
           Voorbeelden
         </Text>
-        <Examples words={words} />
+        <Examples words={demoWords} />
 
         <Button onClick={closeHandler}>Start</Button>
       </Modal.Body>

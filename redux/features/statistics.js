@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { customGameResolver } from "../../lib/customGames";
+import { customGameResolver } from "@/lib/customGames";
 
 const data = {
   winDistribution: [], // array consisting of  tries per gameId, lose = -1
@@ -11,11 +11,8 @@ export const statisticsSlice = createSlice({
   name: "statistics",
   initialState,
   reducers: {
-    addWin: (
-      state,
-      { payload: { gameId, WORD_LENGTH, gameType, guesses } }
-    ) => {
-      const idx = customGameResolver(gameType, WORD_LENGTH);
+    addWin: (state, { payload: { gameId, wordLength, gameType, guesses } }) => {
+      const idx = customGameResolver(gameType, wordLength);
 
       if (!state[idx]) {
         state[idx] = [];
@@ -25,8 +22,8 @@ export const statisticsSlice = createSlice({
         state[idx][gameId] = guesses;
       }
     },
-    addLoss: (state, { payload: { gameId, gameType, WORD_LENGTH } }) => {
-      const idx = customGameResolver(gameType, WORD_LENGTH);
+    addLoss: (state, { payload: { gameId, gameType, wordLength } }) => {
+      const idx = customGameResolver(gameType, wordLength);
 
       if (!state[idx]) {
         state[idx] = [];

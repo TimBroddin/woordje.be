@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  WORD_LENGTH: 6,
-  BOARD_SIZE: 7,
+  wordLength: 6,
+  boardSize: 7,
   colorBlind: false,
   pushNotifications: false,
   gameType: "normal",
@@ -13,17 +13,21 @@ export const settingsSlice = createSlice({
   name: "settings",
   initialState,
   reducers: {
+    setGameId: (state, action) => {
+      state.gameId = action.value;
+    },
     setWordSize: (state, action) => {
-      state.WORD_LENGTH = action.value;
+      state.wordLength = action.value;
     },
     setBoardSize: (state, action) => {
-      state.BOARD_SIZE = action.value;
+      state.boardSize = action.value;
     },
     setSettings: (state, action) => {
-      const { WORD_LENGTH, BOARD_SIZE, gameType } = action.payload;
-      state.WORD_LENGTH = WORD_LENGTH;
-      state.BOARD_SIZE = BOARD_SIZE;
+      const { wordLength, boardSize, gameType, gameId } = action.payload;
+      state.wordLength = wordLength;
+      state.boardSize = boardSize;
       state.gameType = gameType;
+      state.gameId = gameId;
     },
     setColorBlind: (state, action) => {
       state.colorBlind = action.payload;
@@ -39,6 +43,7 @@ export const settingsSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
+  setGameId,
   setSettings,
   setWordSize,
   setBoardSize,

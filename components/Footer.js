@@ -4,15 +4,6 @@ import { usePlausible } from "next-plausible";
 import { useSelector, useDispatch } from "react-redux";
 import { useTheme as useNextTheme } from "next-themes";
 import { useRouter } from "next/router";
-
-import { useTranslations } from "../lib/i18n";
-import { Sun, Moon } from "../lib/icons";
-import Show from "../lib/iconly/Icons/Show";
-import Hide from "../lib/iconly/Icons/Hide";
-import Danger from "../lib/iconly/Icons/Danger";
-
-import { setColorBlind, setHardMode } from "../redux/features/settings";
-import { getRandomWord } from "../redux/features/randomWord";
 import {
   Button,
   Card,
@@ -25,48 +16,20 @@ import {
   Switch,
   Tooltip,
   useTheme,
-  styled,
 } from "@nextui-org/react";
 
-const Levels = styled("div", {
-  margin: "24px 0",
-  display: "flex",
-  flexWrap: "wrap",
-  gap: "10px",
-});
+import { useTranslations } from "@/lib/i18n";
+import { Sun, Moon } from "@/lib/icons";
+import Show from "@/lib/iconly/Icons/Show";
+import Hide from "@/lib/iconly/Icons/Hide";
+import Danger from "@/lib/iconly/Icons/Danger";
+import { setColorBlind, setHardMode } from "@/redux/features/settings";
+import { getRandomWord } from "@/redux/features/randomWord";
+import { Levels, Level } from "@/components/styled";
+import GameStats from "@/components/GameStats";
+import { useIsArchive } from "@/lib/hooks";
 
-const Level = styled("a", {
-  fontSize: "16px",
-  color: "white",
-  textDecoration: "none !important",
-  borderRadius: "var(--nextui-radii-md)",
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  height: "36px",
-  width: "36px",
-  padding: "0px",
-
-  variants: {
-    active: {
-      true: {
-        backgroundColor: "var(--color-level-active)",
-      },
-      false: {
-        backgroundColor: "var(--color-level)",
-      },
-    },
-    wide: {
-      true: {
-        width: "72px",
-        padding: "10px",
-      },
-      false: {},
-    },
-  },
-});
-
-const Footer = () => {
+const Footer = ({ gameId }) => {
   const dispatch = useDispatch();
   const { setTheme } = useNextTheme();
   const { isDark, type } = useTheme();
@@ -76,49 +39,92 @@ const Footer = () => {
   const { gameType, colorBlind, hardMode } = useSelector(
     (state) => state.settings
   );
-  const { WORD_LENGTH } = useSelector((state) => state.settings);
+  const { wordLength } = useSelector((state) => state.settings);
   const plausible = usePlausible();
-
+  const isArchive = useIsArchive(gameId);
   return (
     <Container gap={1}>
       <Grid.Container gap={2}>
+        <Grid xs={12} sm={12}>
+          <GameStats />
+        </Grid>
         <Grid xs={12} sm={6}>
-          <Card role="region">
-            <Card.Header>
-              <Text b>Aantal letters</Text>
-            </Card.Header>
-            <Card.Body>
-              <Levels>
-                {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
-                  <NextLink
-                    href={`/speel/${level}`}
-                    key={`level-${level}`}
-                    passHref>
-                    <Level
-                      active={WORD_LENGTH === level && gameType !== "vrttaal"}>
-                      {level}
-                    </Level>
-                  </NextLink>
-                ))}
-                {process.env.NEXT_PUBLIC_VRTTAAL === "1" &&
-                locale === "nl-BE" ? (
-                  <NextLink
-                    href={`/speel/vrttaal`}
-                    key={`level-vrttaal`}
-                    passHref>
-                    <Level active={gameType === "vrttaal"} wide>
-                      <Image
-                        src="/images/vrttaal.svg"
-                        width={100}
-                        height={48}
-                        alt="VRT Taal"
-                      />
-                    </Level>
-                  </NextLink>
-                ) : null}
-              </Levels>
-            </Card.Body>
-          </Card>
+          {!isArchive ? (
+            <Card role="region">
+              <Card.Header>
+                <Text b>Aantal letters</Text>
+              </Card.Header>
+              <Card.Body>
+                <Levels>
+                  {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
+                    <NextLink
+                      href={`/speel/${level}`}
+                      key={`level-${level}`}
+                      passHref>
+                      <Level
+                        active={wordLength === level && gameType !== "vrttaal"}>
+                        {level}
+                      </Level>
+                    </NextLink>
+                  ))}
+                  {process.env.NEXT_PUBLIC_VRTTAAL === "1" &&
+                  locale === "nl-BE" ? (
+                    <NextLink
+                      href={`/speel/vrttaal`}
+                      key={`level-vrttaal`}
+                      passHref>
+                      <Level active={gameType === "vrttaal"} wide>
+                        <Image
+                          src="/images/vrttaal.svg"
+                          width={100}
+                          height={48}
+                          alt="VRT Taal"
+                        />
+                      </Level>
+                    </NextLink>
+                  ) : null}
+                </Levels>
+                <NextLink href={"/archief"} passHref>
+                  <Button color="gradient" ghost auto as="a">
+                    Archief
+                  </Button>
+                </NextLink>
+              </Card.Body>
+            </Card>
+          ) : (
+            <Card role="region">
+              <Card.Header>
+                <Text b>Ander Woordje?</Text>
+              </Card.Header>
+              <Card.Body>
+                <Text css={{ marginBottom: "$2" }}>
+                  Dit is een {translations.title} uit het archief. Een andere
+                  spelen?
+                </Text>
+
+                <NextLink href={"/"} passHref>
+                  <Button
+                    color="gradient"
+                    ghost
+                    auto
+                    css={{ margin: "$2" }}
+                    as="a">
+                    Vandaag
+                  </Button>
+                </NextLink>
+                <NextLink href={"/archief"} passHref>
+                  <Button
+                    color="gradient"
+                    ghost
+                    auto
+                    css={{ margin: "$2" }}
+                    as="a">
+                    Archief
+                  </Button>
+                </NextLink>
+              </Card.Body>
+            </Card>
+          )}
         </Grid>
         <Grid xs={12} sm={6}>
           <Container gap={0}>
@@ -153,12 +159,12 @@ const Footer = () => {
                           iconOn={<Show set="bold" />}
                         />
                       </Col>
-                      <Col css={{ paddingTop: "3px" }}>
+                      <Col css={{ paddingTop: "3px", color: "$text" }}>
                         <Tooltip
                           aria-label="Handig voor kleurenblinden."
                           content="Handig voor kleurenblinden."
                           color="primary">
-                          <Text>Hoog contrast</Text>
+                          Hoog contrast
                         </Tooltip>
                       </Col>
                     </Row>
@@ -195,16 +201,14 @@ const Footer = () => {
                           aria-label="Extra moeilijk"
                         />
                       </Col>
-                      <Col css={{ paddingTop: "3px" }}>
-                        <Text>
-                          <Tooltip
-                            color="primary"
-                            content={
-                              "Geraden letters moeten hergebruikt worden in volgende pogingen."
-                            }>
-                            Extra moeilijk
-                          </Tooltip>
-                        </Text>
+                      <Col css={{ paddingTop: "3px", color: "$text" }}>
+                        <Tooltip
+                          color="primary"
+                          content={
+                            "Geraden letters moeten hergebruikt worden in volgende pogingen."
+                          }>
+                          Extra moeilijk
+                        </Tooltip>
                       </Col>
                     </Row>
                   </Container>

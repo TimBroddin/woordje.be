@@ -1,32 +1,23 @@
-import { Modal, Grid, Text, Card, styled } from "@nextui-org/react";
+import {
+  Modal,
+  Grid,
+  Text,
+  Card,
+  Container,
+  Row,
+  Col,
+  styled,
+} from "@nextui-org/react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { hide } from "../redux/features/modal";
-import { getStatistics } from "../lib/helpers";
+import { hide } from "@/redux/features/modal";
+import { getStatistics } from "@/lib/helpers";
 
-const DistributionValue = styled("div", {
-  boxSizing: "border-box",
-  padding: "5px",
-});
-
-const DistributionRow = styled("div", {
-  display: "grid",
-  gridTemplateColumns: "1fr 5fr",
-  gridAutoRows: "20px",
-  gridGap: "5px",
-  alignItems: "center",
-});
-
-const DistributionLabel = styled("div", {
-  textAlign: "center",
-});
-
-const DistributionBarWrapper = styled("div");
-
-const DistributionBar = styled("div", {
-  background: "#d35400",
+const Bar = styled("div", {
+  background: "$secondary",
   color: "white",
-  padding: "1px",
+  borderRadius: "$sm !important",
+  overflow: "hidden",
 });
 
 const Box = ({ title, num, pct, color, large, children }) => {
@@ -67,7 +58,7 @@ const Statistics = ({ visible }) => {
   const pctLost = totalGames ? (lost / totalGames) * 100 : 0;
 
   const maxDistributionValue = Math.max(...Object.values(distribution));
-  const distributionValues = Array.from({ length: settings.BOARD_SIZE }).map(
+  const distributionValues = Array.from({ length: settings.boardSize }).map(
     (_, idx) => {
       return {
         amount: idx + 1,
@@ -84,7 +75,6 @@ const Statistics = ({ visible }) => {
     value: distribution[-1] || 0,
     pct: distribution[-1] ? (distribution[-1] / maxDistributionValue) * 100 : 0,
   });
-
   return (
     <Modal
       closeButton
@@ -97,7 +87,7 @@ const Statistics = ({ visible }) => {
           {settings.gameType === "vrttaal" ? (
             <Text b>het VRT Taal woord</Text>
           ) : (
-            <Text b>{settings.WORD_LENGTH} tekens</Text>
+            <Text b>{settings.wordLength} tekens</Text>
           )}
         </Text>
       </Modal.Header>
@@ -112,24 +102,34 @@ const Statistics = ({ visible }) => {
             color="gradient"
           />
           <Box title="Aantal pogingen" large color="primary">
-            <DistributionValue>
+            <Container gap={0} css={{ color: "$white" }}>
               {distributionValues.map((item) => {
                 return (
-                  <DistributionRow key={`distribution-${item.amount}`}>
-                    <DistributionLabel>{item.amount}</DistributionLabel>
-                    <DistributionBarWrapper>
-                      <DistributionBar
-                        style={{
+                  <Row
+                    key={`distribution-${item.amount}`}
+                    gap={1}
+                    css={{ marginBottom: "$4" }}>
+                    <Col span={2} css={{ textAlign: "right" }}>
+                      <Text b css={{ color: "white" }}>
+                        {item.amount}
+                      </Text>
+                    </Col>
+                    <Col span={10}>
+                      <Bar
+                        css={{
                           width: `${item.pct}%`,
-                          display: item.pct ? "block" : "none",
                         }}>
-                        {item.value ? `${item.value}x` : ""}
-                      </DistributionBar>
-                    </DistributionBarWrapper>
-                  </DistributionRow>
+                        {item.value && (
+                          <Text css={{ color: "$white", margin: "$2" }}>
+                            {item.value}x
+                          </Text>
+                        )}
+                      </Bar>
+                    </Col>
+                  </Row>
                 );
               })}
-            </DistributionValue>
+            </Container>
           </Box>
         </Grid.Container>
       </Modal.Body>

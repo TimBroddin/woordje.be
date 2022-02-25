@@ -15,14 +15,21 @@ import dynamic from "next/dynamic";
 
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 import NextLink from "next/link";
-import { copyToClipboard, getIsVictory } from "../lib/helpers";
-import { useGameState, useCorrectedGameId } from "../lib/hooks";
-import { useTranslations } from "../lib/i18n";
-import { getStreak } from "../lib/helpers";
-import { hide } from "../redux/features/modal";
+import { copyToClipboard, getIsVictory } from "@/lib/helpers";
+import {
+  useDisplayGameId,
+  useGameState,
+  useSolution,
+  useArchive,
+  useIsArchive,
+  useStaticProps,
+} from "@/lib/hooks";
+import { useTranslations } from "@/lib/i18n";
+import { getStreak } from "@/lib/helpers";
+import { hide } from "@/redux/features/modal";
 
 import { usePlausible } from "next-plausible";
 
@@ -41,7 +48,7 @@ const ShareText = styled("div", {
   textAlign: "center",
 });
 
-const Streak = styled(motion.h4, {
+const Streak = styled(m.h4, {
   fontSize: "22px",
   margin: 0,
   marginBottom: "10px",
@@ -56,17 +63,27 @@ const Icon = ({ src, alt, width = 20, height = 20 }) => (
   <IconImage src={src} width={width} height={height} alt={alt} />
 );
 
-const Results = ({ solution, visible, toast }) => {
-  const CORRECTED_GAME_ID = useCorrectedGameId();
+const Results = ({ visible, toast }) => {
   const translations = useTranslations();
-  const { WORD_LENGTH, BOARD_SIZE, gameType, hardMode } = useSelector(
+  const { wordLength, boardSize, gameType, hardMode, gameId } = useSelector(
     (state) => state.settings
   );
+  const displayGameId = useDisplayGameId(gameId);
+  const isArchive = useIsArchive(gameId);
   const streak = useSelector(getStreak);
   const timer = useSelector((state) => state.timer);
   const [gameState, setGameState] = useGameState();
   const plausible = usePlausible();
   const dispatch = useDispatch();
+  const { solution: initialSolution } = useStaticProps();
+  const { solution } = useSolution(
+    {
+      gameId,
+      wordLength,
+      gameType: "vrttaal" ? "vrttaal" : null,
+    },
+    initialSolution
+  );
 
   const closeHandler = (e) => {
     dispatch(hide());
@@ -76,22 +93,21 @@ const Results = ({ solution, visible, toast }) => {
       const header = [
         `${
           html ? translations.share_html : translations.share_text
-        } #${CORRECTED_GAME_ID}`,
+        } #${displayGameId} x ${
+          gameType === "vrttaal" ? "vrttaal" : wordLength
+        }`,
       ];
-      if (gameType === "vrttaal") {
-        header.push(`VRT Taal`);
-      } else {
-        if (WORD_LENGTH != 6) {
-          header.push(`(${WORD_LENGTH} letters)`);
-        }
+      if (isArchive) {
+        header.push("archief");
       }
+
       if (hardMode) {
         header.push(`💀 Extra moeilijk`);
       }
       header.push(
         `💡 ${
           getIsVictory(gameState) ? gameState.guesses.length : "X"
-        }/${BOARD_SIZE}`
+        }/${boardSize}`
       );
       if (streak > 1) {
         header.push(`🎳 ${streak}`);
@@ -132,15 +148,16 @@ ${gameState.guesses
       translations.share_html,
       translations.share_text,
       translations.share_hashtag,
-      CORRECTED_GAME_ID,
+      displayGameId,
       gameType,
       gameState,
-      BOARD_SIZE,
+      boardSize,
       streak,
       timer?.start,
       timer.value,
-      WORD_LENGTH,
+      wordLength,
       hardMode,
+      isArchive,
     ]
   );
 
@@ -149,7 +166,7 @@ ${gameState.guesses
       .map((line) =>
         line
           .map((item) =>
-            item.score === "good" ? "V" : item.score === "off" ? "X" : "0"
+            item.score === "good" ? "🟩" : item.score === "off" ? "🟨" : "⬛️"
           )
           .join("")
       )
@@ -188,7 +205,7 @@ ${gameState.guesses
         </Text>
       </Modal.Header>
       <Modal.Body>
-        {solution.meaning ? (
+        {solution?.meaning ? (
           <Card>
             <Text>
               <Text b>Betekenis:</Text>{" "}
@@ -254,9 +271,9 @@ ${gameState.guesses
               plausible("Share", { props: { method: "facebook" } });
               window.open(
                 `https://www.facebook.com/share.php?u=${encodeURIComponent(
-                  `${translations.url}/share/${WORD_LENGTH}/${getEncodedState(
-                    gameState
-                  )}`
+                  `${
+                    translations.url
+                  }/share/${gameId}/${wordLength}/${getEncodedState(gameState)}`
                 )}`,
                 "_blank"
               );
@@ -292,9 +309,9 @@ ${gameState.guesses
               plausible("Share", { props: { method: "linkedin" } });
               window.open(
                 `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                  `${translations.url}/share/${WORD_LENGTH}/${getEncodedState(
-                    gameState
-                  )}`
+                  `${
+                    translations.url
+                  }/share/${gameId}/${wordLength}/${getEncodedState(gameState)}`
                 )}`,
                 "_blank"
               );
@@ -330,7 +347,7 @@ ${gameState.guesses
         <p>
           Probeer ook eens met{" "}
           {[3, 4, 5, 6, 7, 8, 9, 10]
-            .filter((x) => x !== WORD_LENGTH)
+            .filter((x) => x !== wordLength)
             .map((x, i) => (
               <span key={`link-${x}`}>
                 <NextLink passHref href={`/speel/${x}`}>

@@ -1,4 +1,6 @@
+import { RANDOM_WORD_QUERY } from "../../queries";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { request } from "graphql-request";
 
 const initialState = {
   value: "",
@@ -7,10 +9,13 @@ const initialState = {
 const getRandomWord = createAsyncThunk(
   "randomWord/getRandomWord",
   async (_, thunkAPI) => {
-    const { WORD_LENGTH } = thunkAPI.getState().settings;
+    const { wordLength } = thunkAPI.getState().settings;
 
-    const res = await fetch(`/api/random?l=${WORD_LENGTH}`);
-    const word = await res.text();
+    const res = await request(`/api/graphql`, RANDOM_WORD_QUERY, {
+      wordLength,
+      amount: 1,
+    });
+    const word = res.randomWords?.[0];
 
     return word;
   }

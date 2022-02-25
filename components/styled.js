@@ -1,5 +1,5 @@
 import { styled } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 export const Main = styled("main", {
   color: "#fff",
@@ -22,8 +22,81 @@ export const Board = styled("div", {
   },
 });
 
-export const Row = styled(motion.div, {
+export const Row = styled(m.div, {
   display: "flex",
   justifyContent: "center",
   alignIitems: "center",
+});
+
+export const Levels = styled("div", {
+  margin: "24px 0",
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "10px",
+
+  "@media (max-width: 768px)": {
+    justifyContent: "space-between",
+  },
+});
+
+export const Note = styled("div", {
+  borderRadius: "$xs",
+  padding: "$8",
+  margin: "$0",
+
+  variants: {
+    type: {
+      primary: {
+        backgroundColor: "$primary",
+        "> p": {
+          color: "$white",
+          margin: "$0",
+        },
+      },
+    },
+  },
+});
+
+export const Level = styled("a", {
+  fontSize: "16px",
+  color: "white",
+  textDecoration: "none !important",
+  borderRadius: "var(--nextui-radii-md)",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "36px",
+  width: "36px",
+  padding: "0px",
+  backgroundColor: "var(--color-level)",
+
+  "&:hover": {
+    backgroundColor: "var(--color-level-active)",
+  },
+
+  variants: {
+    won: {
+      true: {
+        backgroundColor: "var(--nextui-colors-success)",
+      },
+    },
+    lost: {
+      true: {
+        backgroundColor: "var(--nextui-colors-error)",
+      },
+    },
+
+    active: {
+      true: {
+        backgroundColor: "var(--color-level-active)",
+      },
+    },
+    wide: {
+      true: {
+        width: "72px",
+        padding: "10px",
+      },
+      false: {},
+    },
+  },
 });
