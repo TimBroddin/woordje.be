@@ -8,3 +8,6 @@ Basic architecture:
 - [Vercel.com](https://vercel.com/) serverless functions
 - [Redux](https://redux.js.org)
 - [Next-ui](https://nextui.org/)
+- GraphQL
+- [Prisma](https://www.prisma.io/)
+- [PlanetScale](https://planetscale.com/)
