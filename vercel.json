@@ -1,7 +1,7 @@
 {
   "functions": {
     "pages/api/graphql.js": {
-      "memory": 128
+      "memory": 256
     }
   }
 }
