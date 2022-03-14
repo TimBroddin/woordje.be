@@ -11,3 +11,5 @@ Basic architecture:
 - GraphQL
 - [Prisma](https://www.prisma.io/)
 - [PlanetScale](https://planetscale.com/)
+
+![Powered by Vercel](/public/vercel.svg)
