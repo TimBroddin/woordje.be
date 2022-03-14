@@ -6,7 +6,6 @@ import Image from "next/image";
 import { NextSeo } from "next-seo";
 
 // HELPERS & HOOKS
-import { getCurrentWordFromAirTable } from "@/lib/airtable";
 import {
   getSolution,
   getRandomWord,
@@ -99,60 +98,23 @@ export const getStaticProps = async (ctx) => {
   const correctedGameId =
     locale === "nl-NL" ? parseInt(gameId) + 36 : parseInt(gameId);
 
-  if (gameType === "vrttaal") {
-    try {
-      const { Woord } = await getCurrentWordFromAirTable();
-      return {
-        props: {
-          gameType: gameType,
-          gameId: parseInt(gameId, 10),
-          wordLength: Woord.length,
-          ssrSolution: Woord,
-          ssrRandomWord: getRandomWord(Woord.length),
-          ssrDemoWords: getDemoWords(Woord.length),
+  const wordLength = parseInt(gameType);
 
-          ssr: {
-            solution: Woord,
-            randomWord: getRandomWord(Woord.length),
-            demoWords: getRandomWords(3, Woord.length),
-            statistics: await getStatistics(
-              correctedGameId,
-              Woord.length,
-              "vrttaal"
-            ),
-          },
-        },
-        revalidate: 300,
-      };
-    } catch (e) {
-      return {
-        props: {},
-        revalidate: 300,
-      };
-    }
-  } else {
-    const wordLength = parseInt(gameType);
+  return {
+    props: {
+      gameType: `normal-${gameType}`,
+      wordLength,
+      gameId: correctedGameId,
 
-    return {
-      props: {
-        gameType: `normal-${gameType}`,
-        wordLength,
-        gameId: correctedGameId,
-
-        ssr: {
-          solution: await getSolution(correctedGameId, wordLength),
-          randomWord: getRandomWord(wordLength),
-          demoWords: getRandomWords(3, wordLength),
-          statistics: await getStatistics(
-            correctedGameId,
-            wordLength,
-            "normal"
-          ),
-        },
+      ssr: {
+        solution: await getSolution(correctedGameId, wordLength),
+        randomWord: getRandomWord(wordLength),
+        demoWords: getRandomWords(3, wordLength),
+        statistics: await getStatistics(correctedGameId, wordLength, "normal"),
       },
-      revalidate: 300,
-    };
-  }
+    },
+    revalidate: 300,
+  };
 };
 
 export async function getStaticPaths() {

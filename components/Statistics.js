@@ -83,12 +83,7 @@ const Statistics = ({ visible }) => {
       onClose={closeHandler}>
       <Modal.Header>
         <Text>
-          Statistieken voor{" "}
-          {settings.gameType === "vrttaal" ? (
-            <Text b>het VRT Taal woord</Text>
-          ) : (
-            <Text b>{settings.wordLength} tekens</Text>
-          )}
+          Statistieken voor <Text b>{settings.wordLength} tekens</Text>
         </Text>
       </Modal.Header>
       <Modal.Body>

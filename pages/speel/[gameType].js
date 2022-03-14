@@ -7,7 +7,6 @@ import { NextSeo } from "next-seo";
 import { usePlausible } from "next-plausible";
 
 // HELPERS & HOOKS
-import { getCurrentWordFromAirTable } from "@/lib/airtable";
 import {
   getSolution,
   getRandomWord,
@@ -98,60 +97,29 @@ export const getStaticProps = async (ctx) => {
 
   const { gameType } = params;
 
-  if (gameType === "vrttaal") {
-    try {
-      const { Woord } = await getCurrentWordFromAirTable();
-      return {
-        props: {
-          gameType: gameType,
-          wordLength: Woord.length,
-          ssrSolution: Woord,
-          customGame: "vrttaal",
+  const wordLength = parseInt(gameType);
+  return {
+    props: {
+      gameType: `normal-${gameType}`,
+      wordLength,
 
-          ssr: {
-            solution: Woord,
-            randomWord: getRandomWord(Woord.length),
-            demoWords: getRandomWords(3, Woord.length),
-            statistics: await getStatistics(
-              getTodaysGameId(),
-              Woord.length,
-              "vrttaal"
-            ),
-          },
-        },
-        revalidate: 60,
-      };
-    } catch (e) {
-      return {
-        props: {},
-        revalidate: 60,
-      };
-    }
-  } else {
-    const wordLength = parseInt(gameType);
-    return {
-      props: {
-        gameType: `normal-${gameType}`,
-        wordLength,
-
-        ssr: {
-          solution: await getSolution(getTodaysGameId(), wordLength),
-          randomWord: getRandomWord(wordLength),
-          demoWords: getRandomWords(3, wordLength),
-          statistics: await getStatistics(
-            getTodaysGameId(),
-            wordLength,
-            "normal"
-          ),
-        },
+      ssr: {
+        solution: await getSolution(getTodaysGameId(), wordLength),
+        randomWord: getRandomWord(wordLength),
+        demoWords: getRandomWords(3, wordLength),
+        statistics: await getStatistics(
+          getTodaysGameId(),
+          wordLength,
+          "normal"
+        ),
       },
-      revalidate: 60,
-    };
-  }
+    },
+    revalidate: 60,
+  };
 };
 
 export async function getStaticPaths() {
-  const items = ["3", "4", "5", "6", "7", "8", "9", "10", "vrttaal"];
+  const items = ["3", "4", "5", "6", "7", "8", "9", "10"];
   const locales = ["nl-NL", "nl-BE"];
   const paths = [];
 

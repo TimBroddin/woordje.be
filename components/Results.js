@@ -80,7 +80,7 @@ const Results = ({ visible, toast }) => {
     {
       gameId,
       wordLength,
-      gameType: "vrttaal" ? "vrttaal" : null,
+      gameType: null,
     },
     initialSolution
   );
@@ -93,9 +93,7 @@ const Results = ({ visible, toast }) => {
       const header = [
         `${
           html ? translations.share_html : translations.share_text
-        } #${displayGameId} x ${
-          gameType === "vrttaal" ? "vrttaal" : wordLength
-        }`,
+        } #${displayGameId} x ${wordLength}`,
       ];
       if (isArchive) {
         header.push("archief");

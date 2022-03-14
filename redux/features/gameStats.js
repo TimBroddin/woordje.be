@@ -12,7 +12,7 @@ const getStats = createAsyncThunk("gameStats/getStats", async (_, thunkAPI) => {
   const res = await request(`/api/graphql`, STATS_QUERY, {
     wordLength,
     gameId,
-    gameType: gameType === "vrttaal" ? "vrttaal" : "normal",
+    gameType: "normal",
   });
   const stats = res.stats;
 

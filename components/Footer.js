@@ -63,28 +63,9 @@ const Footer = ({ gameId }) => {
                       href={`/speel/${level}`}
                       key={`level-${level}`}
                       passHref>
-                      <Level
-                        active={wordLength === level && gameType !== "vrttaal"}>
-                        {level}
-                      </Level>
+                      <Level active={wordLength === level}>{level}</Level>
                     </NextLink>
                   ))}
-                  {process.env.NEXT_PUBLIC_VRTTAAL === "1" &&
-                  locale === "nl-BE" ? (
-                    <NextLink
-                      href={`/speel/vrttaal`}
-                      key={`level-vrttaal`}
-                      passHref>
-                      <Level active={gameType === "vrttaal"} wide>
-                        <Image
-                          src="/images/vrttaal.svg"
-                          width={100}
-                          height={48}
-                          alt="VRT Taal"
-                        />
-                      </Level>
-                    </NextLink>
-                  ) : null}
                 </Levels>
                 <NextLink href={"/archief"} passHref>
                   <Button color="gradient" ghost auto as="a">

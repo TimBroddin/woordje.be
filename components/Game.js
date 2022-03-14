@@ -170,7 +170,7 @@ export default function Game({ gameId, gameType, wordLength }) {
         serverResponse = await check(
           {
             text,
-            customGame: gameType === "vrttaal" ? "vrttaal" : null,
+            customGame: null,
             wordLength,
             gameId,
           },
@@ -213,7 +213,7 @@ export default function Game({ gameId, gameType, wordLength }) {
           logResult(
             gameId,
             wordLength,
-            gameType === "vrttaal" ? "vrttaal" : "normal",
+            "normal",
             gameState.guesses.length + 1
           ).then(() => {
             dispatch(getStats());
@@ -226,7 +226,7 @@ export default function Game({ gameId, gameType, wordLength }) {
           logResult(
             gameId,
             wordLength,
-            gameType === "vrttaal" ? "vrttaal" : "normal",
+            "normal",
             gameState.guesses.length + 2
           ).then(() => {
             dispatch(getStats());

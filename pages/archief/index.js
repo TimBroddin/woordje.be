@@ -44,6 +44,7 @@ const GameCard = ({ displayGameId }) => {
                   }>
                   <NextLink
                     href={`/archief/${displayGameId}x${level}`}
+                    prefetch={false}
                     passHref>
                     <Level active={false} won={won} lost={lost}>
                       {level}

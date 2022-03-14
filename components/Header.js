@@ -91,7 +91,6 @@ const Header = ({
             weight="bold">
             {customTitle ? customTitle : translations.title}
           </Text>
-          {gameType === "vrttaal" ? <Text small>VRT Taal editie</Text> : null}
           {subtitle && <Text small>{subtitle}</Text>}
         </Col>
         {showStats && (
