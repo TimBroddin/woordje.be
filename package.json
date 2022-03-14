@@ -48,5 +48,8 @@
     "minimist": "^1.2.5",
     "prisma": "^3.10.0",
     "tty": "^1.0.1"
-  }
+  },
+  "cacheDirectories": [
+    ".next/cache"
+  ]
 }

@@ -147,7 +147,6 @@ ${gameState.guesses
       translations.share_text,
       translations.share_hashtag,
       displayGameId,
-      gameType,
       gameState,
       boardSize,
       streak,
