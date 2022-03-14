@@ -113,7 +113,7 @@ export const getStaticProps = async (ctx) => {
         statistics: await getStatistics(correctedGameId, wordLength, "normal"),
       },
     },
-    revalidate: 300,
+    revalidate: 600,
   };
 };
 
@@ -121,6 +121,7 @@ export async function getStaticPaths() {
   const locales = ["nl-BE", "nl-NL"];
   const levels = ["3", "4", "5", "6", "7", "8", "9", "10"];
   const paths = [];
+  /*
 
   for (let locale of locales) {
     const maxGameId =
@@ -133,6 +134,6 @@ export async function getStaticPaths() {
       }
     }
   }
-
+*/
   return { paths, fallback: "blocking" };
 }
