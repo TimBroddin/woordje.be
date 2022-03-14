@@ -284,7 +284,7 @@ const Footer = ({ gameId }) => {
       </Text>
       <PoweredBy>
         <NextLink
-          href="https://vercel.com/?utm_source=[team-name]&utm_campaign=oss"
+          href="https://vercel.com/?utm_source=broddin&utm_campaign=oss"
           passHref>
           <a target="_blank" norel noreferer>
             <Image
