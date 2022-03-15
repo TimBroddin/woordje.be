@@ -16,6 +16,7 @@ import {
   Switch,
   Tooltip,
   useTheme,
+  styled,
 } from "@nextui-org/react";
 
 import { useTranslations } from "@/lib/i18n";
@@ -28,6 +29,11 @@ import { getRandomWord } from "@/redux/features/randomWord";
 import { Levels, Level } from "@/components/styled";
 import GameStats from "@/components/GameStats";
 import { useIsArchive, useStaticProps } from "@/lib/hooks";
+
+const PoweredBy = styled("div", {
+  marginTop: "$8",
+  marginLeft: "$8",
+});
 
 const Footer = ({ gameId }) => {
   const dispatch = useDispatch();
@@ -257,6 +263,20 @@ const Footer = ({ gameId }) => {
           .
         </Text>
       </Text>
+      <PoweredBy>
+        <NextLink
+          href="https://vercel.com/?utm_source=broddin&utm_campaign=oss"
+          passHref>
+          <a target="_blank" norel noreferer>
+            <Image
+              src={"/images/powered-by-vercel.svg"}
+              alt="Powered by Vercel"
+              width="146"
+              height="30"
+            />
+          </a>
+        </NextLink>
+      </PoweredBy>
     </Container>
   );
 };
