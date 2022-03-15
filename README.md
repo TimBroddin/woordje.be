@@ -13,4 +13,5 @@ Basic architecture:
 - [PlanetScale](https://planetscale.com/)
 
 Hosting for Woordje is kindly sponsored by [Vercel.com](https://vercel.com/).
+
 [![Powered by Vercel](/public/images/powered-by-vercel.svg)](https://vercel.com/?utm_source=Woordje&utm_campaign=oss)
