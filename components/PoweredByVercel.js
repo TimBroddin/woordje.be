@@ -1,5 +1,4 @@
 import { Container, styled } from "@nextui-org/react";
-import Link from "next/link";
 import Image from "next/image";
 
 const PoweredBy = styled("div", {
@@ -11,7 +10,7 @@ const PoweredByVercel = () => {
   return (
     <Container gap={1}>
       <PoweredBy>
-        <Link
+        <a
           href="https://vercel.com/?utm_source=Woordje&utm_campaign=oss"
           rel="noreferrer"
           target="_blank">
@@ -21,7 +20,7 @@ const PoweredByVercel = () => {
             width="146"
             height="30"
           />
-        </Link>
+        </a>
       </PoweredBy>
     </Container>
   );
