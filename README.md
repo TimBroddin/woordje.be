@@ -12,4 +12,5 @@ Basic architecture:
 - [Prisma](https://www.prisma.io/)
 - [PlanetScale](https://planetscale.com/)
 
-[![Powered by Vercel](/public/images/powered-by-vercel.svg)](https://vercel.com/?utm_source=broddin&utm_campaign=oss)
+Hosting for Woordje is kindly sponsored by [Vercel.com](https://vercel.com/).
+[![Powered by Vercel](/public/images/powered-by-vercel.svg)](https://vercel.com/?utm_source=Woordje&utm_campaign=oss)

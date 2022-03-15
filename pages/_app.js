@@ -13,6 +13,7 @@ import GlobalStyle from "../styles/globals";
 import useSWR, { SWRConfig } from "swr";
 import { request } from "graphql-request";
 import { LazyMotion, domAnimation } from "framer-motion";
+import PoweredByVercel from "@/components/PoweredByVercel";
 
 let persistor = persistStore(store);
 

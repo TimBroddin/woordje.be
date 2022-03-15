@@ -1,13 +1,23 @@
 import { styled } from "@nextui-org/react";
 import { m } from "framer-motion";
+import PoweredByVercel from "./PoweredByVercel";
 
-export const Main = styled("main", {
+const MainContainer = styled("main", {
   color: "#fff",
   maxWidth: "480px",
   margin: "0 auto",
   minHeight: "100vh",
   height: "-webkit-fill-available",
 });
+
+export const Main = ({ children }) => {
+  return (
+    <MainContainer>
+      {children}
+      <PoweredByVercel />
+    </MainContainer>
+  );
+};
 
 export const Board = styled("div", {
   transition: "all 0.2s ease-in-out",
