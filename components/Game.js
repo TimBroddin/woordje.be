@@ -9,7 +9,7 @@ import { usePlausible } from "next-plausible";
 import { GraphQLClient } from "graphql-request";
 
 // HELPERS & HOOKS
-import { getIsGameOverSelector, logResult } from "@/lib/helpers";
+import { getIsGameOverSelector, logResult, check } from "@/lib/helpers";
 
 import { useGameState, useStaticProps } from "@/lib/hooks";
 
@@ -34,20 +34,6 @@ import { CHECK_QUERY } from "../queries";
 
 const STAGGER = 0.15;
 
-async function check(variables, signal) {
-  const client = new GraphQLClient("/api/graphql");
-  try {
-    const res = await client.request({
-      document: CHECK_QUERY,
-      variables,
-      signal,
-    });
-    return { match: res.check };
-  } catch (e) {
-    return { error: e.message.split(":")?.[0], match: [] };
-  }
-}
-
 export default function Game({ gameId, gameType, wordLength }) {
   const dispatch = useDispatch();
   const { locale } = useRouter();
@@ -56,6 +42,7 @@ export default function Game({ gameId, gameType, wordLength }) {
     randomWord: ssrRandomWord,
     demoWords: ssrDemoWords,
     statistics: ssrStatistics,
+    solution,
   } = useStaticProps();
   const randomWord = useSelector((state) => state.randomWord);
 
@@ -105,13 +92,6 @@ export default function Game({ gameId, gameType, wordLength }) {
   }, [dispatch, ssrStatistics]);
 
   useEffect(() => {
-    if (fetchControllerRef.current) {
-      fetchControllerRef.current.abort();
-    }
-    toast.dismiss("toast");
-  }, [inputText]);
-
-  useEffect(() => {
     if (typeof document !== "undefined") {
       if (colorBlind) {
         document.body.classList.add("colorblind");
@@ -122,11 +102,7 @@ export default function Game({ gameId, gameType, wordLength }) {
   }, [colorBlind]);
 
   const submit = useCallback(
-    async (text) => {
-      if (fetchControllerRef.current) fetchControllerRef.current.abort();
-      const controller = new AbortController();
-      fetchControllerRef.current = controller;
-
+    (text) => {
       setIsLoading(true);
       // check if all previous guessed letters are used
       if (hardMode) {
@@ -165,36 +141,8 @@ export default function Game({ gameId, gameType, wordLength }) {
         dispatch(getRandomWord());
       }
 
-      let serverResponse;
       try {
-        serverResponse = await check(
-          {
-            text,
-            customGame: null,
-            wordLength,
-            gameId,
-          },
-          controller.signal
-        );
-      } catch (err) {
-        if (err.name === "AbortError") {
-          toast.dismiss("toast");
-        } else {
-          toast.error("Unknown error", { id: "toast" });
-        }
-        return;
-      } finally {
-        setIsLoading(false);
-        fetchControllerRef.current = null;
-      }
-
-      const { match, error } = serverResponse;
-
-      if (error) {
-        if (error === "unknown word") {
-          toast.error("Ongeldig woord", { id: "toast", duration: 2000 });
-        }
-      } else {
+        const match = check(text, solution.word);
         toast.dismiss("toast");
 
         dispatch(setInputText(""));
@@ -238,18 +186,28 @@ export default function Game({ gameId, gameType, wordLength }) {
           wordLength,
           guesses: gameState.guesses.concat([match]),
         });
+      } catch (err) {
+        if (err.message === "unknown word") {
+          toast.error("Ongeldig woord", { id: "toast", duration: 2000 });
+        } else {
+          toast.error("Unknown error", { id: "toast", duration: 2000 });
+        }
+        return;
+      } finally {
+        setIsLoading(false);
       }
     },
     [
-      boardSize,
-      wordLength,
-      gameId,
-      gameState.guesses,
-      randomWord,
-      setGameState,
-      dispatch,
-      gameType,
       hardMode,
+      randomWord.value,
+      gameState.guesses,
+      dispatch,
+      solution.word,
+      boardSize,
+      setGameState,
+      gameId,
+      wordLength,
+      gameType,
     ]
   );
 

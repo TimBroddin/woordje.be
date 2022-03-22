@@ -104,6 +104,7 @@ export const getStaticProps = async (ctx) => {
       wordLength,
 
       ssr: {
+        gameId: getTodaysGameId(),
         solution: await getSolution(getTodaysGameId(), wordLength),
         randomWord: getRandomWord(wordLength),
         demoWords: getRandomWords(3, wordLength),
