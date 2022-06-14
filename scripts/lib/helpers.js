@@ -25,26 +25,32 @@ Array.prototype.equals = function (array) {
 // Hide method from for-in loops
 Object.defineProperty(Array.prototype, "equals", { enumerable: false });
 
-const keypress = async () => {
-  process.stdin.setRawMode(true);
-  return new Promise((resolve) =>
-    process.stdin.once("data", (data) => {
-      process.stdin.setRawMode(false);
-      const byteArray = [...data];
+const keypress = async (correct) => {
+    process.stdin.setRawMode(true);
+    return new Promise((resolve) =>
+        process.stdin.once("data", (data) => {
+            process.stdin.setRawMode(false);
+            const byteArray = [...data];
 
-      if (byteArray.equals([27, 91, 67])) {
-        resolve("right");
-      } else if (byteArray.equals([27, 91, 68])) {
-        resolve("left");
-      } else if (byteArray.length > 0 && byteArray[0] === 3) {
-        console.log("^C");
-        resolve("save");
-      } else {
-        console.log(byteArray);
-        resolve(data.toString());
-      }
-    })
-  );
+            if (byteArray.equals([27, 91, 67])) {
+                resolve("right");
+            } else if (byteArray.equals([27, 91, 68])) {
+                resolve("left");
+            } else if (byteArray.equals([97])) {
+                if (correct) {
+                    resolve("left");
+                } else {
+                    resolve("right");
+                }
+            } else if (byteArray.length > 0 && byteArray[0] === 3) {
+                console.log("^C");
+                resolve("save");
+            } else {
+                console.log(byteArray);
+                resolve(data.toString());
+            }
+        })
+    );
 };
 
 module.exports = { keypress };
