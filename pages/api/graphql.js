@@ -5,15 +5,16 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-co
 import prisma from "@/lib/prisma";
 
 const apolloServer = new ApolloServer({
-  typeDefs,
-  resolvers,
-  playground: true,
-  introspection: true,
-  plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
-  context: ({ req }) => ({
-    prisma,
-    ip: req.headers["x-real-ip"] ?? req.connection.remoteAddress,
-  }),
+    typeDefs,
+    resolvers,
+    playground: true,
+    introspection: true,
+    cache: "bounded",
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+    context: ({ req }) => ({
+        prisma,
+        ip: req.headers["x-real-ip"] ?? req.connection.remoteAddress,
+    }),
 });
 
 const startServer = apolloServer.start();
