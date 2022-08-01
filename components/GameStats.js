@@ -43,49 +43,54 @@ const GameStats = () => {
   const maxDistributionValue = Math.max(...distribution);
 
   return (
-    <Card>
-      <Collapse.Group>
-        <Collapse
-          title=""
-          subtitle={`${Math.round(
-            stats && stats.wins ? stats?.wins : initialStatistics.wins
-          )}% van alle spelers vond de oplossing.`}>
-          <Container gap={1} css={{ color: "$text" }}>
-            {distribution?.map((amount, k) => {
-              return (
-                <Row
-                  key={`gameStatsDistribution-${k}`}
-                  gap={1}
-                  css={{ marginBottom: "$4" }}>
-                  <Col span={5} css={{ textAlign: "right" }}>
-                    <Text b>{k + 1}</Text> {k === 0 ? "poging" : "pogingen"}
-                  </Col>
-                  <Col span={7}>
-                    <Bar
-                      mine={ownScore === k + 1}
-                      css={{
-                        width: `${(amount / maxDistributionValue) * 100}%`,
-                      }}>
-                      {amount && (
-                        <Text
-                          css={{
-                            color: "$background",
-                            margin: "$2",
-                            padding: "$2 $0",
-                            fontSize: "11px",
-                          }}>
-                          {amount}%
-                        </Text>
-                      )}
-                    </Bar>
-                  </Col>
-                </Row>
-              );
-            })}
-          </Container>
-        </Collapse>
-      </Collapse.Group>
-    </Card>
+      <Card>
+          <Collapse.Group>
+              <Collapse
+                  title=" "
+                  subtitle={`${Math.round(
+                      stats && stats.wins ? stats?.wins : initialStatistics.wins
+                  )}% van alle spelers vond de oplossing.`}>
+                  <Container gap={1} css={{ color: "$text" }}>
+                      {distribution?.map((amount, k) => {
+                          return (
+                              <Row
+                                  key={`gameStatsDistribution-${k}`}
+                                  gap={1}
+                                  css={{ marginBottom: "$4" }}>
+                                  <Col span={5} css={{ textAlign: "right" }}>
+                                      <Text b>{k + 1}</Text>{" "}
+                                      {k === 0 ? "poging" : "pogingen"}
+                                  </Col>
+                                  <Col span={7}>
+                                      <Bar
+                                          mine={ownScore === k + 1}
+                                          css={{
+                                              width: `${
+                                                  (amount /
+                                                      maxDistributionValue) *
+                                                  100
+                                              }%`,
+                                          }}>
+                                          {amount && (
+                                              <Text
+                                                  css={{
+                                                      color: "$background",
+                                                      margin: "$2",
+                                                      padding: "$2 $0",
+                                                      fontSize: "11px",
+                                                  }}>
+                                                  {amount}%
+                                              </Text>
+                                          )}
+                                      </Bar>
+                                  </Col>
+                              </Row>
+                          );
+                      })}
+                  </Container>
+              </Collapse>
+          </Collapse.Group>
+      </Card>
   );
 };
 
