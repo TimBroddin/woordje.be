@@ -273,18 +273,6 @@ const Footer = ({ gameId }) => {
                                       color: "$white",
                                       textDecoration: "underline",
                                   }}
-                                  href="https://www.scam.city/"
-                                  rel="noreferrer"
-                                  style={{ textDecoration: "underline" }}
-                                  target="_blank">
-                                  ScamCity
-                              </Link>
-                              /
-                              <Link
-                                  css={{
-                                      color: "$white",
-                                      textDecoration: "underline",
-                                  }}
                                   href="https://broddin.be/"
                                   style={{ textDecoration: "underline" }}
                                   rel="noreferrer"
