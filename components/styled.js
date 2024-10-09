@@ -11,12 +11,7 @@ const MainContainer = styled("main", {
 });
 
 export const Main = ({ children }) => {
-  return (
-    <MainContainer>
-      {children}
-      <PoweredByVercel />
-    </MainContainer>
-  );
+  return <MainContainer>{children}</MainContainer>;
 };
 
 export const Board = styled("div", {
@@ -39,10 +34,10 @@ export const Row = styled(m.div, {
 });
 
 export const Levels = styled("div", {
-    margin: "0px 0 24px 0",
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "10px",
+  margin: "0px 0 24px 0",
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "10px",
 });
 
 export const Note = styled("div", {
