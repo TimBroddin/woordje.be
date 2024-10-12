@@ -26,55 +26,55 @@ const darkTheme = createTheme({
 });
 
 const Gate = ({ children }) => {
-   <PersistGate persistor={persistor}>{children}</PersistGate>;
-
+  <PersistGate persistor={persistor}>{children}</PersistGate>;
 };
 
 function MyApp({ Component, pageProps }) {
   const translations = useTranslations();
   GlobalStyle();
   return (
-      <LazyMotion features={domAnimation}>
-          <NextThemesProvider
-              defaultTheme="system"
-              attribute="class"
-              value={{
-                  light: lightTheme.className,
-                  dark: darkTheme.className,
-              }}>
-              <NextUIProvider>
-                  <Head>
-                      <link
-                          rel="alternate"
-                          hrefLang={translations.alternate_lang}
-                          href={translations.alternate_url}
-                      />
-                  </Head>
-                  <PlausibleProvider domain={translations.plausible}>
-                      <Provider store={store}>
-                          <>
-                              <Pwa />
+    <LazyMotion features={domAnimation}>
+      <NextThemesProvider
+        defaultTheme="system"
+        attribute="class"
+        value={{
+          light: lightTheme.className,
+          dark: darkTheme.className,
+        }}
+      >
+        <NextUIProvider>
+          <Head>
+            <link
+              rel="alternate"
+              hrefLang={translations.alternate_lang}
+              href={translations.alternate_url}
+            />
+          </Head>
+          <PlausibleProvider
+            domain={translations.plausible}
+            customDomain="https://stats.broddin.be"
+          >
+            <Provider store={store}>
+              <>
+                <Pwa />
 
-                              <PersistGate persistor={persistor}>
-                                  <SWRConfig
-                                      value={{
-                                          revalidateOnFocus: false,
-                                          fetcher: ({ query, variables }) =>
-                                              request(
-                                                  "/api/graphql",
-                                                  query,
-                                                  variables
-                                              ),
-                                      }}>
-                                      <Component {...pageProps} />
-                                  </SWRConfig>
-                              </PersistGate>
-                          </>
-                      </Provider>
-                  </PlausibleProvider>
-              </NextUIProvider>
-          </NextThemesProvider>
-      </LazyMotion>
+                <PersistGate persistor={persistor}>
+                  <SWRConfig
+                    value={{
+                      revalidateOnFocus: false,
+                      fetcher: ({ query, variables }) =>
+                        request("/api/graphql", query, variables),
+                    }}
+                  >
+                    <Component {...pageProps} />
+                  </SWRConfig>
+                </PersistGate>
+              </>
+            </Provider>
+          </PlausibleProvider>
+        </NextUIProvider>
+      </NextThemesProvider>
+    </LazyMotion>
   );
 }
 
