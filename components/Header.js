@@ -1,14 +1,44 @@
-import { Container, Row, Col, Button, Text, Tooltip } from "@nextui-org/react";
-import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
+"use client";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
 
-import { useTranslations } from "@/lib/i18n";
+import { useTranslations } from "@/lib/i18n/use-translations";
+import { useSettingsStore } from "@/lib/stores/settings-store";
+import { useUIStore } from "@/lib/stores/ui-store";
 import InfoSquare from "@/lib/iconly/Icons/InfoSquare";
 import Chart from "@/lib/iconly/Icons/Chart";
 import Home from "@/lib/iconly/Icons/Home";
 
-import { setModal } from "@/redux/features/modal";
+const IconButton = ({ children, onClick, tooltip, className }) => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <button
+        onClick={onClick}
+        className={cn(
+          "w-12 h-12 flex items-center justify-center",
+          "border-none rounded-2xl",
+          "bg-[var(--surface)] hover:bg-[var(--muted)]",
+          "shadow-[var(--shadow-soft-sm)] transition-all duration-200 ease-out",
+          "hover:shadow-[var(--shadow-soft)] hover:-translate-y-1 hover:scale-105",
+          "active:shadow-[var(--shadow-soft-sm)] active:translate-y-0 active:scale-95",
+          className
+        )}
+      >
+        {children}
+      </button>
+    </TooltipTrigger>
+    {tooltip && <TooltipContent>{tooltip}</TooltipContent>}
+  </Tooltip>
+);
 
 const Header = ({
   showInfo = true,
@@ -16,115 +46,100 @@ const Header = ({
   showHome = false,
   emptyRight = false,
   customTitle,
-  titleSize = 60,
+  titleSize = 52,
   titleColor,
   subtitle,
 }) => {
-  const dispatch = useDispatch();
-  const { gameType, colorBlind } = useSelector((state) => state.settings);
+  const { colorBlind } = useSettingsStore();
+  const { setModal } = useUIStore();
   const translations = useTranslations();
   const router = useRouter();
-
   const plausible = usePlausible();
+
   return (
-    <Container
-      justify="space-between"
-      alignItems="center"
-      alignContent="space-between"
-      css={{ marginBottom: "$8" }}>
-      <Row justify="space-between" align="center">
-        {showHome && (
-          <Col span={2}>
-            <Button
-              auto
-              light
-              animated={false}
-              onClick={(e) => {
-                router.push("/");
-              }}
-              aria-label="Home"
-              icon={
+    <TooltipProvider>
+      <header className="mb-6 pt-4 px-4">
+        <div className="flex justify-between items-center gap-4">
+          {/* Left icon slot */}
+          <div className="w-11 flex-shrink-0">
+            {showHome && (
+              <IconButton
+                onClick={() => router.push("/")}
+                tooltip="Terug naar home"
+              >
                 <Home
                   set={colorBlind ? "bold" : "two-tone"}
                   primaryColor="var(--color-icon-left)"
-                  secondaryColor="var(--nextui-colors-blue500)"
-                  size="large"
+                  secondaryColor="var(--primary)"
+                  size="medium"
                 />
-              }
-            />
-          </Col>
-        )}
-        {showInfo && (
-          <Col span={2}>
-            <Tooltip
-              placement="bottom"
-              aria-label={`Klik hier voor uitleg over ${translations.title}`}
-              content={`Klik hier voor uitleg over ${translations.title}`}>
-              <Button
-                auto
-                light
-                animated={false}
-                onClick={(e) => {
-                  dispatch(setModal("splash"));
-                }}
-                aria-label="Uitleg"
-                icon={
-                  <InfoSquare
-                    set={colorBlind ? "bold" : "two-tone"}
-                    primaryColor="var(--color-icon-left)"
-                    secondaryColor="var(--nextui-colors-blue500)"
-                    size="large"
-                  />
-                }
-              />
-            </Tooltip>
-          </Col>
-        )}
-        <Col span={8} css={{ textAlign: "center" }}>
-          <Text
-            h1
-            size={titleSize ?? 55}
-            css={{
-              textGradient: titleColor ?? "45deg, $blue500 -20%, $pink500 50%",
-              lineHeight: "70px",
-            }}
-            weight="bold">
-            {customTitle ? customTitle : translations.title}
-          </Text>
-          {subtitle && <Text small>{subtitle}</Text>}
-        </Col>
-        {showStats && (
-          <Col span={2}>
-            <Tooltip
-              style={{ float: "right" }}
-              placement="bottom"
-              aria-label="Klik hier voor je statistieken."
-              content="Klik hier voor je statistieken.">
-              <Button
-                light
-                auto
-                animated={false}
-                aria-label="Statistieken"
-                onClick={(e) => {
-                  plausible("Statistics");
+              </IconButton>
+            )}
+            {showInfo && !showHome && (
+              <IconButton
+                onClick={() => setModal("splash")}
+                tooltip={`Uitleg over ${translations.title}`}
+              >
+                <InfoSquare
+                  set={colorBlind ? "bold" : "two-tone"}
+                  primaryColor="var(--color-icon-left)"
+                  secondaryColor="var(--primary)"
+                  size="medium"
+                />
+              </IconButton>
+            )}
+          </div>
 
-                  dispatch(setModal("statistics"));
+          {/* Title */}
+          <div className="flex-1 text-center">
+            <h1
+              className={cn(
+                "font-black tracking-tight leading-none",
+                "text-[var(--foreground)]",
+                // Decorative soft underline effect
+                "relative inline-block",
+                "after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2",
+                "after:-bottom-1 after:h-[6px] after:w-[80%] after:rounded-full",
+                "after:bg-gradient-to-r after:from-[var(--primary)] after:to-[var(--accent)]",
+                "after:opacity-70"
+              )}
+              style={{
+                fontSize: titleSize ?? 48,
+                fontFamily: "var(--font-display)"
+              }}
+            >
+              {customTitle ? customTitle : translations.title}
+            </h1>
+            {subtitle && (
+              <p className="text-sm text-[var(--muted-foreground)] mt-3 font-medium">
+                {subtitle}
+              </p>
+            )}
+          </div>
+
+          {/* Right icon slot */}
+          <div className="w-11 flex-shrink-0">
+            {showStats && (
+              <IconButton
+                onClick={() => {
+                  plausible("Statistics");
+                  setModal("statistics");
                 }}
-                icon={
-                  <Chart
-                    set={colorBlind ? "bold" : "two-tone"}
-                    primaryColor="var(--color-icon-right)"
-                    secondaryColor="var(--nextui-colors-pink500)"
-                    size="large"
-                  />
-                }
-              />
-            </Tooltip>
-          </Col>
-        )}
-        {emptyRight && <Col span={2} />}
-      </Row>
-    </Container>
+                tooltip="Bekijk je statistieken"
+                className="ml-auto"
+              >
+                <Chart
+                  set={colorBlind ? "bold" : "two-tone"}
+                  primaryColor="var(--color-icon-right)"
+                  secondaryColor="var(--primary)"
+                  size="medium"
+                />
+              </IconButton>
+            )}
+          </div>
+        </div>
+      </header>
+    </TooltipProvider>
   );
 };
 

@@ -1,3 +1,496 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Google Fonts - must come before other imports */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Fredoka:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   WOORDJE — Soft & Friendly Word Game
+   Warm • Rounded • Playful • Cozy
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THEME CONFIGURATION (Tailwind v4 CSS-first)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* Typography - Friendly rounded fonts */
+  --font-sans: 'Nunito', system-ui, sans-serif;
+  --font-display: 'Fredoka', 'Nunito', system-ui, sans-serif;
+
+  /* Border Radius - Soft, friendly curves */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+
+  /* Animations - Gentle and bouncy */
+  --animate-bounce-in: bounce-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-shake: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+  --animate-pop: pop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-flip: flip 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --animate-slide-up: slide-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-pulse-glow: pulse-glow 2.5s ease-in-out infinite;
+  --animate-wiggle: wiggle 0.3s ease-in-out;
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  20% { transform: translateX(-3px) rotate(-1deg); }
+  40% { transform: translateX(3px) rotate(1deg); }
+  60% { transform: translateX(-3px) rotate(-1deg); }
+  80% { transform: translateX(3px) rotate(1deg); }
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+@keyframes flip {
+  0% { transform: rotateX(0) scale(1); }
+  50% { transform: rotateX(90deg) scale(0.95); }
+  100% { transform: rotateX(0) scale(1); }
+}
+
+@keyframes slide-up {
+  0% { transform: translateY(16px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--color-accent-glow); }
+  50% { box-shadow: 0 0 24px 6px var(--color-accent-glow); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CSS CUSTOM PROPERTIES — Light Mode (default)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Base Colors - Clean with subtle warmth */
+  --background: #f8f6fa;
+  --foreground: #1a1625;
+  --surface: #ffffff;
+  --surface-elevated: #ffffff;
+
+  /* Brand Colors - Vibrant purple & pink */
+  --primary: #8b5cf6;
+  --primary-foreground: #ffffff;
+  --accent: #ec4899;
+  --accent-foreground: #ffffff;
+
+  /* UI Colors - Clear hierarchy */
+  --muted: #f0ecf5;
+  --muted-foreground: #5c566d;
+  --border: #e2dce9;
+  --border-strong: #c9c1d6;
+  --ring: #8b5cf6;
+
+  /* Game Tile Colors - Vivid and clear */
+  --color-good: #22c55e;
+  --color-good-dark: #16a34a;
+  --color-off: #eab308;
+  --color-off-dark: #ca8a04;
+  --color-bad: #a8a0b8;
+  --color-bad-dark: #9890a8;
+  --color-unknown: #ebe6f2;
+  --color-unknown-dark: #ddd6e8;
+
+  /* Tile text colors */
+  --color-tile-text: #1a1625;
+  --color-tile-text-revealed: #ffffff;
+
+  /* Keyboard - Clear and defined */
+  --keyboard-bg: var(--muted);
+  --keyboard-key-bg: var(--surface);
+  --keyboard-key-border: var(--border);
+  --keyboard-key-text: var(--foreground);
+
+  /* Effects - Defined shadows with more presence */
+  --color-accent-glow: rgba(139, 92, 246, 0.4);
+  --shadow-soft: 0 4px 14px rgba(26, 22, 37, 0.12);
+  --shadow-soft-sm: 0 2px 8px rgba(26, 22, 37, 0.1);
+  --shadow-soft-lg: 0 8px 28px rgba(26, 22, 37, 0.16);
+  --shadow-soft-hover: 0 8px 24px rgba(26, 22, 37, 0.2);
+
+  /* Icon colors - More saturated */
+  --color-icon-left: #a78bfa;
+  --color-icon-right: #f472b6;
+
+  /* Level badges */
+  --color-level: #8b5cf6;
+  --color-level-active: #d946ef;
+
+  /* Focus - Clear purple glow */
+  --focus-color: #a855f7;
+  --focus-ring: 0 0 0 3px rgba(168, 85, 247, 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DARK MODE — Dreamy purple night
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dark {
+  --background: #0f0d14;
+  --foreground: #f5f3f8;
+  --surface: #1a1625;
+  --surface-elevated: #252131;
+
+  /* Brand - Vibrant purple & pink */
+  --primary: #a78bfa;
+  --primary-foreground: #0f0d14;
+  --accent: #f472b6;
+  --accent-foreground: #0f0d14;
+
+  /* UI - Clear dark tones */
+  --muted: #1a1625;
+  --muted-foreground: #9f97b0;
+  --border: #2d2840;
+  --border-strong: #3d3655;
+  --ring: #a78bfa;
+
+  /* Game Colors - Vivid in dark */
+  --color-good: #22c55e;
+  --color-good-dark: #16a34a;
+  --color-off: #eab308;
+  --color-off-dark: #ca8a04;
+  --color-bad: #3d3655;
+  --color-bad-dark: #2d2840;
+  --color-unknown: #2d2840;
+  --color-unknown-dark: #252131;
+
+  --color-tile-text: #f5f3f8;
+  --color-tile-text-revealed: #0f0d14;
+
+  /* Keyboard */
+  --keyboard-bg: #1a1625;
+  --keyboard-key-bg: #252131;
+  --keyboard-key-border: #3d3655;
+  --keyboard-key-text: #f5f3f8;
+
+  /* Effects - Stronger glows */
+  --color-accent-glow: rgba(167, 139, 250, 0.4);
+  --shadow-soft: 0 4px 14px rgba(0, 0, 0, 0.5);
+  --shadow-soft-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-soft-lg: 0 8px 28px rgba(0, 0, 0, 0.6);
+  --shadow-soft-hover: 0 8px 24px rgba(0, 0, 0, 0.65);
+
+  /* Icons - Vibrant pastels */
+  --color-icon-left: #a78bfa;
+  --color-icon-right: #f472b6;
+
+  /* Level badges */
+  --color-level: #a78bfa;
+  --color-level-active: #e879f9;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COLORBLIND MODE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+body.colorblind {
+  --color-good: #f97316;
+  --color-good-dark: #ea580c;
+  --color-off: #06b6d4;
+  --color-off-dark: #0891b2;
+  --color-icon-left: #1d4ed8;
+  --color-icon-right: #1d4ed8;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  min-height: 100dvh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GAME-SPECIFIC UTILITIES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Letter tiles base - Soft, rounded, friendly */
+.letter-tile {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--color-tile-text);
+  box-shadow: var(--shadow-soft-sm), inset 0 -2px 0 rgba(0,0,0,0.06);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.2s ease;
+}
+
+.letter-tile:not(.revealed):hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--shadow-soft), inset 0 -2px 0 rgba(0,0,0,0.06);
+}
+
+/* Revealed states - Glowing and satisfying */
+.letter-tile.revealed {
+  color: var(--color-tile-text-revealed);
+  box-shadow: var(--shadow-soft);
+}
+
+.letter-tile.good {
+  background: linear-gradient(135deg, var(--color-good) 0%, var(--color-good-dark) 100%);
+  box-shadow: var(--shadow-soft), 0 0 20px rgba(107, 203, 119, 0.3);
+}
+
+.letter-tile.off {
+  background: linear-gradient(135deg, var(--color-off) 0%, var(--color-off-dark) 100%);
+  box-shadow: var(--shadow-soft), 0 0 20px rgba(255, 217, 61, 0.3);
+}
+
+.letter-tile.bad {
+  background: linear-gradient(135deg, var(--color-bad) 0%, var(--color-bad-dark) 100%);
+}
+
+/* Keyboard keys - Soft, rounded, bouncy */
+.keyboard-key {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  background: var(--keyboard-key-bg);
+  border: none;
+  border-radius: 10px;
+  color: var(--keyboard-key-text);
+  box-shadow: var(--shadow-soft-sm), inset 0 -2px 0 rgba(0,0,0,0.05);
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.keyboard-key:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft), inset 0 -2px 0 rgba(0,0,0,0.05);
+}
+
+.keyboard-key:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: var(--shadow-soft-sm);
+}
+
+.keyboard-key.good {
+  background: linear-gradient(135deg, var(--color-good) 0%, var(--color-good-dark) 100%);
+  color: var(--color-tile-text-revealed);
+  box-shadow: var(--shadow-soft-sm), 0 0 12px rgba(107, 203, 119, 0.25);
+}
+
+.keyboard-key.off {
+  background: linear-gradient(135deg, var(--color-off) 0%, var(--color-off-dark) 100%);
+  color: var(--color-tile-text-revealed);
+  box-shadow: var(--shadow-soft-sm), 0 0 12px rgba(255, 217, 61, 0.25);
+}
+
+.keyboard-key.bad {
+  background: linear-gradient(135deg, var(--color-bad) 0%, var(--color-bad-dark) 100%);
+  color: var(--color-tile-text-revealed);
+}
+
+/* Soft shadow utilities (replacing brutal) */
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+
+.shadow-soft-sm {
+  box-shadow: var(--shadow-soft-sm);
+}
+
+.shadow-soft:hover,
+.shadow-soft-hover:hover {
+  box-shadow: var(--shadow-soft-hover);
+  transform: translateY(-2px);
+}
+
+.shadow-soft:active {
+  box-shadow: var(--shadow-soft-sm);
+  transform: translateY(1px);
+}
+
+/* Legacy brutal classes - mapped to soft */
+.shadow-brutal {
+  box-shadow: var(--shadow-soft);
+}
+
+.shadow-brutal-sm {
+  box-shadow: var(--shadow-soft-sm);
+}
+
+.shadow-brutal:hover,
+.shadow-brutal-hover:hover {
+  box-shadow: var(--shadow-soft-hover);
+  transform: translateY(-2px);
+}
+
+.shadow-brutal:active {
+  box-shadow: var(--shadow-soft-sm);
+  transform: translateY(1px);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BUTTON STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.btn-friendly {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: var(--primary-foreground);
+  border: none;
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft), inset 0 -2px 0 rgba(0,0,0,0.1);
+  padding: 0.875rem 1.75rem;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-friendly:hover {
+  box-shadow: var(--shadow-soft-hover), inset 0 -2px 0 rgba(0,0,0,0.1);
+  transform: translateY(-3px);
+}
+
+.btn-friendly:active {
+  box-shadow: var(--shadow-soft-sm);
+  transform: translateY(1px);
+}
+
+/* Legacy brutal button - mapped to friendly */
+.btn-brutal {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: var(--primary-foreground);
+  border: none;
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft), inset 0 -2px 0 rgba(0,0,0,0.1);
+  padding: 0.875rem 1.75rem;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-brutal:hover {
+  box-shadow: var(--shadow-soft-hover), inset 0 -2px 0 rgba(0,0,0,0.1);
+  transform: translateY(-3px);
+}
+
+.btn-brutal:active {
+  box-shadow: var(--shadow-soft-sm);
+  transform: translateY(1px);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CARD STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.card-friendly {
+  background: var(--surface);
+  border: none;
+  border-radius: 20px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Legacy brutal card - mapped to friendly */
+.card-brutal {
+  background: var(--surface);
+  border: none;
+  border-radius: 20px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DIALOG/MODAL BACKDROP
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-state="open"][data-overlay] {
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.dark [data-state="open"][data-overlay] {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCROLLBAR STYLING
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 10px;
+  border: 2px solid var(--muted);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STANDALONE/PWA MODE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (display-mode: standalone), (display-mode: fullscreen) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .hide-in-standalone {
+    display: none !important;
+  }
+}

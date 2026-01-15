@@ -1,118 +1,77 @@
-import { useSelector, useDispatch } from "react-redux";
-import { styled } from "@nextui-org/react";
-import Image from "next/image";
+"use client";
 
-import { hide } from "@/redux/features/installPopup";
-import { useTranslations } from "@/lib/i18n";
-import { getIsGameOverSelector } from "@/lib/helpers";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
+
+import { useTranslations } from "@/lib/i18n/use-translations";
+import { useStatisticsStore } from "@/lib/stores/statistics-store";
+import { useUIStore } from "@/lib/stores/ui-store";
 import { m } from "framer-motion";
 
 const isIphone = () => {
   if (typeof window !== "undefined") {
     const userAgent = window.navigator.userAgent.toLowerCase();
-
     return /iphone/.test(userAgent);
   } else {
     return false;
   }
 };
 
-const Root = styled("div", {
-  "@media all and (display-mode: standalone), (display-mode: fullscreen)": {
-    display: "none",
-  },
-});
-
-const Popup = styled(m.div, {
-  position: "fixed",
-  zIndex: 99999,
-  maxWidth: "380px",
-  margin: "auto",
-  bottom: "20px",
-  left: 0,
-  right: 0,
-});
-
-const Wrapper = styled("div", {
-  display: "flex",
-  backgroundColor: "#ffffff",
-  alignItems: "center",
-  justifyContent: "space-around",
-  flexDirection: "row",
-  borderRadius: "5px",
-  padding: "10px",
-  margin: "0 20px",
-  boxShadow: "0px 0px 40px 0px rgba(0, 0, 0, 0.2)",
-
-  "&::after": {
-    content: "",
-    position: "absolute",
-    bottom: "-10px",
-    borderTop: "solid 10px #ffffff",
-    borderLeft: "solid 10px transparent",
-    borderRight: "solid 10px transparent",
-  },
-});
-
-const LabelWrapper = styled("div", {
-  textAlign: "center",
-  color: "#202020",
-});
-
-const Label = styled("div", {
-  fontSize: "14px",
-});
-
-const CloseWrapper = styled("div");
-const ShareIcon = styled("span", {
-  margin: "10px 10px 0 10px",
-});
-
-const CloseIcon = Image;
-
 const AddToHomeScreen = ({ modalClosed }) => {
-  const visible = useSelector((state) => state.installPopup.visible);
-  const statistics = useSelector((state) => state.statistics);
-  const isGameOver = useSelector(getIsGameOverSelector);
-  const { currentModal } = useSelector((state) => state.modal);
+  const { data: statistics } = useStatisticsStore();
+  const { currentModal, installPopupVisible, setInstallPopupVisible } = useUIStore();
   const translations = useTranslations();
 
-  const dispatch = useDispatch();
+  const hasStatistics = statistics && Object.keys(statistics).length > 0;
 
   return isIphone() &&
-    statistics.length &&
+    hasStatistics &&
     !currentModal &&
     !window?.navigator?.standalone &&
-    visible ? (
-    <Root>
-      <Popup initial={{ y: 10 }} animate={{ y: 0 }}>
-        <Wrapper>
-          <LabelWrapper>
-            <Label>Zet {translations.title} op je beginscherm</Label>
-            <Label>
+    installPopupVisible ? (
+    <div className="hide-in-standalone">
+      <m.div
+        initial={{ y: 10 }}
+        animate={{ y: 0 }}
+        className={cn(
+          "fixed z-[99999] max-w-[380px] mx-auto",
+          "bottom-5 left-0 right-0"
+        )}
+      >
+        <div
+          className={cn(
+            "flex bg-white items-center justify-around",
+            "flex-row rounded-[5px] p-2.5 mx-5",
+            "shadow-[0px_0px_40px_0px_rgba(0,0,0,0.2)]",
+            "after:content-[''] after:absolute after:bottom-[-10px]",
+            "after:border-t-[10px] after:border-t-white",
+            "after:border-l-[10px] after:border-l-transparent",
+            "after:border-r-[10px] after:border-r-transparent"
+          )}
+        >
+          <div className="text-center text-[#202020]">
+            <div className="text-sm">
+              Zet {translations.title} op je beginscherm
+            </div>
+            <div className="text-sm">
               Tap
-              <ShareIcon>
+              <span className="mx-2.5 mt-2.5 inline-block">
                 <Image
-                  src={"/icons/iosshare.svg"}
+                  src="/icons/iosshare.svg"
                   alt="Share"
                   width={20}
                   height={20}
                 />
-              </ShareIcon>
+              </span>
               en kies dan &ldquo;Zet op beginscherm&rdquo;
-            </Label>
-          </LabelWrapper>
-          <CloseWrapper onClick={(e) => dispatch(hide())}>
-            <CloseIcon
-              src={"/icons/close.svg"}
-              alt="Sluiten"
-              width={20}
-              height={20}
-            />
-          </CloseWrapper>
-        </Wrapper>
-      </Popup>
-    </Root>
+            </div>
+          </div>
+          <div onClick={() => setInstallPopupVisible(false)} className="cursor-pointer">
+            <Image src="/icons/close.svg" alt="Sluiten" width={20} height={20} />
+          </div>
+        </div>
+      </m.div>
+    </div>
   ) : null;
 };
 

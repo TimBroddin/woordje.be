@@ -1,19 +1,29 @@
-import { Modal, Button, Text, Loading, styled } from "@nextui-org/react";
+"use client";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { m } from "framer-motion";
-import { useSelector, useDispatch } from "react-redux";
+import { cn } from "@/lib/utils";
 
-import { useTranslations } from "@/lib/i18n";
-import { hide } from "@/redux/features/modal";
+import { useTranslations } from "@/lib/i18n/use-translations";
+import { useSettingsStore } from "@/lib/stores/settings-store";
+import { useUIStore } from "@/lib/stores/ui-store";
 import Letter from "@/components/Letter";
-import { useStaticProps } from "@/lib/hooks";
 
-const Board = styled(m.div, {
-  display: "flex",
-  justifyContent: "center",
-});
+const Board = ({ children, className, ...props }) => (
+  <m.div className={cn("flex justify-center", className)} {...props}>
+    {children}
+  </m.div>
+);
 
 const Examples = ({ words }) => {
-  const { wordLength } = useSelector((state) => state.settings);
+  const { wordLength } = useSettingsStore();
 
   const board = {
     show: {
@@ -34,87 +44,102 @@ const Examples = ({ words }) => {
 
   if (words && words.length) {
     return (
-      <div style={{ "--word-length": wordLength }}>
-        <Board initial="hidden" animate="show" variants={board}>
-          {words[0].split("").map((letter, index) => (
-            <Letter key={index} small score={index === 0 ? "good" : "bad"}>
-              {letter}
-            </Letter>
-          ))}
-        </Board>
-        <Text>
-          De letter <Text b>{words[0].split("")[0].toUpperCase()}</Text> komt
-          voor in het woord en staat op de <Text b>juiste</Text> plaats.
-        </Text>
+      <div style={{ "--word-length": wordLength }} className="space-y-4">
+        <div className="p-4 bg-[var(--muted)] rounded-sm border-2 border-[var(--border)]">
+          <Board initial="hidden" animate="show" variants={board}>
+            {words[0].split("").map((letter, index) => (
+              <Letter key={index} small score={index === 0 ? "good" : "bad"}>
+                {letter}
+              </Letter>
+            ))}
+          </Board>
+          <p className="text-[var(--foreground)] mt-3 text-sm text-center">
+            <span className="inline-block px-2 py-0.5 bg-[var(--color-good)] text-white font-mono font-bold rounded-sm mr-1">
+              {words[0].split("")[0].toUpperCase()}
+            </span>{" "}
+            staat op de <strong>juiste</strong> plaats
+          </p>
+        </div>
 
-        <Board initial="hidden" animate="show" variants={board}>
-          {words[1].split("").map((letter, index) => (
-            <Letter key={index} small score={index === 2 ? "off" : "bad"}>
-              {letter}
-            </Letter>
-          ))}
-        </Board>
-        <Text>
-          De letter <Text b>{words[1].split("")[2].toUpperCase()}</Text> komt
-          voor in het woord, maar staat <Text b>niet</Text> op de juiste plaats.
-        </Text>
-        <Board initial="hidden" animate="show" variants={board}>
-          {words[2].split("").map((letter, index) => (
-            <Letter key={index} score="bad" small>
-              {letter}
-            </Letter>
-          ))}
-        </Board>
-        <Text>Geen enkele letter komt voor in het woord.</Text>
+        <div className="p-4 bg-[var(--muted)] rounded-sm border-2 border-[var(--border)]">
+          <Board initial="hidden" animate="show" variants={board}>
+            {words[1].split("").map((letter, index) => (
+              <Letter key={index} small score={index === 2 ? "off" : "bad"}>
+                {letter}
+              </Letter>
+            ))}
+          </Board>
+          <p className="text-[var(--foreground)] mt-3 text-sm text-center">
+            <span className="inline-block px-2 py-0.5 bg-[var(--color-off)] text-white font-mono font-bold rounded-sm mr-1">
+              {words[1].split("")[2].toUpperCase()}
+            </span>{" "}
+            zit in het woord, maar op de <strong>verkeerde</strong> plaats
+          </p>
+        </div>
+
+        <div className="p-4 bg-[var(--muted)] rounded-sm border-2 border-[var(--border)]">
+          <Board initial="hidden" animate="show" variants={board}>
+            {words[2].split("").map((letter, index) => (
+              <Letter key={index} score="bad" small>
+                {letter}
+              </Letter>
+            ))}
+          </Board>
+          <p className="text-[var(--foreground)] mt-3 text-sm text-center">
+            <span className="inline-block px-2 py-0.5 bg-[var(--color-bad)] text-white font-mono font-bold rounded-sm mr-1">
+              ✗
+            </span>{" "}
+            Geen enkele letter zit in het woord
+          </p>
+        </div>
       </div>
     );
   } else {
-    return <Loading size="xl" />;
+    return (
+      <div className="flex justify-center py-8">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--primary)]" />
+      </div>
+    );
   }
 };
 
-const Splash = ({ visible }) => {
-  const dispatch = useDispatch();
+const Splash = ({ visible, demoWords }) => {
   const translations = useTranslations();
-  const { wordLength, boardSize } = useSelector((state) => state.settings);
-  const { demoWords } = useStaticProps();
-  const closeHandler = (e) => {
-    dispatch(hide());
+  const { wordLength, boardSize } = useSettingsStore();
+  const { setModal } = useUIStore();
+
+  const closeHandler = () => {
+    setModal(null);
   };
 
   return (
-    <Modal
-      closeButton
-      aria-labelledby="modal-title"
-      open={visible}
-      onClose={closeHandler}>
-      <Modal.Header>
-        <Text size={18}>
-          Welkom bij{" "}
-          <Text b size={18}>
-            {translations.title}
-          </Text>
-        </Text>
-      </Modal.Header>
-      <Modal.Body>
-        <Text>
-          Raad het {wordLength}-letterwoord in {boardSize} beurten, of minder.
-        </Text>
+    <Dialog open={visible} onOpenChange={(open) => !open && closeHandler()}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>
+            Welkom bij <strong>{translations.title}</strong>
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="p-3 bg-[var(--primary)] text-[var(--primary-foreground)] rounded-sm border-2 border-[var(--border-strong)]">
+            <p className="text-sm font-medium text-center">
+              Raad het <strong className="font-mono">{wordLength}</strong>-letterwoord in <strong className="font-mono">{boardSize}</strong> pogingen
+            </p>
+          </div>
 
-        <Text>
-          Elke gok moet een geldig woord zijn. Gebruik enter om je woord in te
-          dienen.
-        </Text>
-        <Text>Elke dag verschijnt er een nieuwe opgave!</Text>
+          <p className="text-[var(--foreground)] text-sm">
+            Elke gok moet een geldig Nederlands woord zijn. Druk op <kbd className="px-1.5 py-0.5 bg-[var(--muted)] border border-[var(--border)] rounded-sm font-mono text-xs">ENTER</kbd> om je woord in te dienen.
+          </p>
 
-        <Text h2 size={24} margin={"36px 0 10px 0"}>
-          Voorbeelden
-        </Text>
-        <Examples words={demoWords} />
+          <h2 className="text-lg font-bold text-[var(--foreground)] pt-2">Voorbeelden</h2>
+          <Examples words={demoWords} />
 
-        <Button onClick={closeHandler}>Start</Button>
-      </Modal.Body>
-    </Modal>
+          <Button onClick={closeHandler} className="w-full" size="lg">
+            Start het spel
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -1,4 +1,3 @@
-import { Link } from "@nextui-org/react";
 import { useRemark } from "react-remark";
 import { useEffect } from "react";
 
@@ -7,9 +6,14 @@ const Markdown = ({ text }) => {
     rehypeReactOptions: {
       components: {
         a: (props) => (
-          <Link {...props} target="_blank" rel="noopener noreferer">
+          <a
+            {...props}
+            className="text-primary underline hover:text-primary/80"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {props.children}
-          </Link>
+          </a>
         ),
       },
     },

@@ -2,13 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/components/*": ["components/*"],
-      "@/data/*": ["data/*"],
-      "@/lib/*": ["lib/*"],
-      "@/redux/*": ["redux/*"],
-      "@/styles/*": ["styles/*"],
-      "@/queries/*": ["queries/*"]
+      "@/*": ["./*"]
     }
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "public/sw.js"]
 }

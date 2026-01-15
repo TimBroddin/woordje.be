@@ -1,92 +1,80 @@
-import { styled } from "@nextui-org/react";
+"use client";
+
+import { cn } from "@/lib/utils";
 import { useEffect } from "react";
-import { useGameState } from "@/lib/hooks";
-import { useTranslations } from "@/lib/i18n";
+import { useTranslations } from "@/lib/i18n/use-translations";
+import { useGameStore } from "@/lib/stores/game-store";
+import { useSettingsStore } from "@/lib/stores/settings-store";
 
-const Wrapper = styled("div", {
-  marginTop: "10px",
-  padding: "0px 5px",
+const Wrapper = ({ children, className }) => {
+  return (
+    <div
+      className={cn(
+        "mt-4 px-1 w-full max-w-[500px] mx-auto",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+};
 
-  "@media (min-width: 480px)": {
-    marginLeft: "calc(-100vw / 2 + 480px / 2)",
-    marginRight: "calc(-100vw / 2 + 480px / 2)",
-  },
-  "@media (min-width: 768px)": {
-    width: "768px",
-    marginLeft: "calc(-768px / 2 + 480px / 2)",
-    marginRight: "calc(-768px / 2 + 480px / 2)",
-  },
-});
+const KeyboardRow = ({ children, className }) => {
+  return (
+    <div className={cn("flex justify-center gap-[6px] mb-[6px]", className)}>
+      {children}
+    </div>
+  );
+};
 
-const Row = styled("div", {
-  display: "flex",
-  justifyContent: "center",
-  marginBottom: "2px",
-});
-
-const Letter = styled("div", {
-  padding: "5px 2px",
-  flexGrow: 1,
-  flexBasis: 0,
-  touchAction: "manipulation",
-  "-webkit-touch-callout": "none",
-  "-webkit-tap-highlight-color": "rgba(0, 0, 0, 0)",
-  "user-select": "none",
-  maxWidth: "10%",
-
-  "> span": {
-    display: "block",
-    color: "var(--nextui-colors-text)",
-    fontWeight: "bold",
-    padding: "5px",
-    border: "1px solid var(--keyboard-border-color)",
-    borderRadius: "var(--nextui-radii-sm)",
-    flex: 1,
-    textAalign: "center",
-    height: "50px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "var(--color-unknown)",
-    variants: {},
-  },
-
-  variants: {
-    isBigger: {
-      true: {
-        maxWidth: "calc(20% + 10px)",
-      },
-      false: {},
-    },
-    score: {
-      good: {
-        "> span": {
-          backgroundColor: "var(--color-good)",
-        },
-      },
-      bad: {
-        "> span": {
-          backgroundColor: "var(--color-bad)",
-        },
-      },
-      off: {
-        "> span": {
-          backgroundColor: "var(--color-off)",
-        },
-      },
-    },
-  },
-});
+const KeyLetter = ({ children, isBigger, score, onClick, className }) => {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        // Base layout
+        "p-0 grow basis-0 max-w-[10%]",
+        // Touch handling
+        "[touch-action:manipulation]",
+        "[-webkit-touch-callout:none]",
+        "[-webkit-tap-highlight-color:transparent]",
+        "select-none cursor-pointer",
+        // Bigger keys (backspace, enter)
+        isBigger && "max-w-[15%]",
+        className
+      )}
+    >
+      <span
+        className={cn(
+          // Soft, friendly key styling
+          "keyboard-key",
+          "block text-sm font-semibold",
+          "h-[54px] flex justify-center items-center",
+          "rounded-xl",
+          // Score variants
+          score === "good" && "good",
+          score === "bad" && "bad",
+          score === "off" && "off"
+        )}
+      >
+        {children}
+      </span>
+    </button>
+  );
+};
 
 const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
-  const [gameState] = useGameState();
+  const { guesses } = useGameStore();
+  const { wordLength } = useSettingsStore();
   const translations = useTranslations();
 
   const letterRows = translations.keyboard.map((row) => row.split(""));
+  const currentGuesses = guesses[wordLength] || [];
 
   const used = {};
-  if (gameState && gameState.guesses) {
-    gameState.guesses.forEach((row) => {
+  if (currentGuesses && currentGuesses.length) {
+    currentGuesses.forEach((row) => {
       row.forEach((r) => {
         used[r.letter] =
           used[r.letter] === "good"
@@ -127,10 +115,10 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
   return (
     <Wrapper>
       {letterRows.map((row, rowIdx) => (
-        <Row key={`keyboard.${rowIdx}`}>
+        <KeyboardRow key={`keyboard.${rowIdx}`}>
           {row.map((l) => {
             return (
-              <Letter
+              <KeyLetter
                 key={`keyboard.${rowIdx}.${l}`}
                 onClick={(e) => {
                   e.preventDefault();
@@ -138,38 +126,38 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
                   return false;
                 }}
                 score={used[l]}
-                disabled={used[l] === "bad"}>
-                <span>{l.toUpperCase()}</span>
-              </Letter>
+              >
+                {l.toUpperCase()}
+              </KeyLetter>
             );
           })}
           {rowIdx === 1 && (
-            <Letter
+            <KeyLetter
               onClick={(e) => {
                 e.preventDefault();
                 e.nativeEvent.stopImmediatePropagation();
                 onBackspace();
-
                 return false;
               }}
-              isBigger={true}>
-              <span>⌫</span>
-            </Letter>
+              isBigger={true}
+            >
+              ⌫
+            </KeyLetter>
           )}
           {rowIdx === 2 && (
-            <Letter
+            <KeyLetter
               onClick={(e) => {
                 e.preventDefault();
                 e.nativeEvent.stopImmediatePropagation();
                 onSubmit();
-
                 return false;
               }}
-              isBigger={true}>
-              <span>ENTER</span>
-            </Letter>
+              isBigger={true}
+            >
+              ↵
+            </KeyLetter>
           )}
-        </Row>
+        </KeyboardRow>
       ))}
     </Wrapper>
   );
