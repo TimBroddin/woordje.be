@@ -37,7 +37,6 @@ export default function GameClient({
   wordLength,
   gameType,
   ssr,
-  locale,
 }) {
   const boardSize = wordLength + 1;
   const { width, height } = useWindowSize();

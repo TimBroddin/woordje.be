@@ -66,8 +66,9 @@ function GameCard({ displayGameId }) {
   );
 }
 
-export default function ArchiveClient({ locale }) {
-  const translations = useTranslations(locale);
+export default function ArchiveClient() {
+  // Auto-detect locale from hostname
+  const translations = useTranslations();
   const [page, setPage] = useState(1);
 
   const todaysGameId = getTodaysGameId();

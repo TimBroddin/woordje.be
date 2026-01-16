@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { getTranslations } from "@/lib/i18n/config";
+import { getTranslationsStatic } from "@/lib/i18n/config";
 import { getTodaysGameId } from "@/lib/gameId";
 import { getSolution, getRandomWord, getRandomWords } from "@/lib/data/solution";
 import { getStatistics } from "@/lib/data/statistics";
@@ -18,7 +18,8 @@ export async function generateMetadata({ params }) {
   const { query } = await params;
   const [gameIdStr, wordLengthStr] = query.split("x");
 
-  const translations = await getTranslations();
+  // Use static translations for ISR compatibility
+  // Generic metadata works for both domains
   const displayGameId = parseInt(gameIdStr);
   const wordLength = parseInt(wordLengthStr);
 
@@ -27,21 +28,20 @@ export async function generateMetadata({ params }) {
   }
 
   return {
-    title: `${translations.title} #${displayGameId} - nederlandstalige Wordle - ${wordLength} letters`,
-    description: translations.description,
+    title: `Woordje #${displayGameId} - nederlandstalige Wordle - ${wordLength} letters`,
+    description: "Een dagelijks woordspelletje gebaseerd op Wordle, met 3 tot 10 letters.",
     openGraph: {
-      url: translations.url,
-      title: `${translations.title} #${displayGameId} - nederlandstalige Wordle - ${wordLength} letters`,
-      description: translations.description,
+      title: `Woordje #${displayGameId} - nederlandstalige Wordle - ${wordLength} letters`,
+      description: "Een dagelijks woordspelletje gebaseerd op Wordle, met 3 tot 10 letters.",
       images: [
         {
-          url: `${translations.url}/og.png?v=2`,
+          url: "/og.png?v=2",
           width: 1200,
           height: 630,
-          alt: translations.title,
+          alt: "Woordje",
         },
       ],
-      siteName: translations.title,
+      siteName: "Woordje",
     },
     twitter: {
       creator: "@timbroddin",
@@ -53,14 +53,9 @@ export async function generateMetadata({ params }) {
 export default async function ArchiveGamePage({ params }) {
   const { query } = await params;
   const [gameIdStr, wordLengthStr] = query.split("x");
-  const translations = await getTranslations();
 
   const displayGameId = parseInt(gameIdStr);
   const wordLength = parseInt(wordLengthStr);
-
-  // Correct gameId based on locale
-  const gameId =
-    translations.id === "woordol" ? displayGameId + 36 : displayGameId;
 
   // Validate inputs
   if (
@@ -72,7 +67,11 @@ export default async function ArchiveGamePage({ params }) {
     notFound();
   }
 
-  // Prevent playing future games
+  // For ISR, we use the displayGameId directly (nl-BE style)
+  // The client component will handle the locale-specific gameId offset
+  const gameId = displayGameId;
+
+  // Prevent playing future games (use base gameId without locale offset)
   if (gameId >= getTodaysGameId()) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -97,7 +96,6 @@ export default async function ArchiveGamePage({ params }) {
 
   return (
     <ArchiveGameClient
-      gameId={gameId}
       displayGameId={displayGameId}
       wordLength={wordLength}
       gameType={`normal-${wordLength}`}
@@ -107,7 +105,6 @@ export default async function ArchiveGamePage({ params }) {
         demoWords,
         statistics,
       }}
-      locale={translations.id === "woordje" ? "nl-BE" : "nl-NL"}
     />
   );
 }

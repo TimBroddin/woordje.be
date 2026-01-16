@@ -34,18 +34,20 @@ import AddToHomeScreen from "@/components/AddToHomeScreen";
 const STAGGER = 0.15;
 
 export default function ArchiveGameClient({
-  gameId,
   displayGameId,
   wordLength,
   gameType,
   ssr,
-  locale,
 }) {
   const boardSize = wordLength + 1;
   const { width, height } = useWindowSize();
   const plausible = usePlausible();
   const fetchControllerRef = useRef(null);
-  const translations = useTranslations(locale);
+  // Auto-detect locale from hostname (no override)
+  const translations = useTranslations();
+
+  // Calculate gameId based on locale (woordol uses +36 offset)
+  const gameId = translations.id === "woordol" ? displayGameId + 36 : displayGameId;
 
   // Zustand stores
   const { guesses, setGameState, resetGameState, gameId: storedGameId } = useGameStore();

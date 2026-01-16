@@ -79,7 +79,7 @@ const Results = ({ visible, toast, solution: propSolution }) => {
   const { wordLength, boardSize, hardMode, gameId } = useSettingsStore();
   const { guesses, setGameState } = useGameStore();
   const { data: statistics } = useStatisticsStore();
-  const { timer, setModal } = useUIStore();
+  const { timerStart, timerValue, setModal } = useUIStore();
   const plausible = usePlausible();
 
   // Calculate display game ID based on locale
@@ -123,12 +123,12 @@ const Results = ({ visible, toast, solution: propSolution }) => {
         header.push(`🎳 ${streak}`);
       }
 
-      if (timer?.start && timer?.value && getIsVictory(gameState)) {
+      if (timerStart && timerValue && getIsVictory(gameState)) {
         header.push(
           `🕑 ${
-            timer.value / 1000 > 3
-              ? Math.round(timer.value / 1000)
-              : (timer.value / 1000).toFixed(2)
+            timerValue / 1000 > 3
+              ? Math.round(timerValue / 1000)
+              : (timerValue / 1000).toFixed(2)
           }s`
         );
       }
@@ -162,8 +162,8 @@ ${gameState.guesses
       gameState,
       boardSize,
       streak,
-      timer?.start,
-      timer?.value,
+      timerStart,
+      timerValue,
       wordLength,
       hardMode,
       isArchive,

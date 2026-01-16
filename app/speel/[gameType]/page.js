@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { getTranslations } from "@/lib/i18n/config";
 import { getTodaysGameId } from "@/lib/gameId";
 import { getSolution, getRandomWord, getRandomWords } from "@/lib/data/solution";
 import { getStatistics } from "@/lib/data/statistics";
@@ -23,33 +22,29 @@ export async function generateMetadata({ params }) {
     return {};
   }
 
-  const translations = await getTranslations();
   const gameId = getTodaysGameId();
-  const displayGameId = translations.id === "woordje" ? gameId : gameId - 36;
 
+  // Use generic metadata for ISR compatibility
+  // Client will show locale-specific content
   return {
-    title: `${translations.title} #${displayGameId} - nederlandstalige Wordle - ${wordLength} letters`,
-    description: translations.description,
+    title: `Woordje #${gameId} - nederlandstalige Wordle - ${wordLength} letters`,
+    description: "Een dagelijks woordspelletje gebaseerd op Wordle, met 3 tot 10 letters.",
     openGraph: {
-      title: `${translations.title} #${displayGameId} - nederlandstalige Wordle - ${wordLength} letters`,
-      description: translations.description,
-      url: translations.url,
-      siteName: translations.title,
+      title: `Woordje #${gameId} - nederlandstalige Wordle - ${wordLength} letters`,
+      description: "Een dagelijks woordspelletje gebaseerd op Wordle, met 3 tot 10 letters.",
+      siteName: "Woordje",
       images: [
         {
-          url: `${translations.url}/og.png?v=2`,
+          url: "/og.png?v=2",
           width: 1200,
           height: 630,
-          alt: translations.title,
+          alt: "Woordje",
         },
       ],
     },
     twitter: {
       card: "summary",
       creator: "@timbroddin",
-    },
-    alternates: {
-      canonical: translations.url,
     },
   };
 }
@@ -64,7 +59,6 @@ export default async function GamePage({ params }) {
   }
 
   const gameId = getTodaysGameId();
-  const translations = await getTranslations();
 
   // Fetch all SSR data in parallel
   const [solution, statistics] = await Promise.all([
@@ -86,7 +80,6 @@ export default async function GamePage({ params }) {
         demoWords,
         statistics,
       }}
-      locale={translations.id === "woordje" ? "nl-BE" : "nl-NL"}
     />
   );
 }
