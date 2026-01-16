@@ -329,7 +329,7 @@ export default function GameClient({
 
       <Board
         loading={isLoading}
-        style={{ "--word-length": wordLength, "--shrink-size": "4px" }}
+        style={{ "--word-length": wordLength, "--shrink-size": "6px" }}
       >
         {/* Rendered guesses */}
         {currentGuesses.map((match, i) => (

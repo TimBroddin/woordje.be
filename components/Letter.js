@@ -30,12 +30,13 @@ const LetterFace = forwardRef(
         style={style}
         className={cn(
           // Base size with CSS custom property calculations
-          "w-[calc(50px-((var(--word-length,6)-6)*var(--shrink-size,5px)))]",
-          "h-[calc(50px-((var(--word-length,6)-6)*var(--shrink-size,5px)))]",
-          "text-[calc(26px-((var(--word-length,6)-6)*var(--shrink-size,4px)))]",
+          // Use max() to ensure minimum readable size, and scale more aggressively for long words
+          "w-[max(32px,calc(50px-((var(--word-length,6)-6)*var(--shrink-size,6px))))]",
+          "h-[max(32px,calc(50px-((var(--word-length,6)-6)*var(--shrink-size,6px))))]",
+          "text-[max(16px,calc(26px-((var(--word-length,6)-6)*var(--shrink-size,4px))))]",
           // Soft, friendly styling
           "letter-tile",
-          "m-[4px]",
+          "m-[max(2px,calc(4px-((var(--word-length,6)-6)*0.5px)))]",
           "relative top-0",
           "[backface-visibility:hidden]",
           "rounded-xl",
@@ -43,9 +44,9 @@ const LetterFace = forwardRef(
           focus && "shadow-[0_0_0_4px_var(--focus-color),_0_0_16px_rgba(192,132,252,0.4)] z-10",
           // Small variant for examples
           small && [
-            "w-[calc(40px-((var(--word-length,6)-6)*var(--shrink-size,4px)))]",
-            "h-[calc(40px-((var(--word-length,6)-6)*var(--shrink-size,4px)))]",
-            "text-[max(14px,calc(18px-((var(--word-length,6)-6)*var(--shrink-size,3px))))]",
+            "w-[max(28px,calc(40px-((var(--word-length,6)-6)*var(--shrink-size,5px))))]",
+            "h-[max(28px,calc(40px-((var(--word-length,6)-6)*var(--shrink-size,5px))))]",
+            "text-[max(12px,calc(18px-((var(--word-length,6)-6)*var(--shrink-size,3px))))]",
             "rounded-lg",
           ],
           className
@@ -69,12 +70,13 @@ export const LetterBack = forwardRef(
         style={style}
         className={cn(
           // Base size with CSS custom property calculations
-          "w-[calc(50px-((var(--word-length,6)-6)*var(--shrink-size,5px)))]",
-          "h-[calc(50px-((var(--word-length,6)-6)*var(--shrink-size,5px)))]",
-          "text-[calc(26px-((var(--word-length,6)-6)*var(--shrink-size,4px)))]",
+          // Use max() to ensure minimum readable size, and scale more aggressively for long words
+          "w-[max(32px,calc(50px-((var(--word-length,6)-6)*var(--shrink-size,6px))))]",
+          "h-[max(32px,calc(50px-((var(--word-length,6)-6)*var(--shrink-size,6px))))]",
+          "text-[max(16px,calc(26px-((var(--word-length,6)-6)*var(--shrink-size,4px))))]",
           // Soft, friendly styling
           "letter-tile revealed",
-          "font-bold uppercase m-[4px]",
+          "font-bold uppercase m-[max(2px,calc(4px-((var(--word-length,6)-6)*0.5px)))]",
           "[backface-visibility:hidden]",
           "flex justify-center items-center",
           "rounded-xl",
@@ -91,9 +93,9 @@ export const LetterBack = forwardRef(
           score === "off" && "off",
           // Small variant for examples
           small && [
-            "w-[calc(40px-((var(--word-length,6)-6)*var(--shrink-size,4px)))]",
-            "h-[calc(40px-((var(--word-length,6)-6)*var(--shrink-size,4px)))]",
-            "text-[max(14px,calc(18px-((var(--word-length,6)-6)*var(--shrink-size,3px))))]",
+            "w-[max(28px,calc(40px-((var(--word-length,6)-6)*var(--shrink-size,5px))))]",
+            "h-[max(28px,calc(40px-((var(--word-length,6)-6)*var(--shrink-size,5px))))]",
+            "text-[max(12px,calc(18px-((var(--word-length,6)-6)*var(--shrink-size,3px))))]",
             "rounded-lg",
           ],
           className

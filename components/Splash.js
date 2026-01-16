@@ -44,7 +44,7 @@ const Examples = ({ words }) => {
 
   if (words && words.length) {
     return (
-      <div style={{ "--word-length": wordLength }} className="space-y-4">
+      <div style={{ "--word-length": wordLength, "--shrink-size": "6px" }} className="space-y-4">
         <div className="p-4 bg-[var(--muted)] rounded-sm border-2 border-[var(--border)]">
           <Board initial="hidden" animate="show" variants={board}>
             {words[0].split("").map((letter, index) => (

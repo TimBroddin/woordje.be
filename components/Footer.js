@@ -89,17 +89,16 @@ const Footer = ({ gameId, wordLength: propWordLength, boardSize: propBoardSize }
                 <CardContent className="space-y-4">
                   <Levels>
                     {[3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
-                      <NextLink
-                        href={`/speel/${level}`}
-                        key={`level-${level}`}
-                        legacyBehavior
-                        passHref
-                      >
+                      <NextLink href={`/speel/${level}`} key={`level-${level}`}>
+                        {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                        }
                         <Level active={wordLength === level}>{level}</Level>
                       </NextLink>
                     ))}
                   </Levels>
-                  <NextLink href="/archief" legacyBehavior passHref>
+                  <NextLink href="/archief">
+                    {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                    }
                     <Button className="w-full" asChild>
                       <a>📁 Archief bekijken</a>
                     </Button>
@@ -118,12 +117,16 @@ const Footer = ({ gameId, wordLength: propWordLength, boardSize: propBoardSize }
                     Dit is een {translations.title} uit het archief.
                   </p>
                   <div className="flex flex-col gap-2">
-                    <NextLink href="/" legacyBehavior passHref>
+                    <NextLink href="/">
+                      {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                      }
                       <Button variant="outline" className="flex-1" asChild>
                         <a>🎯 Vandaag</a>
                       </Button>
                     </NextLink>
-                    <NextLink href="/archief" legacyBehavior passHref>
+                    <NextLink href="/archief">
+                      {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                      }
                       <Button variant="outline" className="flex-1" asChild>
                         <a>📁 Archief</a>
                       </Button>

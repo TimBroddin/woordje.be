@@ -9,7 +9,6 @@ import {
 import { cn } from "@/lib/utils";
 
 import { useSettingsStore } from "@/lib/stores/settings-store";
-import { useGameStore } from "@/lib/stores/game-store";
 import { useStatisticsStore } from "@/lib/stores/statistics-store";
 import { useUIStore } from "@/lib/stores/ui-store";
 import { calculateStatistics } from "@/lib/helpers";
@@ -77,8 +76,7 @@ const DistributionBar = ({ label, value, percentage, isHighlighted }) => (
 
 const Statistics = ({ visible }) => {
   const { setModal } = useUIStore();
-  const { wordLength, boardSize } = useSettingsStore();
-  const { gameId } = useGameStore();
+  const { wordLength, boardSize, gameId } = useSettingsStore();
   const { data: statistics } = useStatisticsStore();
 
   const closeHandler = () => {

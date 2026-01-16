@@ -309,7 +309,7 @@ export default function ArchiveGameClient({
 
       <Board
         loading={isLoading}
-        style={{ "--word-length": wordLength, "--shrink-size": "4px" }}
+        style={{ "--word-length": wordLength, "--shrink-size": "6px" }}
       >
         {currentGuesses.map((match, i) => (
           <Row
