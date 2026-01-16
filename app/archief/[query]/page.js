@@ -6,8 +6,8 @@ import { getSolution, getRandomWord, getRandomWords } from "@/lib/data/solution"
 import { getStatistics } from "@/lib/data/statistics";
 import ArchiveGameClient from "./archive-game-client";
 
-// ISR - revalidate every 10 minutes
-export const revalidate = 600;
+// ISR - revalidate every 24 hours (archive content doesn't change)
+export const revalidate = 86400;
 
 // Don't pre-generate any archive pages, generate on demand
 export async function generateStaticParams() {

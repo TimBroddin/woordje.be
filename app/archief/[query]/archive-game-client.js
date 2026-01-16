@@ -16,8 +16,6 @@ import { useSettingsStore } from "@/lib/stores/settings-store";
 import { useStatisticsStore } from "@/lib/stores/statistics-store";
 import { useUIStore } from "@/lib/stores/ui-store";
 
-// Data fetcher for stats refresh
-import { getStatistics } from "@/lib/data/statistics";
 import { useTranslations } from "@/lib/i18n/use-translations";
 
 // Components
@@ -82,12 +80,12 @@ export default function ArchiveGameClient({
   useEffect(() => {
     if (storedGameId !== gameId) {
       resetGameState(gameId);
+      resetTimer();
+      setInputText("");
     }
 
     setShowConfetti(false);
     setSettings({ wordLength, boardSize, gameType, gameId });
-    resetTimer();
-    setInputText("");
     setRandomWord(ssr.randomWord);
     setGameStats(ssr.statistics);
   }, [
@@ -209,9 +207,10 @@ export default function ArchiveGameClient({
           addWin({ gameId, wordLength, gameType, guesses: newGuesses.length });
 
           logResult(gameId, wordLength, "normal", newGuesses.length).then(
-            async () => {
-              const stats = await getStatistics(gameId, wordLength, "normal");
-              setGameStats(stats);
+            (result) => {
+              if (result.statistics) {
+                setGameStats(result.statistics);
+              }
             }
           );
         } else if (newGuesses.length === boardSize) {
@@ -219,9 +218,10 @@ export default function ArchiveGameClient({
           addLoss({ gameId, wordLength, gameType });
 
           logResult(gameId, wordLength, "normal", newGuesses.length + 1).then(
-            async () => {
-              const stats = await getStatistics(gameId, wordLength, "normal");
-              setGameStats(stats);
+            (result) => {
+              if (result.statistics) {
+                setGameStats(result.statistics);
+              }
             }
           );
         }

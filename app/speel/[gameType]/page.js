@@ -4,8 +4,8 @@ import { getSolution, getRandomWord, getRandomWords } from "@/lib/data/solution"
 import { getStatistics } from "@/lib/data/statistics";
 import GameClient from "./game-client";
 
-// ISR - revalidate every 60 seconds
-export const revalidate = 60;
+// ISR - revalidate every hour (client checks for midnight staleness)
+export const revalidate = 3600;
 
 // Generate static pages for all word lengths
 export async function generateStaticParams() {

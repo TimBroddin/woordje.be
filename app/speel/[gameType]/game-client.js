@@ -6,6 +6,9 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import { usePlausible } from "next-plausible";
 
+import { useRouter } from "next/navigation";
+import { getTodaysGameId } from "@/lib/gameId";
+
 // Server action
 import { checkWord } from "@/lib/actions/check";
 import { logResult } from "@/lib/actions/log-result";
@@ -15,9 +18,6 @@ import { useGameStore } from "@/lib/stores/game-store";
 import { useSettingsStore } from "@/lib/stores/settings-store";
 import { useStatisticsStore } from "@/lib/stores/statistics-store";
 import { useUIStore } from "@/lib/stores/ui-store";
-
-// Data fetcher for stats refresh
-import { getStatistics } from "@/lib/data/statistics";
 
 // Components
 import { Main, Board, Row } from "@/components/styled";
@@ -42,6 +42,7 @@ export default function GameClient({
   const { width, height } = useWindowSize();
   const plausible = usePlausible();
   const fetchControllerRef = useRef(null);
+  const router = useRouter();
 
   // Zustand stores
   const { guesses, setGameState, resetGameState, gameId: storedGameId } = useGameStore();
@@ -78,12 +79,12 @@ export default function GameClient({
     // Reset game state if it's a new game
     if (storedGameId !== gameId) {
       resetGameState(gameId);
+      resetTimer();
+      setInputText("");
     }
 
     setShowConfetti(false);
     setSettings({ wordLength, boardSize, gameType, gameId });
-    resetTimer();
-    setInputText("");
     setRandomWord(ssr.randomWord);
     setGameStats(ssr.statistics);
   }, [
@@ -100,6 +101,23 @@ export default function GameClient({
     setRandomWord,
     setGameStats,
   ]);
+
+  // Check if SSR-provided gameId is stale (user kept tab open past midnight)
+  // Uses an interval to detect when the day changes, avoiding immediate refresh on mount
+  useEffect(() => {
+    const checkStaleness = () => {
+      const currentGameId = getTodaysGameId();
+      if (currentGameId !== gameId) {
+        router.refresh();
+      }
+    };
+
+    // Check every minute for day change (only matters around midnight)
+    const interval = setInterval(checkStaleness, 60000);
+
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameId]);
 
   // Handle colorblind mode
   useEffect(() => {
@@ -208,12 +226,12 @@ export default function GameClient({
           stopTimer();
           addWin({ gameId, wordLength, gameType, guesses: newGuesses.length });
 
-          // Log result to server
+          // Log result to server and get updated stats in one call
           logResult(gameId, wordLength, "normal", newGuesses.length).then(
-            async () => {
-              // Refresh stats from server
-              const stats = await getStatistics(gameId, wordLength, "normal");
-              setGameStats(stats);
+            (result) => {
+              if (result.statistics) {
+                setGameStats(result.statistics);
+              }
             }
           );
         } else if (newGuesses.length === boardSize) {
@@ -222,9 +240,10 @@ export default function GameClient({
           addLoss({ gameId, wordLength, gameType });
 
           logResult(gameId, wordLength, "normal", newGuesses.length + 1).then(
-            async () => {
-              const stats = await getStatistics(gameId, wordLength, "normal");
-              setGameStats(stats);
+            (result) => {
+              if (result.statistics) {
+                setGameStats(result.statistics);
+              }
             }
           );
         }

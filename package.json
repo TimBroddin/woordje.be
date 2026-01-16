@@ -9,6 +9,7 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@icons-pack/react-simple-icons": "^13.8.0",
         "@libsql/client": "^0.14.0",
         "@radix-ui/react-collapsible": "^1.1.12",
         "@radix-ui/react-dialog": "^1.1.15",

@@ -12,8 +12,14 @@ import { cn } from "@/lib/utils";
 
 import dynamic from "next/dynamic";
 
-import Image from "next/image";
 import { m } from "framer-motion";
+import {
+  SiX,
+  SiFacebook,
+  SiWhatsapp,
+  SiThreads,
+} from "@icons-pack/react-simple-icons";
+import { Linkedin, Share2 } from "lucide-react";
 
 import NextLink from "next/link";
 import { copyToClipboard, getIsVictory, calculateStreak } from "@/lib/helpers";
@@ -28,21 +34,41 @@ import { usePlausible } from "next-plausible";
 
 const LazyLoadMarkDown = dynamic(() => import("./Markdown"));
 
-const SharePreview = ({ children, onClick }) => (
+const SharePreview = ({ header, grid, onClick }) => (
   <div
     onClick={onClick}
     className={cn(
-      "p-4 bg-[var(--muted)] rounded-2xl",
-      "border-none",
-      "shadow-inner",
-      "text-sm whitespace-pre-wrap leading-relaxed",
+      "p-5 bg-gradient-to-br from-[var(--muted)] to-[var(--background)] rounded-2xl",
+      "border border-[var(--border)]",
+      "shadow-lg",
       "select-all cursor-pointer",
-      "hover:bg-[var(--border)] hover:scale-[1.01]",
+      "hover:shadow-xl hover:scale-[1.01]",
       "transition-all duration-200 ease-out"
     )}
-    style={{ fontFamily: "var(--font-display)" }}
   >
-    {children}
+    <div
+      className="text-sm text-[var(--muted-foreground)] mb-4 text-center"
+      style={{ fontFamily: "var(--font-display)" }}
+    >
+      {header}
+    </div>
+    <div className="flex flex-col gap-2 items-center w-full">
+      {grid.map((row, i) => (
+        <div key={i} className="flex gap-2">
+          {row.map((cell, j) => (
+            <div
+              key={j}
+              className={cn(
+                "w-7 h-7 rounded-full shadow-sm transition-transform",
+                cell === "good" && "bg-[var(--color-good)] shadow-[0_2px_8px_rgba(34,197,94,0.4)]",
+                cell === "off" && "bg-[var(--color-off)] shadow-[0_2px_8px_rgba(234,179,8,0.3)]",
+                cell === "bad" && "bg-black dark:bg-zinc-800"
+              )}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
   </div>
 );
 
@@ -62,14 +88,14 @@ const StreakBadge = ({ children, ...props }) => (
   </m.div>
 );
 
-const SocialButton = ({ icon, label, onClick }) => (
+const SocialButton = ({ icon: Icon, label, onClick }) => (
   <Button
     size="sm"
     variant="outline"
     className="flex-1 min-w-[120px]"
     onClick={onClick}
   >
-    <Image src={icon} width={16} height={16} alt={label} className="mr-2" />
+    <Icon size={16} className="mr-2" />
     {label}
   </Button>
 );
@@ -182,6 +208,41 @@ ${gameState.guesses
       .join("");
   }, [gameState]);
 
+  const getShareHeader = useCallback(() => {
+    const parts = [
+      `${translations.share_text} #${displayGameId} x ${wordLength}`,
+    ];
+    if (isArchive) parts.push("archief");
+    if (hardMode) parts.push("💀 Extra moeilijk");
+    parts.push(
+      `💡 ${getIsVictory(gameState) ? gameState.guesses.length : "X"}/${boardSize}`
+    );
+    if (streak > 1) parts.push(`🎳 ${streak}`);
+    if (timerStart && timerValue && getIsVictory(gameState)) {
+      parts.push(
+        `🕑 ${timerValue / 1000 > 3 ? Math.round(timerValue / 1000) : (timerValue / 1000).toFixed(2)}s`
+      );
+    }
+    return parts.join(" ▪️ ");
+  }, [
+    translations.share_text,
+    displayGameId,
+    wordLength,
+    isArchive,
+    hardMode,
+    gameState,
+    boardSize,
+    streak,
+    timerStart,
+    timerValue,
+  ]);
+
+  const getShareGrid = useCallback(() => {
+    return gameState.guesses.map((line) =>
+      line.map((item) => item.score)
+    );
+  }, [gameState]);
+
   const onCopyToClipboard = useCallback(
     (e) => {
       e.stopPropagation();
@@ -247,9 +308,11 @@ ${gameState.guesses
           )}
 
           {/* Share preview */}
-          <SharePreview onClick={(e) => e.stopPropagation()}>
-            {getShareText()}
-          </SharePreview>
+          <SharePreview
+            header={getShareHeader()}
+            grid={getShareGrid()}
+            onClick={(e) => e.stopPropagation()}
+          />
 
           {/* Copy button */}
           <Button onClick={onCopyToClipboard} className="w-full">
@@ -263,12 +326,12 @@ ${gameState.guesses
             </h3>
             <div className="flex flex-wrap gap-2 justify-center">
               <SocialButton
-                icon="/icons/twitter.svg"
-                label="Twitter"
+                icon={SiX}
+                label="X"
                 onClick={() => {
-                  plausible("Share", { props: { method: "twitter" } });
+                  plausible("Share", { props: { method: "x" } });
                   window.open(
-                    `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    `https://x.com/intent/tweet?text=${encodeURIComponent(
                       getShareText(false, true)
                     )}`,
                     "_blank"
@@ -276,7 +339,7 @@ ${gameState.guesses
                 }}
               />
               <SocialButton
-                icon="/icons/facebook.svg"
+                icon={SiFacebook}
                 label="Facebook"
                 onClick={() => {
                   plausible("Share", { props: { method: "facebook" } });
@@ -291,7 +354,7 @@ ${gameState.guesses
                 }}
               />
               <SocialButton
-                icon="/icons/whatsapp.svg"
+                icon={SiWhatsapp}
                 label="WhatsApp"
                 onClick={() => {
                   plausible("Share", { props: { method: "whatsapp" } });
@@ -304,7 +367,7 @@ ${gameState.guesses
                 }}
               />
               <SocialButton
-                icon="/icons/linkedin.svg"
+                icon={Linkedin}
                 label="LinkedIn"
                 onClick={() => {
                   plausible("Share", { props: { method: "linkedin" } });
@@ -318,9 +381,28 @@ ${gameState.guesses
                   );
                 }}
               />
+              <SocialButton
+                icon={SiThreads}
+                label="Threads"
+                onClick={() => {
+                  plausible("Share", { props: { method: "threads" } });
+                  const text = getShareText(false, true)
+                    .replace(/🟩/g, "X")
+                    .replace(/🟨/g, "o")
+                    .replace(/⬛️?/g, "-")
+                    .replace(/ ▪️ /g, " | ")
+                    .replace(/💡 /g, "")
+                    .replace(/🎳 /g, "streak: ")
+                    .replace(/🕑 /g, "");
+                  window.open(
+                    `https://www.threads.net/intent/post?text=${encodeURIComponent(text)}`,
+                    "_blank"
+                  );
+                }}
+              />
               {typeof window !== "undefined" && window?.navigator?.share && (
                 <SocialButton
-                  icon="/icons/share.svg"
+                  icon={Share2}
                   label="Meer..."
                   onClick={() => {
                     if (window.navigator.share) {
