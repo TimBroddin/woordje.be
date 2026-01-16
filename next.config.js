@@ -1,6 +1,4 @@
-const { withPlausibleProxy } = require("next-plausible");
-
-module.exports = withPlausibleProxy()({
+module.exports = {
   reactStrictMode: true,
   turbopack: {},
   images: {
@@ -11,4 +9,4 @@ module.exports = withPlausibleProxy()({
       },
     ],
   },
-});
+};

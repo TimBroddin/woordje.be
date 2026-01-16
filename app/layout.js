@@ -49,6 +49,7 @@ export default function RootLayout({ children }) {
         <PlausibleProvider
           domain={defaultTranslations.plausible}
           customDomain="https://stats.broddin.be"
+          selfHosted={true}
         >
           <ClientProviders>{children}</ClientProviders>
         </PlausibleProvider>
