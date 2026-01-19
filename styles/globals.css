@@ -168,8 +168,8 @@
   --color-good-dark: #16a34a;
   --color-off: #eab308;
   --color-off-dark: #ca8a04;
-  --color-bad: #3d3655;
-  --color-bad-dark: #2d2840;
+  --color-bad: #8a8299;
+  --color-bad-dark: #7a7289;
   --color-unknown: #2d2840;
   --color-unknown-dark: #252131;
 
@@ -290,6 +290,10 @@ body {
   background: linear-gradient(135deg, var(--color-bad) 0%, var(--color-bad-dark) 100%);
 }
 
+.dark .letter-tile.revealed.bad {
+  color: var(--foreground);
+}
+
 /* Keyboard keys - Soft, rounded, bouncy */
 .keyboard-key {
   font-family: var(--font-display);
@@ -331,6 +335,10 @@ body {
 .keyboard-key.bad {
   background: linear-gradient(135deg, var(--color-bad) 0%, var(--color-bad-dark) 100%);
   color: var(--color-tile-text-revealed);
+}
+
+.dark .keyboard-key.bad {
+  color: var(--keyboard-key-text);
 }
 
 /* Soft shadow utilities (replacing brutal) */
