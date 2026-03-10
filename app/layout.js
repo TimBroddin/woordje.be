@@ -1,3 +1,4 @@
+import Script from "next/script";
 import PlausibleProvider from "next-plausible";
 import { getTranslationsStatic } from "@/lib/i18n/config";
 import { ClientProviders } from "@/components/providers/ClientProviders";
@@ -53,6 +54,11 @@ export default function RootLayout({ children }) {
         >
           <ClientProviders>{children}</ClientProviders>
         </PlausibleProvider>
+        <Script
+          src="https://www.titansofindustry.be/project-menu.js"
+          strategy="lazyOnload"
+        />
+        <titans-project-menu theme="light" variant="compact"></titans-project-menu>
       </body>
     </html>
   );
