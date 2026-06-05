@@ -1,5 +1,11 @@
 import { redirect } from "next/navigation";
 
+// Render per-request and never write to the ISR cache. Share URLs are unbounded
+// (one per game-result hash, shared on social media); caching each would create
+// a distinct ISR write for every share link. The page only derives meta tags
+// from the URL params and then redirects, so there is nothing worth caching.
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }) {
   const { gameId, length, hash } = await params;
   const wordLength = parseInt(length);
