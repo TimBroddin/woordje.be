@@ -30,7 +30,7 @@ import { useStatisticsStore } from "@/lib/stores/statistics-store";
 import { useUIStore } from "@/lib/stores/ui-store";
 import { getTodaysGameId } from "@/lib/gameId";
 
-import { usePlausible } from "next-plausible";
+import { useAnalytics } from "@/lib/analytics";
 
 const LazyLoadMarkDown = dynamic(() => import("./Markdown"));
 
@@ -106,7 +106,7 @@ const Results = ({ visible, toast, solution: propSolution }) => {
   const { guesses, setGameState } = useGameStore();
   const { data: statistics } = useStatisticsStore();
   const { timerStart, timerValue, setModal } = useUIStore();
-  const plausible = usePlausible();
+  const track = useAnalytics();
 
   // Calculate display game ID based on locale
   const displayGameId = translations.id === "woordje" ? gameId : gameId - 36;
@@ -329,7 +329,7 @@ ${gameState.guesses
                 icon={SiX}
                 label="X"
                 onClick={() => {
-                  plausible("Share", { props: { method: "x" } });
+                  track("Share", { method: "x" });
                   window.open(
                     `https://x.com/intent/tweet?text=${encodeURIComponent(
                       getShareText(false, true)
@@ -342,7 +342,7 @@ ${gameState.guesses
                 icon={SiFacebook}
                 label="Facebook"
                 onClick={() => {
-                  plausible("Share", { props: { method: "facebook" } });
+                  track("Share", { method: "facebook" });
                   window.open(
                     `https://www.facebook.com/share.php?u=${encodeURIComponent(
                       `${
@@ -357,7 +357,7 @@ ${gameState.guesses
                 icon={SiWhatsapp}
                 label="WhatsApp"
                 onClick={() => {
-                  plausible("Share", { props: { method: "whatsapp" } });
+                  track("Share", { method: "whatsapp" });
                   window.open(
                     `https://api.whatsapp.com/send?text=${encodeURIComponent(
                       getShareText(false, true)
@@ -370,7 +370,7 @@ ${gameState.guesses
                 icon={Linkedin}
                 label="LinkedIn"
                 onClick={() => {
-                  plausible("Share", { props: { method: "linkedin" } });
+                  track("Share", { method: "linkedin" });
                   window.open(
                     `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
                       `${
@@ -385,7 +385,7 @@ ${gameState.guesses
                 icon={SiThreads}
                 label="Threads"
                 onClick={() => {
-                  plausible("Share", { props: { method: "threads" } });
+                  track("Share", { method: "threads" });
                   const text = getShareText(false, true)
                     .replace(/🟩/g, "X")
                     .replace(/🟨/g, "o")
@@ -406,7 +406,7 @@ ${gameState.guesses
                   label="Meer..."
                   onClick={() => {
                     if (window.navigator.share) {
-                      plausible("Share", { props: { method: "webshare" } });
+                      track("Share", { method: "webshare" });
                       window.navigator
                         .share({ text: getShareText(false, true) })
                         .catch(() => {});

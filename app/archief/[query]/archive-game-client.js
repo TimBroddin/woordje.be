@@ -4,7 +4,6 @@ import { useCallback, useState, useEffect, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
-import { usePlausible } from "next-plausible";
 
 // Server action
 import { checkWord } from "@/lib/actions/check";
@@ -39,7 +38,6 @@ export default function ArchiveGameClient({
 }) {
   const boardSize = wordLength + 1;
   const { width, height } = useWindowSize();
-  const plausible = usePlausible();
   const fetchControllerRef = useRef(null);
   // Auto-detect locale from hostname (no override)
   const translations = useTranslations();

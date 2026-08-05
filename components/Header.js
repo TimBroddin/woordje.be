@@ -9,7 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useRouter } from "next/navigation";
-import { usePlausible } from "next-plausible";
+import { useAnalytics } from "@/lib/analytics";
 
 import { useTranslations } from "@/lib/i18n/use-translations";
 import { useSettingsStore } from "@/lib/stores/settings-store";
@@ -54,7 +54,7 @@ const Header = ({
   const { setModal } = useUIStore();
   const translations = useTranslations();
   const router = useRouter();
-  const plausible = usePlausible();
+  const track = useAnalytics();
 
   return (
     <TooltipProvider>
@@ -122,7 +122,7 @@ const Header = ({
             {showStats && (
               <IconButton
                 onClick={() => {
-                  plausible("Statistics");
+                  track("Statistics");
                   setModal("statistics");
                 }}
                 tooltip="Bekijk je statistieken"

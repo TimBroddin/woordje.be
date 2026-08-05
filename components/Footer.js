@@ -2,7 +2,7 @@
 
 import NextLink from "next/link";
 import Image from "next/image";
-import { usePlausible } from "next-plausible";
+import { useAnalytics } from "@/lib/analytics";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
@@ -65,7 +65,7 @@ const Footer = ({ gameId, wordLength: propWordLength, boardSize: propBoardSize }
   const { wordLength: storeWordLength, colorBlind, hardMode, setColorBlind, setHardMode } = useSettingsStore();
 
   const wordLength = propWordLength || storeWordLength;
-  const plausible = usePlausible();
+  const track = useAnalytics();
   const isArchive = gameId !== getTodaysGameId();
 
   return (
@@ -217,9 +217,7 @@ const Footer = ({ gameId, wordLength: propWordLength, boardSize: propBoardSize }
                   <Switch
                     checked={hardMode}
                     onChange={(e) => {
-                      plausible("HardMode", {
-                        props: { value: e.target.checked },
-                      });
+                      track("HardMode", { value: e.target.checked });
                       setHardMode(e.target.checked);
                     }}
                     iconOn={<Danger filled size={12} />}

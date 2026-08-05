@@ -1,6 +1,6 @@
 import Script from "next/script";
-import PlausibleProvider from "next-plausible";
 import { getTranslationsStatic } from "@/lib/i18n/config";
+import { Analytics } from "@/components/Analytics";
 import { ClientProviders } from "@/components/providers/ClientProviders";
 import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 import { LocaleHead } from "@/components/LocaleHead";
@@ -47,13 +47,8 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <ServiceWorkerRegistration />
-        <PlausibleProvider
-          domain={defaultTranslations.plausible}
-          customDomain="https://stats.broddin.be"
-          selfHosted={true}
-        >
-          <ClientProviders>{children}</ClientProviders>
-        </PlausibleProvider>
+        <ClientProviders>{children}</ClientProviders>
+        <Analytics />
         <Script
           src="https://www.titansofindustry.be/project-menu.js"
           strategy="lazyOnload"
