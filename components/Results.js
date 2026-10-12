@@ -32,7 +32,7 @@ import { getTodaysGameId } from "@/lib/gameId";
 
 import { useAnalytics } from "@/lib/analytics";
 
-const LazyLoadMarkDown = dynamic(() => import("./Markdown"));
+const Definition = dynamic(() => import("./Definition"), { ssr: false });
 
 const SharePreview = ({ header, grid, onClick }) => (
   <div
@@ -281,15 +281,8 @@ ${gameState.guesses
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Solution meaning */}
-          {solution?.meaning && (
-            <div className="p-4 bg-[var(--muted)] rounded-xl border-none">
-              <p className="text-sm text-[var(--foreground)]">
-                <strong className="text-[var(--primary)]">Betekenis:</strong>{" "}
-                <LazyLoadMarkDown text={solution.meaning} />
-              </p>
-            </div>
-          )}
+          {/* Dictionary definition */}
+          {visible && <Definition word={solution?.word} />}
 
           {/* Streak badge */}
           {streak > 1 && (
