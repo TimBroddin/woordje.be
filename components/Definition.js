@@ -13,20 +13,34 @@ const parseDefinitions = (html) => {
   const heading = doc.getElementById("Nederlands");
   if (!heading) return [];
 
-  // Headings are wrapped in <div class="mw-heading">, walk its siblings
-  // until the next language section starts
-  let node = (heading.closest(".mw-heading") || heading).nextElementSibling;
-  const definitions = [];
-  while (node && !node.classList.contains("mw-heading2")) {
-    if (node.tagName === "OL") {
-      for (const li of node.children) {
-        const clone = li.cloneNode(true);
-        clone.querySelectorAll("dl, ul, ol, sup").forEach((el) => el.remove());
-        const text = clone.textContent.replace(/\s+/g, " ").trim();
-        if (text) definitions.push(text);
+  const lists = [];
+  const section = heading.closest("section");
+  if (section) {
+    // Parsoid output: the language section is a <section> with every
+    // subsection nested inside it
+    for (const ol of section.querySelectorAll("ol")) {
+      if (!ol.parentElement.closest("li") && !ol.classList.contains("references")) {
+        lists.push(ol);
       }
     }
-    node = node.nextElementSibling;
+  } else {
+    // Legacy output: headings are wrapped in <div class="mw-heading">, walk
+    // its siblings until the next language section starts
+    let node = (heading.closest(".mw-heading") || heading).nextElementSibling;
+    while (node && !node.classList.contains("mw-heading2")) {
+      if (node.tagName === "OL") lists.push(node);
+      node = node.nextElementSibling;
+    }
+  }
+
+  const definitions = [];
+  for (const ol of lists) {
+    for (const li of ol.children) {
+      const clone = li.cloneNode(true);
+      clone.querySelectorAll("dl, ul, ol, sup").forEach((el) => el.remove());
+      const text = clone.textContent.replace(/\s+/g, " ").trim();
+      if (text) definitions.push(text);
+    }
   }
   return definitions.slice(0, MAX_DEFINITIONS);
 };
