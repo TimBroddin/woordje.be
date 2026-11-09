@@ -40,7 +40,8 @@
         "eslint": "^9.39.5",
         "eslint-config-next": "^16.4.5",
         "postcss": "^8.5.32",
-        "tailwindcss": "^4.3.5"
+        "tailwindcss": "^4.3.5",
+        "typescript": "^6.0.3"
     },
     "cacheDirectories": [
         ".next/cache"
