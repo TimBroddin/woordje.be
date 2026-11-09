@@ -67,19 +67,21 @@ const fetchDefinitions = async (word) => {
 };
 
 const Definition = ({ word }) => {
-  const [definitions, setDefinitions] = useState(null);
+  // Remember which word the definitions are for, so a new word shows nothing until its own arrive
+  const [result, setResult] = useState({ word: null, definitions: null });
 
   useEffect(() => {
     if (!word) return;
     let cancelled = false;
-    setDefinitions(null);
     fetchDefinitions(word)
-      .then((result) => !cancelled && setDefinitions(result))
-      .catch(() => !cancelled && setDefinitions([]));
+      .then((definitions) => !cancelled && setResult({ word, definitions }))
+      .catch(() => !cancelled && setResult({ word, definitions: [] }));
     return () => {
       cancelled = true;
     };
   }, [word]);
+
+  const definitions = result.word === word ? result.definitions : null;
 
   if (!definitions?.length) return null;
 

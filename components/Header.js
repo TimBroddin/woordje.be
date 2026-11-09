@@ -1,142 +1,114 @@
 "use client";
 
+import NextLink from "next/link";
+import { ArrowLeft, ChartColumn, CircleHelp, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useRouter } from "next/navigation";
 import { useAnalytics } from "@/lib/analytics";
-
 import { useTranslations } from "@/lib/i18n/use-translations";
-import { useSettingsStore } from "@/lib/stores/settings-store";
 import { useUIStore } from "@/lib/stores/ui-store";
-import InfoSquare from "@/lib/iconly/Icons/InfoSquare";
-import Chart from "@/lib/iconly/Icons/Chart";
-import Home from "@/lib/iconly/Icons/Home";
+import BetaBadge from "@/components/BetaBadge";
 
-const IconButton = ({ children, onClick, tooltip, className }) => (
+const iconButton = cn(
+  "h-10 w-9 sm:w-10 inline-flex items-center justify-center rounded-xl",
+  "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)]",
+  "transition-colors duration-150",
+  "[&_svg]:size-5"
+);
+
+const IconButton = ({ label, children, ...props }) => (
   <Tooltip>
     <TooltipTrigger asChild>
-      <button
-        onClick={onClick}
-        className={cn(
-          "w-12 h-12 flex items-center justify-center",
-          "border-none rounded-2xl",
-          "bg-[var(--surface)] hover:bg-[var(--muted)]",
-          "shadow-[var(--shadow-soft-sm)] transition-all duration-200 ease-out",
-          "hover:shadow-[var(--shadow-soft)] hover:-translate-y-1 hover:scale-105",
-          "active:shadow-[var(--shadow-soft-sm)] active:translate-y-0 active:scale-95",
-          className
-        )}
-      >
+      <button type="button" aria-label={label} className={iconButton} {...props}>
         {children}
       </button>
     </TooltipTrigger>
-    {tooltip && <TooltipContent>{tooltip}</TooltipContent>}
+    <TooltipContent>{label}</TooltipContent>
   </Tooltip>
 );
 
+/**
+ * App bar: title on the left, actions on the right.
+ * `showHome` adds a back link on the left (to `backHref`, the daily game by default).
+ */
 const Header = ({
   showInfo = true,
   showStats = true,
   showHome = false,
-  emptyRight = false,
+  backHref = "/",
+  backLabel = "Terug naar het spel van vandaag",
+  showMultiplayer = showStats,
   customTitle,
-  titleSize = 52,
-  titleColor,
   subtitle,
+  className,
 }) => {
-  const { colorBlind } = useSettingsStore();
   const { setModal } = useUIStore();
   const translations = useTranslations();
-  const router = useRouter();
   const track = useAnalytics();
 
   return (
-    <TooltipProvider>
-      <header className="mb-6 pt-4 px-4">
-        <div className="flex justify-between items-center gap-4">
-          {/* Left icon slot */}
-          <div className="w-11 flex-shrink-0">
-            {showHome && (
-              <IconButton
-                onClick={() => router.push("/")}
-                tooltip="Terug naar home"
-              >
-                <Home
-                  set={colorBlind ? "bold" : "two-tone"}
-                  primaryColor="var(--color-icon-left)"
-                  secondaryColor="var(--primary)"
-                  size="medium"
-                />
-              </IconButton>
-            )}
-            {showInfo && !showHome && (
-              <IconButton
-                onClick={() => setModal("splash")}
-                tooltip={`Uitleg over ${translations.title}`}
-              >
-                <InfoSquare
-                  set={colorBlind ? "bold" : "two-tone"}
-                  primaryColor="var(--color-icon-left)"
-                  secondaryColor="var(--primary)"
-                  size="medium"
-                />
-              </IconButton>
-            )}
-          </div>
+    <TooltipProvider delayDuration={300}>
+      <header className={cn("flex items-center gap-2 px-4 pt-3 pb-4", className)}>
+        {showHome && (
+          <NextLink href={backHref} aria-label={backLabel} className={cn(iconButton, "-ml-2")}>
+            <ArrowLeft />
+          </NextLink>
+        )}
 
-          {/* Title */}
-          <div className="flex-1 text-center">
-            <h1
+        {/* The brand title never truncates; long custom titles (pages) may */}
+        <div className={cn("flex-1", customTitle ? "min-w-0" : "shrink-0")}>
+          <h1 className="font-display font-semibold tracking-tight leading-none text-[28px] sm:text-[32px] truncate">
+            {customTitle ? (
+              customTitle
+            ) : (
+              <NextLink href="/" className="no-underline text-inherit">
+                {translations.title}
+              </NextLink>
+            )}
+          </h1>
+          {subtitle && (
+            <p className="text-sm text-[var(--muted-foreground)] mt-1 font-semibold truncate">{subtitle}</p>
+          )}
+        </div>
+
+        <div className="flex items-center gap-1 shrink-0">
+          {showMultiplayer && (
+            <NextLink
+              href="/multiplayer"
+              onClick={() => track("Multiplayer", { action: "header" })}
               className={cn(
-                "font-black tracking-tight leading-none",
-                "text-[var(--foreground)]",
-                // Decorative soft underline effect
-                "relative inline-block",
-                "after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2",
-                "after:-bottom-1 after:h-[6px] after:w-[80%] after:rounded-full",
-                "after:bg-gradient-to-r after:from-[var(--primary)] after:to-[var(--accent)]",
-                "after:opacity-70"
+                "relative h-10 px-2 sm:px-3 inline-flex items-center gap-1.5 rounded-xl",
+                "text-sm font-bold text-[var(--primary)] hover:bg-[var(--primary-soft)]",
+                "transition-colors duration-150 [&_svg]:size-[18px]"
               )}
-              style={{
-                fontSize: titleSize ?? 48,
-                fontFamily: "var(--font-display)"
+            >
+              <Users aria-hidden="true" />
+              <span className="max-[359px]:sr-only">Multiplayer</span>
+              {/* Corner tag: adds no width, so the title keeps its room on small phones */}
+              <BetaBadge className="absolute -top-1 -right-1 px-1 text-[9px] leading-3 bg-[var(--background)]" />
+            </NextLink>
+          )}
+          {showInfo && (
+            <IconButton label="Hoe speel je?" onClick={() => setModal("splash")}>
+              <CircleHelp />
+            </IconButton>
+          )}
+          {showStats && (
+            <IconButton
+              label="Jouw statistieken"
+              onClick={() => {
+                track("Statistics");
+                setModal("statistics");
               }}
             >
-              {customTitle ? customTitle : translations.title}
-            </h1>
-            {subtitle && (
-              <p className="text-sm text-[var(--muted-foreground)] mt-3 font-medium">
-                {subtitle}
-              </p>
-            )}
-          </div>
-
-          {/* Right icon slot */}
-          <div className="w-11 flex-shrink-0">
-            {showStats && (
-              <IconButton
-                onClick={() => {
-                  track("Statistics");
-                  setModal("statistics");
-                }}
-                tooltip="Bekijk je statistieken"
-                className="ml-auto"
-              >
-                <Chart
-                  set={colorBlind ? "bold" : "two-tone"}
-                  primaryColor="var(--color-icon-right)"
-                  secondaryColor="var(--primary)"
-                  size="medium"
-                />
-              </IconButton>
-            )}
-          </div>
+              <ChartColumn />
+            </IconButton>
+          )}
         </div>
       </header>
     </TooltipProvider>

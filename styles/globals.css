@@ -1,218 +1,168 @@
 /* Google Fonts - must come before other imports */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Fredoka:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Fredoka:wght@500;600&display=swap');
 
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   WOORDJE — Soft & Friendly Word Game
-   Warm • Rounded • Playful • Cozy
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   THEME CONFIGURATION (Tailwind v4 CSS-first)
+   WOORDJE
+   Calm, flat and friendly: rounded type, one violet accent, flat tiles.
+   Colour is reserved for game feedback (green / ochre / grey) and for the
+   one primary action on screen.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @theme {
-  /* Typography - Friendly rounded fonts */
   --font-sans: 'Nunito', system-ui, sans-serif;
   --font-display: 'Fredoka', 'Nunito', system-ui, sans-serif;
 
-  /* Border Radius - Soft, friendly curves */
-  --radius-sm: 12px;
-  --radius-md: 16px;
-  --radius-lg: 20px;
-  --radius-xl: 24px;
-  --radius-2xl: 32px;
+  /* Small controls 8–12px, cards 16px; pills only for tiny badges */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 20px;
 
-  /* Animations - Gentle and bouncy */
-  --animate-bounce-in: bounce-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  --animate-shake: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-  --animate-pop: pop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  --animate-flip: flip 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  --animate-slide-up: slide-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  --animate-pulse-glow: pulse-glow 2.5s ease-in-out infinite;
-  --animate-wiggle: wiggle 0.3s ease-in-out;
+  /* Motion: quick ease-out, no overshoot */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --animate-fade-in: fade-in 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  --animate-count: count 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  --animate-shake: shake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
-@keyframes bounce-in {
-  0% { transform: scale(0.8); opacity: 0; }
-  60% { transform: scale(1.08); }
-  100% { transform: scale(1); opacity: 1; }
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Countdown digits: settle in, then fade */
+@keyframes count {
+  0% { opacity: 0; transform: scale(1.15); }
+  30% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.85; transform: scale(1); }
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0) rotate(0deg); }
-  20% { transform: translateX(-3px) rotate(-1deg); }
-  40% { transform: translateX(3px) rotate(1deg); }
-  60% { transform: translateX(-3px) rotate(-1deg); }
-  80% { transform: translateX(3px) rotate(1deg); }
-}
-
-@keyframes pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.12); }
-  100% { transform: scale(1); }
-}
-
-@keyframes flip {
-  0% { transform: rotateX(0) scale(1); }
-  50% { transform: rotateX(90deg) scale(0.95); }
-  100% { transform: rotateX(0) scale(1); }
-}
-
-@keyframes slide-up {
-  0% { transform: translateY(16px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 var(--color-accent-glow); }
-  50% { box-shadow: 0 0 24px 6px var(--color-accent-glow); }
-}
-
-@keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-3deg); }
-  75% { transform: rotate(3deg); }
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   CSS CUSTOM PROPERTIES — Light Mode (default)
+   TOKENS — light
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Base Colors - Clean with subtle warmth */
-  --background: #f8f6fa;
+  --background: #f7f6f9;
   --foreground: #1a1625;
   --surface: #ffffff;
   --surface-elevated: #ffffff;
 
-  /* Brand Colors - Vibrant purple & pink */
-  --primary: #8b5cf6;
+  --primary: #7c3aed;
+  --primary-hover: #6d28d9;
   --primary-foreground: #ffffff;
+  --primary-soft: #efe9fc; /* tinted background for selected / highlighted rows */
   --accent: #ec4899;
   --accent-foreground: #ffffff;
 
-  /* UI Colors - Clear hierarchy */
-  --muted: #f0ecf5;
+  --muted: #efecf3;
   --muted-foreground: #5c566d;
-  --border: #e2dce9;
-  --border-strong: #c9c1d6;
-  --ring: #8b5cf6;
+  --border: #e3dfe9;
+  --border-strong: #c9c3d3;
+  --ring: #7c3aed;
 
-  /* Game Tile Colors - Vivid and clear */
-  --color-good: #22c55e;
-  --color-good-dark: #16a34a;
-  --color-off: #eab308;
-  --color-off-dark: #ca8a04;
-  --color-bad: #a8a0b8;
-  --color-bad-dark: #9890a8;
-  --color-unknown: #ebe6f2;
-  --color-unknown-dark: #ddd6e8;
+  /* Game feedback. White letters on these reach ≥3:1 (large bold text). */
+  --color-good: #1f9e55;
+  --color-good-dark: #1a8a4a;
+  --color-off: #b98a10;
+  --color-off-dark: #a57b0e;
+  --color-bad: #8a8398;
+  --color-bad-dark: #7d768c;
+  --color-lost: #c2415b;
+  --color-good-text: #157a3f; /* green for small text on light surfaces */
+  --color-unknown: #e6e2ec;
 
-  /* Tile text colors */
   --color-tile-text: #1a1625;
   --color-tile-text-revealed: #ffffff;
+  --tile-border: #d6d1de;
+  --tile-border-filled: #9a93a8;
 
-  /* Keyboard - Clear and defined */
-  --keyboard-bg: var(--muted);
-  --keyboard-key-bg: var(--surface);
-  --keyboard-key-border: var(--border);
-  --keyboard-key-text: var(--foreground);
+  --keyboard-key-bg: #e6e2ec;
+  --keyboard-key-bg-hover: #dbd6e3;
+  --keyboard-key-text: #1a1625;
 
-  /* Effects - Defined shadows with more presence */
-  --color-accent-glow: rgba(139, 92, 246, 0.4);
-  --shadow-soft: 0 4px 14px rgba(26, 22, 37, 0.12);
-  --shadow-soft-sm: 0 2px 8px rgba(26, 22, 37, 0.1);
-  --shadow-soft-lg: 0 8px 28px rgba(26, 22, 37, 0.16);
-  --shadow-soft-hover: 0 8px 24px rgba(26, 22, 37, 0.2);
+  /* Elevation is quiet: cards use borders, only overlays get a real shadow */
+  --shadow-soft: 0 1px 2px rgba(26, 22, 37, 0.06);
+  --shadow-soft-sm: 0 1px 1px rgba(26, 22, 37, 0.04);
+  --shadow-soft-lg: 0 16px 40px -12px rgba(26, 22, 37, 0.28);
+  --shadow-soft-hover: 0 1px 2px rgba(26, 22, 37, 0.06);
 
-  /* Icon colors - More saturated */
-  --color-icon-left: #a78bfa;
-  --color-icon-right: #f472b6;
-
-  /* Level badges */
-  --color-level: #8b5cf6;
-  --color-level-active: #d946ef;
-
-  /* Focus - Clear purple glow */
-  --focus-color: #a855f7;
-  --focus-ring: 0 0 0 3px rgba(168, 85, 247, 0.5);
+  --focus-color: #7c3aed;
+  --focus-ring: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   DARK MODE — Dreamy purple night
+   TOKENS — dark
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .dark {
-  --background: #0f0d14;
-  --foreground: #f5f3f8;
-  --surface: #1a1625;
-  --surface-elevated: #252131;
+  --background: #121016;
+  --foreground: #f3f1f6;
+  --surface: #1b1822;
+  --surface-elevated: #23202b;
 
-  /* Brand - Vibrant purple & pink */
   --primary: #a78bfa;
-  --primary-foreground: #0f0d14;
+  --primary-hover: #b9a2fb;
+  --primary-foreground: #121016;
+  --primary-soft: #2a2340;
   --accent: #f472b6;
-  --accent-foreground: #0f0d14;
+  --accent-foreground: #121016;
 
-  /* UI - Clear dark tones */
-  --muted: #1a1625;
-  --muted-foreground: #9f97b0;
-  --border: #2d2840;
-  --border-strong: #3d3655;
+  --muted: #24202c;
+  --muted-foreground: #a39bb3;
+  --border: #2e2939;
+  --border-strong: #433d52;
   --ring: #a78bfa;
 
-  /* Game Colors - Vivid in dark */
-  --color-good: #22c55e;
-  --color-good-dark: #16a34a;
-  --color-off: #eab308;
-  --color-off-dark: #ca8a04;
-  --color-bad: #8a8299;
-  --color-bad-dark: #7a7289;
-  --color-unknown: #2d2840;
-  --color-unknown-dark: #252131;
+  --color-good: #1f9e55;
+  --color-good-dark: #1a8a4a;
+  --color-off: #b98a10;
+  --color-off-dark: #a57b0e;
+  --color-bad: #3a3546;
+  --color-bad-dark: #332f3e;
+  --color-lost: #e0667e;
+  --color-good-text: #4cc47e;
+  --color-unknown: #2e2939;
 
-  --color-tile-text: #f5f3f8;
-  --color-tile-text-revealed: #0f0d14;
+  --color-tile-text: #f3f1f6;
+  --color-tile-text-revealed: #ffffff;
+  --tile-border: #3a3546;
+  --tile-border-filled: #6a6379;
 
-  /* Keyboard */
-  --keyboard-bg: #1a1625;
-  --keyboard-key-bg: #252131;
-  --keyboard-key-border: #3d3655;
-  --keyboard-key-text: #f5f3f8;
+  --keyboard-key-bg: #3a3546;
+  --keyboard-key-bg-hover: #464053;
+  --keyboard-key-text: #f3f1f6;
 
-  /* Effects - Stronger glows */
-  --color-accent-glow: rgba(167, 139, 250, 0.4);
-  --shadow-soft: 0 4px 14px rgba(0, 0, 0, 0.5);
-  --shadow-soft-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --shadow-soft-lg: 0 8px 28px rgba(0, 0, 0, 0.6);
-  --shadow-soft-hover: 0 8px 24px rgba(0, 0, 0, 0.65);
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-soft-sm: 0 1px 1px rgba(0, 0, 0, 0.25);
+  --shadow-soft-lg: 0 16px 40px -12px rgba(0, 0, 0, 0.7);
+  --shadow-soft-hover: 0 1px 2px rgba(0, 0, 0, 0.3);
 
-  /* Icons - Vibrant pastels */
-  --color-icon-left: #a78bfa;
-  --color-icon-right: #f472b6;
-
-  /* Level badges */
-  --color-level: #a78bfa;
-  --color-level-active: #e879f9;
+  --focus-color: #a78bfa;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   COLORBLIND MODE
+   HIGH CONTRAST (colour blind) MODE
    ═══════════════════════════════════════════════════════════════════════════ */
 
 body.colorblind {
-  --color-good: #f97316;
-  --color-good-dark: #ea580c;
-  --color-off: #06b6d4;
-  --color-off-dark: #0891b2;
-  --color-icon-left: #1d4ed8;
-  --color-icon-right: #1d4ed8;
+  --color-good: #e8590c;
+  --color-good-dark: #d9480f;
+  --color-off: #1c7ed6;
+  --color-off-dark: #1971c2;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   BASE STYLES
+   BASE
    ═══════════════════════════════════════════════════════════════════════════ */
 
 * {
@@ -229,263 +179,202 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   min-height: 100dvh;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  caret-color: var(--primary);
 }
 
-/* Selection */
 ::selection {
   background-color: var(--primary);
   color: var(--primary-foreground);
 }
 
-/* Focus styles */
 :focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
 }
 
+a {
+  text-underline-offset: 3px;
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
-   GAME-SPECIFIC UTILITIES
+   TILES
+   Empty tiles are outlined, typed letters darken the outline, revealed
+   tiles are flat fills. No glows, no hover lift.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Letter tiles base - Soft, rounded, friendly */
 .letter-tile {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  border-radius: 12px;
+  border: 2px solid var(--tile-border);
+  border-radius: 8px;
   background: var(--surface);
   color: var(--color-tile-text);
-  box-shadow: var(--shadow-soft-sm), inset 0 -2px 0 rgba(0,0,0,0.06);
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 0.2s ease;
 }
 
-.letter-tile:not(.revealed):hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: var(--shadow-soft), inset 0 -2px 0 rgba(0,0,0,0.06);
+.letter-tile:not(.revealed):not(:empty) {
+  border-color: var(--tile-border-filled);
 }
 
-/* Revealed states - Glowing and satisfying */
 .letter-tile.revealed {
+  border-color: transparent;
   color: var(--color-tile-text-revealed);
-  box-shadow: var(--shadow-soft);
 }
 
 .letter-tile.good {
-  background: linear-gradient(135deg, var(--color-good) 0%, var(--color-good-dark) 100%);
-  box-shadow: var(--shadow-soft), 0 0 20px rgba(107, 203, 119, 0.3);
+  background: var(--color-good);
 }
 
 .letter-tile.off {
-  background: linear-gradient(135deg, var(--color-off) 0%, var(--color-off-dark) 100%);
-  box-shadow: var(--shadow-soft), 0 0 20px rgba(255, 217, 61, 0.3);
+  background: var(--color-off);
 }
 
 .letter-tile.bad {
-  background: linear-gradient(135deg, var(--color-bad) 0%, var(--color-bad-dark) 100%);
+  background: var(--color-bad);
 }
 
-.dark .letter-tile.revealed.bad {
-  color: var(--foreground);
-}
+/* ═══════════════════════════════════════════════════════════════════════════
+   KEYBOARD
+   ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Keyboard keys - Soft, rounded, bouncy */
 .keyboard-key {
   font-family: var(--font-display);
   font-weight: 600;
   text-transform: uppercase;
   background: var(--keyboard-key-bg);
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   color: var(--keyboard-key-text);
-  box-shadow: var(--shadow-soft-sm), inset 0 -2px 0 rgba(0,0,0,0.05);
-  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: background-color 0.12s var(--ease-out-quart), transform 0.08s var(--ease-out-quart);
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
-.keyboard-key:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-soft), inset 0 -2px 0 rgba(0,0,0,0.05);
+@media (hover: hover) {
+  .keyboard-key:hover {
+    background: var(--keyboard-key-bg-hover);
+  }
 }
 
 .keyboard-key:active {
-  transform: translateY(1px) scale(0.98);
-  box-shadow: var(--shadow-soft-sm);
+  transform: scale(0.96);
+}
+
+.keyboard-key.good,
+.keyboard-key.off,
+.keyboard-key.bad {
+  color: var(--color-tile-text-revealed);
 }
 
 .keyboard-key.good {
-  background: linear-gradient(135deg, var(--color-good) 0%, var(--color-good-dark) 100%);
-  color: var(--color-tile-text-revealed);
-  box-shadow: var(--shadow-soft-sm), 0 0 12px rgba(107, 203, 119, 0.25);
+  background: var(--color-good);
 }
 
 .keyboard-key.off {
-  background: linear-gradient(135deg, var(--color-off) 0%, var(--color-off-dark) 100%);
-  color: var(--color-tile-text-revealed);
-  box-shadow: var(--shadow-soft-sm), 0 0 12px rgba(255, 217, 61, 0.25);
+  background: var(--color-off);
 }
 
 .keyboard-key.bad {
-  background: linear-gradient(135deg, var(--color-bad) 0%, var(--color-bad-dark) 100%);
-  color: var(--color-tile-text-revealed);
-}
-
-.dark .keyboard-key.bad {
-  color: var(--keyboard-key-text);
-}
-
-/* Soft shadow utilities (replacing brutal) */
-.shadow-soft {
-  box-shadow: var(--shadow-soft);
-}
-
-.shadow-soft-sm {
-  box-shadow: var(--shadow-soft-sm);
-}
-
-.shadow-soft:hover,
-.shadow-soft-hover:hover {
-  box-shadow: var(--shadow-soft-hover);
-  transform: translateY(-2px);
-}
-
-.shadow-soft:active {
-  box-shadow: var(--shadow-soft-sm);
-  transform: translateY(1px);
-}
-
-/* Legacy brutal classes - mapped to soft */
-.shadow-brutal {
-  box-shadow: var(--shadow-soft);
-}
-
-.shadow-brutal-sm {
-  box-shadow: var(--shadow-soft-sm);
-}
-
-.shadow-brutal:hover,
-.shadow-brutal-hover:hover {
-  box-shadow: var(--shadow-soft-hover);
-  transform: translateY(-2px);
-}
-
-.shadow-brutal:active {
-  box-shadow: var(--shadow-soft-sm);
-  transform: translateY(1px);
+  background: var(--color-bad);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   BUTTON STYLES
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-.btn-friendly {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  color: var(--primary-foreground);
-  border: none;
-  border-radius: 14px;
-  box-shadow: var(--shadow-soft), inset 0 -2px 0 rgba(0,0,0,0.1);
-  padding: 0.875rem 1.75rem;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.btn-friendly:hover {
-  box-shadow: var(--shadow-soft-hover), inset 0 -2px 0 rgba(0,0,0,0.1);
-  transform: translateY(-3px);
-}
-
-.btn-friendly:active {
-  box-shadow: var(--shadow-soft-sm);
-  transform: translateY(1px);
-}
-
-/* Legacy brutal button - mapped to friendly */
-.btn-brutal {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  color: var(--primary-foreground);
-  border: none;
-  border-radius: 14px;
-  box-shadow: var(--shadow-soft), inset 0 -2px 0 rgba(0,0,0,0.1);
-  padding: 0.875rem 1.75rem;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.btn-brutal:hover {
-  box-shadow: var(--shadow-soft-hover), inset 0 -2px 0 rgba(0,0,0,0.1);
-  transform: translateY(-3px);
-}
-
-.btn-brutal:active {
-  box-shadow: var(--shadow-soft-sm);
-  transform: translateY(1px);
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   CARD STYLES
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-.card-friendly {
-  background: var(--surface);
-  border: none;
-  border-radius: 20px;
-  box-shadow: var(--shadow-soft);
-}
-
-/* Legacy brutal card - mapped to friendly */
-.card-brutal {
-  background: var(--surface);
-  border: none;
-  border-radius: 20px;
-  box-shadow: var(--shadow-soft);
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   DIALOG/MODAL BACKDROP
+   DIALOG BACKDROP
    ═══════════════════════════════════════════════════════════════════════════ */
 
 [data-state="open"][data-overlay] {
-  backdrop-filter: blur(4px);
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(18, 16, 22, 0.5);
 }
 
 .dark [data-state="open"][data-overlay] {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.7);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SCROLLBAR STYLING
+   SCROLLBARS
    ═══════════════════════════════════════════════════════════════════════════ */
 
+* {
+  scrollbar-color: var(--border-strong) transparent;
+  scrollbar-width: thin;
+}
+
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--muted);
-  border-radius: 10px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--border-strong);
-  border-radius: 10px;
-  border: 2px solid var(--muted);
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
+}
+
+/* Daily board: the usual size per word length, but never wider than the
+   screen (6 letters overflowed on 360px phones, 10 letters on most phones). */
+.daily-board .letter-tile {
+  --tile: min(
+    max(32px, calc(50px - ((var(--word-length, 6) - 6) * var(--shrink-size, 6px)))),
+    calc((100vw - 16px) / var(--word-length, 6) - 12px)
+  );
+  width: var(--tile) !important;
+  height: var(--tile) !important;
+  font-size: calc(var(--tile) * 0.52) !important;
+}
+
+/* Desktop with room to spare: give the daily board a bit more presence */
+@media (min-width: 1024px) and (min-height: 820px) {
+  .daily-board {
+    zoom: 1.12;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MULTIPLAYER BOARD
+   The board gets whatever height is left between the opponents strip and the
+   keyboard; tiles size themselves to fit it using container query units.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mp-board-area {
+  container-type: size;
+}
+
+.mp-board {
+  --mp-tile: max(
+    20px,
+    min(56px, calc(100cqh / var(--rows) - 10px), calc(100cqw / var(--cols) - 12px))
+  );
+}
+
+.mp-board .letter-tile {
+  width: var(--mp-tile) !important;
+  height: var(--mp-tile) !important;
+  font-size: calc(var(--mp-tile) * 0.48) !important;
+  border-radius: min(8px, calc(var(--mp-tile) * 0.18)) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

@@ -1,20 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+const subscribe = () => () => {};
 
 /**
- * Provider to handle Zustand store hydration
- * Prevents hydration mismatch by waiting for client-side hydration
+ * Provider to handle Zustand store hydration.
+ * Renders nothing on the server and during hydration (the persisted stores
+ * only exist in the browser), then the real content.
  */
 export function StoreProvider({ children }) {
-  const [isHydrated, setIsHydrated] = useState(false);
+  const isHydrated = useSyncExternalStore(
+    subscribe,
+    () => true, // browser, after hydration
+    () => false // server render and the hydration pass
+  );
 
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
-  // Show nothing until hydrated to prevent hydration mismatch
-  // The actual content will flash in, which is acceptable for a game app
   if (!isHydrated) {
     return null;
   }
