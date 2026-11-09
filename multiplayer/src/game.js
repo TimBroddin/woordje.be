@@ -31,13 +31,13 @@ export const RECENT_WORDS = 50;
 
 export const maxGuessesFor = (wordLength) => wordLength + 1;
 
-export function createRoomState({ code, isPublic, wordLength, maxPlayers, listed, now }) {
+export function createRoomState({ code, isPublic, wordLength, listed, now }) {
   return {
     v: 1,
     code,
     isPublic: !!isPublic,
     wordLength: clampLength(wordLength),
-    maxPlayers: isPublic ? MAX_PLAYERS : clampPlayers(maxPlayers),
+    maxPlayers: MAX_PLAYERS,
     // Shown in the list of open rooms? Quick match rooms always; private rooms if the host wants
     listed: isPublic ? true : !!listed,
     startTrigger: null, // what started the current round: timer | full | host (analytics)
@@ -63,13 +63,7 @@ const clampLength = (n) => {
   return Math.min(MAX_WORD_LENGTH, Math.max(MIN_WORD_LENGTH, len));
 };
 
-const clampPlayers = (n) => {
-  const count = parseInt(n);
-  if (!Number.isFinite(count)) return MAX_PLAYERS;
-  return Math.min(MAX_PLAYERS, Math.max(MIN_PLAYERS, count));
-};
-
-/** Player count this room was created for (older rooms didn't store one). */
+/** Player cap: 8 (rooms created with a chosen size before keep theirs until they expire). */
 export const roomSize = (state) => state.maxPlayers ?? MAX_PLAYERS;
 
 export function cleanName(name, fallback) {
@@ -229,16 +223,6 @@ export function setListed(state, id, listed) {
   const denied = isHostOfPrivate(state, id);
   if (denied) return denied;
   state.listed = !!listed;
-  return {};
-}
-
-/** Host: change the player count. Never below the people already in the room. */
-export function setRoomSize(state, id, maxPlayers, now) {
-  const denied = isHostOfPrivate(state, id);
-  if (denied) return denied;
-  if (!canConfigure(state)) return { error: "already_started" };
-  state.maxPlayers = Math.max(clampPlayers(maxPlayers), connectedPlayers(state).length, MIN_PLAYERS);
-  updateWaiting(state, now);
   return {};
 }
 

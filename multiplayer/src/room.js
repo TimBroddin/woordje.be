@@ -6,7 +6,6 @@ import {
   leave,
   requestStart,
   setWordLength,
-  setRoomSize,
   setListed,
   roomSummary,
   roundScores,
@@ -26,10 +25,10 @@ const MAX_MESSAGE_BYTES = 2_000;
 const OPEN = 1;
 
 /** Create a fresh room under a random unused code. */
-export async function createRoom(env, { isPublic, wordLength, maxPlayers, listed }) {
+export async function createRoom(env, { isPublic, wordLength, listed }) {
   for (let attempt = 0; attempt < 8; attempt++) {
     const code = randomCode();
-    if (await roomStub(env, code).init({ code, isPublic, wordLength, maxPlayers, listed })) return code;
+    if (await roomStub(env, code).init({ code, isPublic, wordLength, listed })) return code;
   }
   throw new Error("could_not_create_room");
 }
@@ -55,9 +54,9 @@ export class Room extends DurableObject {
 
   // ---- RPC (called by the Worker and the Matchmaker) ----
 
-  async init({ code, isPublic, wordLength, maxPlayers, listed }) {
+  async init({ code, isPublic, wordLength, listed }) {
     if (this.state) return false; // code already taken
-    this.state = createRoomState({ code, isPublic, wordLength, maxPlayers, listed, now: Date.now() });
+    this.state = createRoomState({ code, isPublic, wordLength, listed, now: Date.now() });
     await this.commit();
     return true;
   }
@@ -127,9 +126,6 @@ export class Room extends DurableObject {
         break;
       case "wordLength":
         result = setWordLength(this.state, id, msg.wordLength);
-        break;
-      case "maxPlayers":
-        result = setRoomSize(this.state, id, msg.maxPlayers, now);
         break;
       case "listed":
         result = setListed(this.state, id, msg.listed);

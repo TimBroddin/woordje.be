@@ -16,7 +16,6 @@ import {
   QUICK_WAIT_MS,
   FULL_WAIT_MS,
   JOIN_GRACE_MS,
-  setRoomSize,
   roundScores,
   pointsFor,
   weekKey,
@@ -316,13 +315,12 @@ describe("open game timer", () => {
 });
 
 describe("rooms with friends", () => {
-  const room = (maxPlayers) =>
-    createRoomState({ code: "KABOM", isPublic: false, wordLength: 4, maxPlayers, now: 0 });
+  const room = () => createRoomState({ code: "KABOM", isPublic: false, wordLength: 4, now: 0 });
 
   test("never start on their own: the host starts", () => {
-    const state = room(2);
+    const state = room();
     const ann = join(state, { token: "a" }, 0).player;
-    join(state, { token: "b" }, 0); // full, but still no timer
+    join(state, { token: "b" }, 0);
     expect(state.phase).toBe("lobby");
     expect(nextWakeup(state)).toBe(null);
     tick(state, 10 * 60_000, dict);
@@ -334,17 +332,12 @@ describe("rooms with friends", () => {
     expect(state.startTrigger).toBe("host");
   });
 
-  test("are capped at their player count; the host can resize, not below the head count", () => {
-    const state = room(2);
-    const ann = join(state, { token: "a" }, 0).player;
-    join(state, { token: "b" }, 0);
-    expect(join(state, { token: "c" }, 0).error).toBe("full");
-
-    expect(setRoomSize(state, ann.id, 6, 0)).toEqual({});
-    expect(state.maxPlayers).toBe(6);
-    expect(join(state, { token: "c" }, 0).player).toBeTruthy();
-    expect(setRoomSize(state, ann.id, 2, 0)).toEqual({});
-    expect(state.maxPlayers).toBe(3);
+  test("take up to 8 players, no size to pick", () => {
+    const state = room();
+    expect(state.maxPlayers).toBe(MAX_PLAYERS);
+    for (let i = 0; i < MAX_PLAYERS; i++) expect(join(state, { token: `t${i}` }, 0).player).toBeTruthy();
+    expect(join(state, { token: "late" }, 0).error).toBe("full");
+    expect(state.phase).toBe("lobby"); // a full room still waits for the host
   });
 });
 
@@ -360,7 +353,7 @@ describe("directory", () => {
   });
 
   test("private rooms are unlisted unless the host opens them", () => {
-    const state = createRoomState({ code: "KABOM", isPublic: false, wordLength: 5, maxPlayers: 4, now: 0 });
+    const state = createRoomState({ code: "KABOM", isPublic: false, wordLength: 5, now: 0 });
     const ann = join(state, { token: "a", name: "Ann", presence: "abcdef0123456789" }, 0).player;
     const bob = join(state, { token: "b", name: "Bob" }, 0).player;
     expect(roomSummary(state)).toMatchObject({

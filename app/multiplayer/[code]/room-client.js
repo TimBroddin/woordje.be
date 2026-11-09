@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import GuessBoard from "@/components/multiplayer/GuessBoard";
 import MiniBoard, { playerStatus } from "@/components/multiplayer/MiniBoard";
 import WordLengthPicker from "@/components/multiplayer/WordLengthPicker";
-import PlayerCountPicker from "@/components/multiplayer/PlayerCountPicker";
 import CodeTiles from "@/components/multiplayer/CodeTiles";
 import { useRoom, useTicker } from "@/lib/multiplayer/use-room";
 import { quickMatch } from "@/lib/multiplayer/api";
@@ -393,7 +392,6 @@ function LobbyView({ room, me }) {
   const online = state.players.filter((p) => p.connected).length;
   const size = state.maxPlayers;
   const full = online >= size;
-  const freeSpots = Math.max(0, size - online);
   const canConfigure = !state.isPublic && isHost && state.phase !== "countdown";
 
   // One heading and one sentence: where you are and what happens next
@@ -445,7 +443,7 @@ function LobbyView({ room, me }) {
             disabled={online < 2 || state.phase === "countdown"}
             onClick={() => {
               send({ type: "start" });
-              trackEvent("Multiplayer Host", { action: "start", players: online, maxPlayers: size });
+              trackEvent("Multiplayer Host", { action: "start", players: online });
             }}
           >
             {online < 2 ? "Wacht op een tweede speler" : `Start met ${online} spelers`}
@@ -467,11 +465,6 @@ function LobbyView({ room, me }) {
           <SectionTitle aside={`${online} / ${size}`}>Spelers</SectionTitle>
           <Panel className="divide-y divide-[var(--border)]">
             <PlayerRows state={state} me={me} />
-            {!state.isPublic && freeSpots > 0 && (
-              <div className="px-4 py-2.5 text-sm text-[var(--muted-foreground)]">
-                Nog {freeSpots} {freeSpots === 1 ? "plek" : "plekken"} vrij
-              </div>
-            )}
             {/* key: picks up the name again when the server confirms a change */}
             <NameEditor key={me.name} me={me} send={send} />
           </Panel>
@@ -479,17 +472,6 @@ function LobbyView({ room, me }) {
 
         {canConfigure && (
           <div className="space-y-4">
-            <div>
-              <SectionTitle>Aantal spelers</SectionTitle>
-              <PlayerCountPicker
-                value={size}
-                min={Math.max(2, online)}
-                onChange={(maxPlayers) => {
-                  send({ type: "maxPlayers", maxPlayers });
-                  trackEvent("Multiplayer Host", { action: "size", value: maxPlayers });
-                }}
-              />
-            </div>
             <div>
               <SectionTitle>Aantal letters</SectionTitle>
               <WordLengthPicker

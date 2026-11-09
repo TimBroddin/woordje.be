@@ -51,12 +51,12 @@ events, so filter on `role = host` for one event per room.
 
 | Event | Properties |
 |---|---|
-| `Multiplayer` | `action`: header / footer / results (entry clicks), create (+ `maxPlayers`, `listed`), quick, join (code), join_list, quick_again |
+| `Multiplayer` | `action`: header / footer / results (entry clicks), create (+ `listed`), quick, join (code), join_list, quick_again |
 | `Multiplayer Page` | `online`, `openRooms` when the multiplayer page loads |
 | `Multiplayer Room Joined` | `kind` (private/quick), `role`, `players`, `maxPlayers`, `phase`, `listed`, `wordLength` |
 | `Multiplayer Round Started` | `trigger` (timer / full for open games, host for friends), `round`, `players`, `waitedSeconds` (first game after joining) |
 | `Multiplayer Round Finished` | `result` (won / solved / lost / forfeit), `guesses`, `seconds`, `players`, `round` |
-| `Multiplayer Host` | `action`: start, size, length, listed, next_round |
+| `Multiplayer Host` | `action`: start, length, listed, next_round |
 | `Multiplayer Leaderboard` | `period` (week / all) when switching tabs |
 | `Multiplayer Share` / `Multiplayer Idea` / `Multiplayer Left` / `Multiplayer Error` | method · use/refresh · phase · error code |
 

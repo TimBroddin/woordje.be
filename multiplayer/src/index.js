@@ -56,16 +56,14 @@ export default {
     }
 
     try {
-      // POST /rooms {wordLength, maxPlayers} → a new private room
+      // POST /rooms {wordLength, listed} → a new room for friends (up to 8 players)
       if (url.pathname === "/rooms" && request.method === "POST") {
         const body = await readBody(request);
         const wordLength = readWordLength(body);
         if (!wordLength) return json({ error: "bad_word_length" }, 400, origin);
-        // maxPlayers is clamped to 2–8 by the room; missing means 8
         const code = await createRoom(env, {
           isPublic: false,
           wordLength,
-          maxPlayers: body.maxPlayers,
           listed: body.listed === true,
         });
         return json({ code }, 201, origin);

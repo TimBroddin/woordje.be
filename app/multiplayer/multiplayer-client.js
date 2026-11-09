@@ -9,7 +9,6 @@ import { Main } from "@/components/styled";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import WordLengthPicker from "@/components/multiplayer/WordLengthPicker";
-import PlayerCountPicker from "@/components/multiplayer/PlayerCountPicker";
 import ToggleRow from "@/components/ToggleRow";
 import Leaderboard from "@/components/multiplayer/Leaderboard";
 import { useLobby } from "@/lib/multiplayer/use-lobby";
@@ -23,8 +22,6 @@ import {
   randomName,
   getPreferredLength,
   savePreferredLength,
-  getPreferredSize,
-  savePreferredSize,
 } from "@/lib/multiplayer/identity";
 import { cn } from "@/lib/utils";
 import BetaBadge from "@/components/BetaBadge";
@@ -139,9 +136,6 @@ export default function MultiplayerClient() {
   const storedLength = useStored(getPreferredLength, 5);
   const [lengthChoice, setWordLength] = useState(null);
   const wordLength = lengthChoice ?? storedLength;
-  const storedSize = useStored(getPreferredSize, 4);
-  const [sizeChoice, setRoomSize] = useState(null);
-  const roomSize = sizeChoice ?? storedSize;
   const [listed, setListed] = useState(false);
   const lobby = useLobby();
   const viewTracked = useRef(false);
@@ -165,14 +159,13 @@ export default function MultiplayerClient() {
     savePreferredLength(wordLength);
     setBusy(kind);
     try {
-      if (kind === "create") savePreferredSize(roomSize);
       const roomCode =
-        kind === "quick" ? await quickMatch(wordLength) : await createRoom(wordLength, roomSize, listed);
+        kind === "quick" ? await quickMatch(wordLength) : await createRoom(wordLength, listed);
       track(
         "Multiplayer",
         kind === "quick"
           ? { action: "quick", wordLength }
-          : { action: "create", wordLength, maxPlayers: roomSize, listed },
+          : { action: "create", wordLength, listed },
       );
       router.push(`/multiplayer/${roomCode}`);
     } catch {
@@ -249,12 +242,8 @@ export default function MultiplayerClient() {
         <div className="space-y-6 lg:col-start-2 lg:row-start-1 lg:row-span-2">
           <ModeCard icon={Users} title="Met vrienden">
             <p className="text-sm text-[var(--muted-foreground)]">
-              Maak een kamer en stuur de code naar je vrienden. Jij start het spel zodra iedereen er is.
+              Maak een kamer voor maximaal 8 spelers en stuur de code naar je vrienden. Jij start het spel zodra iedereen er is.
             </p>
-            <div>
-              <span className="block text-sm font-bold mb-1.5">Aantal spelers</span>
-              <PlayerCountPicker value={roomSize} onChange={setRoomSize} />
-            </div>
             <ToggleRow
               className="px-0 py-1 min-h-0"
               label="Open kamer"
@@ -264,7 +253,7 @@ export default function MultiplayerClient() {
             />
             <Button className="w-full" disabled={!!busy} onClick={() => go("create")}>
               {busy === "create" && <Loader2 className="animate-spin" />}
-              Maak een kamer voor {roomSize}
+              Maak een kamer
             </Button>
             <form className="pt-3 border-t border-[var(--border)]" onSubmit={join}>
               <Label htmlFor="mp-code">Kreeg je een code?</Label>
