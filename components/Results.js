@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,16 +12,24 @@ import { cn } from "@/lib/utils";
 
 import dynamic from "next/dynamic";
 
-import { m } from "framer-motion";
 import {
   SiX,
   SiFacebook,
   SiWhatsapp,
   SiThreads,
 } from "@icons-pack/react-simple-icons";
-import { Linkedin, Share2 } from "lucide-react";
+import { ChevronRight, Copy, Share2, Users } from "lucide-react";
+
+// LinkedIn's logo isn't in lucide-react (≥1.0 dropped brand icons) or Simple Icons,
+// so it's drawn here. Same props as the other share icons.
+const LinkedinIcon = ({ size = 24, ...props }) => (
+  <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true" {...props}>
+    <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 4.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
+  </svg>
+);
 
 import NextLink from "next/link";
+import { Levels, Level } from "@/components/styled";
 import { copyToClipboard, getIsVictory, calculateStreak } from "@/lib/helpers";
 import { useTranslations } from "@/lib/i18n/use-translations";
 import { useGameStore } from "@/lib/stores/game-store";
@@ -31,38 +39,24 @@ import { useUIStore } from "@/lib/stores/ui-store";
 import { getTodaysGameId } from "@/lib/gameId";
 
 import { useAnalytics } from "@/lib/analytics";
+import BetaBadge from "@/components/BetaBadge";
 
 const Definition = dynamic(() => import("./Definition"), { ssr: false });
 
-const SharePreview = ({ header, grid, onClick }) => (
-  <div
-    onClick={onClick}
-    className={cn(
-      "p-5 bg-gradient-to-br from-[var(--muted)] to-[var(--background)] rounded-2xl",
-      "border border-[var(--border)]",
-      "shadow-lg",
-      "select-all cursor-pointer",
-      "hover:shadow-xl hover:scale-[1.01]",
-      "transition-all duration-200 ease-out"
-    )}
-  >
-    <div
-      className="text-sm text-[var(--muted-foreground)] mb-4 text-center"
-      style={{ fontFamily: "var(--font-display)" }}
-    >
-      {header}
-    </div>
-    <div className="flex flex-col gap-2 items-center w-full">
+const SharePreview = ({ header, grid }) => (
+  <div className="rounded-xl bg-[var(--muted)] p-4 select-all">
+    <div className="text-xs font-semibold text-[var(--muted-foreground)] mb-3 text-center">{header}</div>
+    <div className="flex flex-col gap-1 items-center" aria-hidden="true">
       {grid.map((row, i) => (
-        <div key={i} className="flex gap-2">
+        <div key={i} className="flex gap-1">
           {row.map((cell, j) => (
             <div
               key={j}
               className={cn(
-                "w-7 h-7 rounded-full shadow-sm transition-transform",
-                cell === "good" && "bg-[var(--color-good)] shadow-[0_2px_8px_rgba(34,197,94,0.4)]",
-                cell === "off" && "bg-[var(--color-off)] shadow-[0_2px_8px_rgba(234,179,8,0.3)]",
-                cell === "bad" && "bg-black dark:bg-zinc-800"
+                "w-5 h-5 rounded-[4px]",
+                cell === "good" && "bg-[var(--color-good)]",
+                cell === "off" && "bg-[var(--color-off)]",
+                cell === "bad" && "bg-[var(--color-bad)]"
               )}
             />
           ))}
@@ -72,31 +66,9 @@ const SharePreview = ({ header, grid, onClick }) => (
   </div>
 );
 
-const StreakBadge = ({ children, ...props }) => (
-  <m.div
-    className={cn(
-      "inline-flex items-center gap-2 px-5 py-2.5",
-      "bg-gradient-to-r from-[var(--primary)] via-[#a78bfa] to-[var(--accent)]",
-      "text-white font-bold text-lg",
-      "border-none rounded-full",
-      "shadow-[var(--shadow-soft),_0_0_20px_rgba(139,92,246,0.4)]"
-    )}
-    {...props}
-  >
-    <span>🎳</span>
-    <span style={{ fontFamily: "var(--font-display)" }}>{children}</span>
-  </m.div>
-);
-
 const SocialButton = ({ icon: Icon, label, onClick }) => (
-  <Button
-    size="sm"
-    variant="outline"
-    className="flex-1 min-w-[120px]"
-    onClick={onClick}
-  >
-    <Icon size={16} className="mr-2" />
-    {label}
+  <Button size="icon" variant="ghost" aria-label={`Deel via ${label}`} title={label} onClick={onClick}>
+    <Icon size={18} />
   </Button>
 );
 
@@ -116,8 +88,8 @@ const Results = ({ visible, toast, solution: propSolution }) => {
   const streak = calculateStreak(statistics, wordLength, gameId);
 
   // Build game state from Zustand store
-  const currentGuesses = guesses[wordLength] || [];
-  const gameState = { guesses: currentGuesses };
+  const currentGuesses = useMemo(() => guesses[wordLength] || [], [guesses, wordLength]);
+  const gameState = useMemo(() => ({ guesses: currentGuesses }), [currentGuesses]);
 
   // Use prop solution if provided
   const solution = propSolution;
@@ -253,9 +225,9 @@ ${gameState.guesses
           "text/html": getShareText(true),
         }).then((ok) => {
           if (ok) {
-            toast.success("Gekopieerd!", { id: "clipboard" });
+            toast.success("Resultaat gekopieerd", { id: "clipboard" });
           } else {
-            toast.error("Clipboard error", { id: "clipboard" });
+            toast.error("Kopiëren lukte niet", { id: "clipboard" });
           }
         });
       }
@@ -265,120 +237,76 @@ ${gameState.guesses
 
   const isVictory = getIsVictory(gameState);
 
+  const tries = currentGuesses.length;
+  const canNativeShare = typeof window !== "undefined" && !!window.navigator?.share;
+
+  const share = (method, url) => {
+    track("Share", { method });
+    window.open(url, "_blank");
+  };
+
   return (
     <Dialog open={visible} onOpenChange={(open) => !open && closeHandler()}>
       <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {isVictory ? "🎉 " : ""}Het woord was{" "}
-            <span
-              className="bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] bg-clip-text text-transparent px-1"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              {solution?.word?.toUpperCase()}
-            </span>
+            {isVictory ? `Geraden in ${tries} ${tries === 1 ? "poging" : "pogingen"}` : "Niet geraden"}
           </DialogTitle>
+          <p className="text-sm text-[var(--muted-foreground)]">
+            Het woord was{" "}
+            <strong className="font-display text-base font-semibold uppercase tracking-wide text-[var(--foreground)]">
+              {solution?.word}
+            </strong>
+            {streak > 1 && <> · {streak} dagen op rij</>}
+          </p>
         </DialogHeader>
 
-        <div className="space-y-4">
-          {/* Dictionary definition */}
+        <div className="space-y-5">
           {visible && <Definition word={solution?.word} />}
 
-          {/* Streak badge */}
-          {streak > 1 && (
-            <div className="flex justify-center">
-              <StreakBadge
-                initial={{ opacity: 0, scale: 0, rotate: 0 }}
-                animate={{ opacity: 1, scale: 1, rotate: 720 }}
-                transition={{
-                  delay: 0.3,
-                  rotate: { type: "spring", stiffness: 100 },
-                }}
-              >
-                {streak} streak!
-              </StreakBadge>
-            </div>
-          )}
-
-          {/* Share preview */}
-          <SharePreview
-            header={getShareHeader()}
-            grid={getShareGrid()}
-            onClick={(e) => e.stopPropagation()}
-          />
-
-          {/* Copy button */}
-          <Button onClick={onCopyToClipboard} className="w-full">
-            📋 Kopieer resultaat
-          </Button>
-
-          {/* Social sharing */}
           <div className="space-y-3">
-            <h3 className="text-sm font-bold text-center text-[var(--muted-foreground)]">
-              Deel je score
-            </h3>
-            <div className="flex flex-wrap gap-2 justify-center">
-              <SocialButton
-                icon={SiX}
-                label="X"
-                onClick={() => {
-                  track("Share", { method: "x" });
-                  window.open(
-                    `https://x.com/intent/tweet?text=${encodeURIComponent(
-                      getShareText(false, true)
-                    )}`,
-                    "_blank"
-                  );
-                }}
-              />
-              <SocialButton
-                icon={SiFacebook}
-                label="Facebook"
-                onClick={() => {
-                  track("Share", { method: "facebook" });
-                  window.open(
-                    `https://www.facebook.com/share.php?u=${encodeURIComponent(
-                      `${
-                        translations.url
-                      }/share/${gameId}/${wordLength}/${getEncodedState(gameState)}`
-                    )}`,
-                    "_blank"
-                  );
-                }}
-              />
+            <SharePreview header={getShareHeader()} grid={getShareGrid()} />
+            <div className="flex gap-2">
+              {canNativeShare ? (
+                <>
+                  <Button
+                    className="flex-1"
+                    onClick={() => {
+                      track("Share", { method: "webshare" });
+                      window.navigator.share({ text: getShareText(false, true) }).catch(() => {});
+                    }}
+                  >
+                    <Share2 /> Deel resultaat
+                  </Button>
+                  <Button variant="outline" onClick={onCopyToClipboard}>
+                    <Copy /> Kopieer
+                  </Button>
+                </>
+              ) : (
+                <Button className="flex-1" onClick={onCopyToClipboard}>
+                  <Copy /> Kopieer resultaat
+                </Button>
+              )}
+            </div>
+            <div className="flex justify-center gap-1">
               <SocialButton
                 icon={SiWhatsapp}
                 label="WhatsApp"
-                onClick={() => {
-                  track("Share", { method: "whatsapp" });
-                  window.open(
-                    `https://api.whatsapp.com/send?text=${encodeURIComponent(
-                      getShareText(false, true)
-                    )}`,
-                    "_blank"
-                  );
-                }}
+                onClick={() =>
+                  share("whatsapp", `https://api.whatsapp.com/send?text=${encodeURIComponent(getShareText(false, true))}`)
+                }
               />
               <SocialButton
-                icon={Linkedin}
-                label="LinkedIn"
-                onClick={() => {
-                  track("Share", { method: "linkedin" });
-                  window.open(
-                    `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                      `${
-                        translations.url
-                      }/share/${gameId}/${wordLength}/${getEncodedState(gameState)}`
-                    )}`,
-                    "_blank"
-                  );
-                }}
+                icon={SiX}
+                label="X"
+                onClick={() =>
+                  share("x", `https://x.com/intent/tweet?text=${encodeURIComponent(getShareText(false, true))}`)
+                }
               />
               <SocialButton
                 icon={SiThreads}
                 label="Threads"
                 onClick={() => {
-                  track("Share", { method: "threads" });
                   const text = getShareText(false, true)
                     .replace(/🟩/g, "X")
                     .replace(/🟨/g, "o")
@@ -387,60 +315,81 @@ ${gameState.guesses
                     .replace(/💡 /g, "")
                     .replace(/🎳 /g, "streak: ")
                     .replace(/🕑 /g, "");
-                  window.open(
-                    `https://www.threads.net/intent/post?text=${encodeURIComponent(text)}`,
-                    "_blank"
-                  );
+                  share("threads", `https://www.threads.net/intent/post?text=${encodeURIComponent(text)}`);
                 }}
               />
-              {typeof window !== "undefined" && window?.navigator?.share && (
-                <SocialButton
-                  icon={Share2}
-                  label="Meer..."
-                  onClick={() => {
-                    if (window.navigator.share) {
-                      track("Share", { method: "webshare" });
-                      window.navigator
-                        .share({ text: getShareText(false, true) })
-                        .catch(() => {});
-                    }
-                  }}
-                />
-              )}
+              <SocialButton
+                icon={SiFacebook}
+                label="Facebook"
+                onClick={() =>
+                  share(
+                    "facebook",
+                    `https://www.facebook.com/share.php?u=${encodeURIComponent(
+                      `${translations.url}/share/${gameId}/${wordLength}/${getEncodedState(gameState)}`
+                    )}`
+                  )
+                }
+              />
+              <SocialButton
+                icon={LinkedinIcon}
+                label="LinkedIn"
+                onClick={() =>
+                  share(
+                    "linkedin",
+                    `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+                      `${translations.url}/share/${gameId}/${wordLength}/${getEncodedState(gameState)}`
+                    )}`
+                  )
+                }
+              />
             </div>
           </div>
 
-          {/* Play again options */}
-          <div className="pt-4">
-            <p className="text-sm text-[var(--foreground)]">
-              Probeer ook met{" "}
+          <NextLink
+            href="/multiplayer"
+            onClick={() => {
+              track("Multiplayer", { action: "results" });
+              setModal(null);
+            }}
+            className="flex items-center gap-3 rounded-xl border border-[var(--border)] p-3 no-underline text-inherit hover:bg-[var(--muted)] transition-colors duration-150"
+          >
+            <span className="h-10 w-10 shrink-0 rounded-lg bg-[var(--primary-soft)] text-[var(--primary)] inline-flex items-center justify-center">
+              <Users className="size-5" aria-hidden="true" />
+            </span>
+            <span className="flex-1 min-w-0">
+              <span className="flex items-center gap-1.5 text-sm font-bold">
+                Daag je vrienden uit <BetaBadge />
+              </span>
+              <span className="block text-xs text-[var(--muted-foreground)]">
+                Multiplayer: iedereen raadt tegelijk hetzelfde woord.
+              </span>
+            </span>
+            <ChevronRight className="size-4 text-[var(--muted-foreground)]" aria-hidden="true" />
+          </NextLink>
+
+          <div className="space-y-2">
+            <p className="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+              Nog een woord van vandaag
+            </p>
+            <Levels>
               {[3, 4, 5, 6, 7, 8, 9, 10]
                 .filter((x) => x !== wordLength)
-                .map((x, i, arr) => (
-                  <span key={`link-${x}`}>
-                    <NextLink
-                      href={`/speel/${x}`}
-                      onClick={() => setModal(null)}
-                      className="font-bold text-[var(--primary)] hover:underline"
-                    >
-                      {x}
-                    </NextLink>
-                    {i < arr.length - 2 ? ", " : i < arr.length - 1 ? " of " : ""}
-                  </span>
-                ))}{" "}
-              letters, of{" "}
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  setModal(null);
-                  setGameState({ gameId, wordLength, guesses: [] });
-                }}
-                className="font-bold text-[var(--primary)] hover:underline"
-              >
-                probeer opnieuw
-              </button>
-              .
-            </p>
+                .map((x) => (
+                  <Level key={`link-${x}`} href={`/speel/${x}`} onClick={() => setModal(null)} className="flex-1">
+                    {x}
+                  </Level>
+                ))}
+            </Levels>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setModal(null);
+                setGameState({ gameId, wordLength, guesses: [] });
+              }}
+              className="text-xs font-bold text-[var(--primary)] hover:underline"
+            >
+              Dit woord opnieuw spelen
+            </button>
           </div>
         </div>
       </DialogContent>

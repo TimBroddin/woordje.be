@@ -34,14 +34,13 @@ const LetterFace = forwardRef(
           "w-[max(32px,calc(50px-((var(--word-length,6)-6)*var(--shrink-size,6px))))]",
           "h-[max(32px,calc(50px-((var(--word-length,6)-6)*var(--shrink-size,6px))))]",
           "text-[max(16px,calc(26px-((var(--word-length,6)-6)*var(--shrink-size,4px))))]",
-          // Soft, friendly styling
           "letter-tile",
           "m-[max(2px,calc(4px-((var(--word-length,6)-6)*0.5px)))]",
           "relative top-0",
           "[backface-visibility:hidden]",
           "rounded-xl",
-          // Focus state with soft glow
-          focus && "shadow-[0_0_0_4px_var(--focus-color),_0_0_16px_rgba(192,132,252,0.4)] z-10",
+          // Where the next letter goes
+          focus && "!border-[var(--primary)] z-10",
           // Small variant for examples
           small && [
             "w-[max(28px,calc(40px-((var(--word-length,6)-6)*var(--shrink-size,5px))))]",
@@ -74,9 +73,9 @@ export const LetterBack = forwardRef(
           "w-[max(32px,calc(50px-((var(--word-length,6)-6)*var(--shrink-size,6px))))]",
           "h-[max(32px,calc(50px-((var(--word-length,6)-6)*var(--shrink-size,6px))))]",
           "text-[max(16px,calc(26px-((var(--word-length,6)-6)*var(--shrink-size,4px))))]",
-          // Soft, friendly styling
+          // Tile styling lives in .letter-tile (globals.css)
           "letter-tile revealed",
-          "font-bold uppercase m-[max(2px,calc(4px-((var(--word-length,6)-6)*0.5px)))]",
+          "font-semibold uppercase m-[max(2px,calc(4px-((var(--word-length,6)-6)*0.5px)))]",
           "[backface-visibility:hidden]",
           "flex justify-center items-center",
           "rounded-xl",
@@ -87,7 +86,7 @@ export const LetterBack = forwardRef(
           "bg-[var(--color-unknown)]",
           // Disabled state
           disabled && "bad",
-          // Score variants with satisfying gradient colors
+          // Score variants
           score === "bad" && "bad",
           score === "good" && "good",
           score === "off" && "off",

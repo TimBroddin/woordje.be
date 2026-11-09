@@ -64,13 +64,15 @@ const KeyLetter = ({ children, isBigger, score, onClick, className }) => {
   );
 };
 
-const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
+// `guesses` lets callers that don't use the daily game store (multiplayer)
+// colour the keys from their own rows.
+const Keyboard = ({ onPress, onBackspace, onSubmit, guesses: guessesOverride }) => {
   const { guesses } = useGameStore();
   const { wordLength } = useSettingsStore();
   const translations = useTranslations();
 
   const letterRows = translations.keyboard.map((row) => row.split(""));
-  const currentGuesses = guesses[wordLength] || [];
+  const currentGuesses = guessesOverride ?? (guesses[wordLength] || []);
 
   const used = {};
   if (currentGuesses && currentGuesses.length) {
@@ -159,6 +161,11 @@ const Keyboard = ({ onPress, onBackspace, onSubmit }) => {
           )}
         </KeyboardRow>
       ))}
+      {/* Only shown where a real keyboard is likely (mouse/trackpad devices) */}
+      <p className="hidden [@media(pointer:fine)]:block text-center text-xs text-[var(--muted-foreground)] mt-3">
+        Je kan ook gewoon typen: <kbd className="font-sans font-bold">Enter</kbd> om te raden,{" "}
+        <kbd className="font-sans font-bold">Backspace</kbd> om te wissen.
+      </p>
     </Wrapper>
   );
 };

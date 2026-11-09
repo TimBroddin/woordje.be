@@ -13,62 +13,25 @@ import { useStatisticsStore } from "@/lib/stores/statistics-store";
 import { useUIStore } from "@/lib/stores/ui-store";
 import { calculateStatistics } from "@/lib/helpers";
 
-const StatCard = ({ title, value, subtitle, variant = "default", className }) => (
-  <div
-    className={cn(
-      "p-4 rounded-2xl border-none",
-      "shadow-[var(--shadow-soft-sm)]",
-      variant === "success" && "bg-gradient-to-br from-[var(--color-good)] to-[var(--color-good-dark)]",
-      variant === "warning" && "bg-gradient-to-br from-[var(--color-off)] to-[var(--color-off-dark)]",
-      variant === "gradient" && "bg-gradient-to-br from-[var(--primary)] via-[#ff8585] to-[var(--accent)]",
-      variant === "primary" && "bg-gradient-to-br from-[var(--primary)] to-[#ff5252]",
-      variant === "default" && "bg-[var(--surface)]",
-      className
-    )}
-  >
-    <p className={cn(
-      "text-xs font-bold uppercase tracking-wide mb-1",
-      variant !== "default" ? "text-white/80" : "text-[var(--muted-foreground)]"
-    )}>
-      {title}
-    </p>
-    <p
-      className={cn(
-        "text-3xl font-black",
-        variant !== "default" ? "text-white" : "text-[var(--foreground)]"
-      )}
-      style={{ fontFamily: "var(--font-display)" }}
-    >
-      {value}
-      {subtitle && (
-        <span className="text-sm font-normal ml-1">({subtitle})</span>
-      )}
-    </p>
+const Stat = ({ label, value }) => (
+  <div className="flex-1 text-center">
+    <div className="font-display text-3xl font-semibold tabular-nums leading-none">{value}</div>
+    <div className="text-xs text-[var(--muted-foreground)] mt-1.5 leading-tight">{label}</div>
   </div>
 );
 
 const DistributionBar = ({ label, value, percentage, isHighlighted }) => (
-  <div className="flex items-center gap-3">
-    <div className={cn(
-      "w-9 h-9 flex items-center justify-center",
-      "border-none rounded-xl",
-      "font-bold text-sm",
-      isHighlighted
-        ? "bg-gradient-to-br from-[var(--color-good)] to-[var(--color-good-dark)] text-white shadow-[0_0_12px_rgba(107,203,119,0.3)]"
-        : "bg-[var(--muted)]"
-    )}>
-      {label}
-    </div>
-    <div className="flex-1 h-8 bg-[var(--muted)] rounded-full border-none overflow-hidden">
+  <div className="flex items-center gap-3 text-xs">
+    <div className="w-4 text-right font-bold tabular-nums text-[var(--muted-foreground)]">{label}</div>
+    <div className="flex-1 h-6">
       <div
         className={cn(
-          "h-full flex items-center px-3 rounded-full",
-          "bg-gradient-to-r from-[var(--primary)] to-[#ff5252] text-white text-xs font-bold",
-          "transition-all duration-500 ease-out"
+          "h-full min-w-7 flex items-center justify-end px-2 rounded-md font-bold tabular-nums",
+          isHighlighted ? "bg-[var(--primary)] text-[var(--primary-foreground)]" : "bg-[var(--muted)]"
         )}
-        style={{ width: `${Math.max(percentage, value ? 10 : 0)}%` }}
+        style={{ width: `${Math.max(percentage, 7)}%` }}
       >
-        {value > 0 && <span>{value}×</span>}
+        {value}
       </div>
     </div>
   </div>
@@ -86,7 +49,6 @@ const Statistics = ({ visible }) => {
   const { wins, lost, distribution, biggestStreak } = calculateStatistics(statistics, wordLength, gameId);
   const totalGames = wins + lost;
   const pctWins = totalGames ? Math.round((wins / totalGames) * 100) : 0;
-  const pctLost = totalGames ? Math.round((lost / totalGames) * 100) : 0;
 
   const maxDistributionValue = Math.max(...Object.values(distribution), 1);
   const distributionValues = Array.from({ length: boardSize }).map(
@@ -101,9 +63,9 @@ const Statistics = ({ visible }) => {
     }
   );
 
-  // Add losses at the beginning
-  distributionValues.unshift({
-    label: "💀",
+  // Losses at the end, after the highest number of tries
+  distributionValues.push({
+    label: "×",
     value: distribution[-1] || 0,
     pct: distribution[-1] ? (distribution[-1] / maxDistributionValue) * 100 : 0,
   });
@@ -112,40 +74,22 @@ const Statistics = ({ visible }) => {
     <Dialog open={visible} onOpenChange={(open) => !open && closeHandler()}>
       <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>
-            Statistieken — <span className="font-mono">{wordLength}</span> letters
-          </DialogTitle>
+          <DialogTitle>Jouw statistieken</DialogTitle>
+          <p className="text-sm text-[var(--muted-foreground)]">Woorden van {wordLength} letters</p>
         </DialogHeader>
 
-        <div className="space-y-4">
-          {/* Stats grid */}
-          <div className="grid grid-cols-2 gap-3">
-            <StatCard
-              title="🎉 Gewonnen"
-              value={wins}
-              subtitle={`${pctWins}%`}
-              variant="success"
-            />
-            <StatCard
-              title="💀 Verloren"
-              value={lost}
-              subtitle={`${pctLost}%`}
-              variant="warning"
-            />
-            <StatCard
-              title="🎳 Langste streak"
-              value={biggestStreak}
-              variant="gradient"
-              className="col-span-2"
-            />
+        <div className="space-y-6">
+          <div className="flex divide-x divide-[var(--border)]">
+            <Stat label="gespeeld" value={totalGames} />
+            <Stat label="gewonnen" value={`${pctWins}%`} />
+            <Stat label="langste reeks" value={biggestStreak} />
           </div>
 
-          {/* Distribution */}
-          <div className="p-4 bg-[var(--muted)] rounded-2xl border-none">
-            <h3 className="text-sm font-bold text-[var(--foreground)] mb-3">
-              Verdeling pogingen
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)] mb-3">
+              Aantal pogingen
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {distributionValues.map((item, idx) => (
                 <DistributionBar
                   key={`dist-${idx}`}
@@ -156,6 +100,9 @@ const Statistics = ({ visible }) => {
                 />
               ))}
             </div>
+            {lost > 0 && (
+              <p className="text-xs text-[var(--muted-foreground)] mt-2">× = niet geraden ({lost}×)</p>
+            )}
           </div>
         </div>
       </DialogContent>

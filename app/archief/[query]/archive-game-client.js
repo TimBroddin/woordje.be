@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useEffect, useRef } from "react";
+import { useCallback, useState, useEffect, useRef, useMemo } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
@@ -62,11 +62,14 @@ export default function ArchiveGameClient({
     setGameStats,
   } = useUIStore();
 
-  const [showConfetti, setShowConfetti] = useState(false);
+  // Confetti belongs to one game: switching word length or day hides it without an effect
+  const gameKey = `${gameId}-${wordLength}`;
+  const [confettiFor, setConfettiFor] = useState(null);
+  const showConfetti = confettiFor === gameKey;
   const [isLoading, setIsLoading] = useState(false);
 
   // Get current guesses for this word length
-  const currentGuesses = guesses[wordLength] || [];
+  const currentGuesses = useMemo(() => guesses[wordLength] || [], [guesses, wordLength]);
 
   // Calculate game state
   const isVictory =
@@ -82,7 +85,6 @@ export default function ArchiveGameClient({
       setInputText("");
     }
 
-    setShowConfetti(false);
     setSettings({ wordLength, boardSize, gameType, gameId });
     setRandomWord(ssr.randomWord);
     setGameStats(ssr.statistics);
@@ -200,7 +202,7 @@ export default function ArchiveGameClient({
         const won = !match.some((i) => i.score !== "good");
 
         if (won) {
-          setShowConfetti(true);
+          setConfettiFor(gameKey);
           stopTimer();
           addWin({ gameId, wordLength, gameType, guesses: newGuesses.length });
 
@@ -251,6 +253,7 @@ export default function ArchiveGameClient({
       stopTimer,
       setGameStats,
       gameType,
+      gameKey,
     ]
   );
 
@@ -286,10 +289,13 @@ export default function ArchiveGameClient({
   };
 
   return (
-    <Main>
+    <Main wide>
       <Header
+        showHome
+        backHref="/archief"
+        backLabel="Terug naar het archief"
         customTitle="Archief"
-        subtitle={`${translations.title} #${displayGameId} x ${wordLength}`}
+        subtitle={`${translations.title} #${displayGameId} · ${wordLength} letters`}
       />
 
       <Toaster />
@@ -297,7 +303,8 @@ export default function ArchiveGameClient({
 
       {showConfetti && (
         <Confetti
-          numberOfPieces={300}
+          numberOfPieces={160}
+          colors={["#7c3aed", "#1f9e55", "#b98a10", "#a78bfa", "#ec4899"]}
           recycle={false}
           width={width}
           height={height}
@@ -305,99 +312,107 @@ export default function ArchiveGameClient({
         />
       )}
 
-      <Board
-        loading={isLoading}
-        style={{ "--word-length": wordLength, "--shrink-size": "6px" }}
-      >
-        {currentGuesses.map((match, i) => (
-          <Row
-            key={`gs_row${i}`}
-            variants={row}
-            initial={i === currentGuesses.length - 1 ? "hidden" : "show"}
-            animate="show"
+      {/* Desktop: game on the left, everything else in a sidebar on the right */}
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-12 lg:items-start lg:px-4">
+        <div className="min-w-0">
+          <Board
+            className="daily-board"
+            loading={isLoading}
+            style={{ "--word-length": wordLength, "--shrink-size": "6px" }}
           >
-            {match.map((item, k) => (
-              <Letter
-                key={`letter-${k}`}
-                radius={letterBorderRadius(i, boardSize, k, wordLength)}
-                score={item.score}
+            {currentGuesses.map((match, i) => (
+              <Row
+                key={`gs_row${i}`}
+                variants={row}
+                initial={i === currentGuesses.length - 1 ? "hidden" : "show"}
+                animate="show"
               >
-                {item.letter}
-              </Letter>
+                {match.map((item, k) => (
+                  <Letter
+                    key={`letter-${k}`}
+                    radius={letterBorderRadius(i, boardSize, k, wordLength)}
+                    score={item.score}
+                  >
+                    {item.letter}
+                  </Letter>
+                ))}
+              </Row>
             ))}
-          </Row>
-        ))}
 
-        {currentGuesses.length < boardSize &&
-          Array.from(
-            { length: boardSize - currentGuesses.length },
-            (_, i) => {
-              const idx = currentGuesses.length + i;
-              if (i === 0 && !isGameOver) {
-                return (
-                  <Row key={`gs_row${idx}`}>
-                    {inputText
-                      .padEnd(wordLength, "?")
-                      .split("")
-                      .map((letter, index) => (
-                        <Letter
-                          focus={
-                            index ===
-                            Math.min(
-                              Math.max(0, inputText.length),
-                              wordLength - 1
-                            )
-                          }
-                          key={`letter-${i}-${index}`}
-                          radius={letterBorderRadius(
-                            idx,
-                            boardSize,
-                            index,
-                            wordLength
-                          )}
-                        >
-                          {letter === "?" ? null : letter}
-                        </Letter>
-                      ))}
-                  </Row>
-                );
-              } else {
-                return (
-                  <Row key={`row_${i}`}>
-                    {Array.from({ length: wordLength }, (_, j) => (
-                      <Letter
-                        disabled={true}
-                        key={`disabled-${i}-${j}`}
-                        radius={letterBorderRadius(idx, boardSize, j, wordLength)}
-                      />
-                    ))}
-                  </Row>
-                );
-              }
-            }
-          )}
-      </Board>
+            {currentGuesses.length < boardSize &&
+              Array.from(
+                { length: boardSize - currentGuesses.length },
+                (_, i) => {
+                  const idx = currentGuesses.length + i;
+                  if (i === 0 && !isGameOver) {
+                    return (
+                      <Row key={`gs_row${idx}`}>
+                        {inputText
+                          .padEnd(wordLength, "?")
+                          .split("")
+                          .map((letter, index) => (
+                            <Letter
+                              focus={
+                                index ===
+                                Math.min(
+                                  Math.max(0, inputText.length),
+                                  wordLength - 1
+                                )
+                              }
+                              key={`letter-${i}-${index}`}
+                              radius={letterBorderRadius(
+                                idx,
+                                boardSize,
+                                index,
+                                wordLength
+                              )}
+                            >
+                              {letter === "?" ? null : letter}
+                            </Letter>
+                          ))}
+                      </Row>
+                    );
+                  } else {
+                    return (
+                      <Row key={`row_${i}`}>
+                        {Array.from({ length: wordLength }, (_, j) => (
+                          <Letter
+                            disabled={true}
+                            key={`disabled-${i}-${j}`}
+                            radius={letterBorderRadius(idx, boardSize, j, wordLength)}
+                          />
+                        ))}
+                      </Row>
+                    );
+                  }
+                }
+              )}
+          </Board>
 
-      <Keyboard
-        onPress={(l) => {
-          setInputText(
-            `${inputText}${l}`
-              .toLowerCase()
-              .replace(/[^a-z]+/g, "")
-              .slice(0, wordLength)
-          );
-        }}
-        onBackspace={() => {
-          setInputText(inputText.slice(0, -1));
-        }}
-        onSubmit={onSubmit}
-      />
+          <Keyboard
+            onPress={(l) => {
+              setInputText(
+                `${inputText}${l}`
+                  .toLowerCase()
+                  .replace(/[^a-z]+/g, "")
+                  .slice(0, wordLength)
+              );
+            }}
+            onBackspace={() => {
+              setInputText(inputText.slice(0, -1));
+            }}
+            onSubmit={onSubmit}
+          />
+        </div>
+        <aside className="lg:sticky lg:top-4">
+          <Footer gameId={gameId} wordLength={wordLength} boardSize={boardSize} />
+        </aside>
+      </div>
 
       <Splash visible={currentModal === "splash"} demoWords={ssr.demoWords} />
       <Statistics visible={currentModal === "statistics"} />
       <Results visible={currentModal === "results" && isGameOver} toast={toast} solution={ssr.solution} />
 
-      <Footer gameId={gameId} wordLength={wordLength} boardSize={boardSize} />
     </Main>
   );
 }

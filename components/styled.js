@@ -2,12 +2,14 @@ import { cn } from "@/lib/utils";
 import { m } from "framer-motion";
 import { forwardRef } from "react";
 
-export const Main = ({ children, className }) => {
+/** Page column. `wide` lets a page go two-column on desktop (≥1024px). */
+export const Main = ({ children, className, wide }) => {
   return (
     <main
       className={cn(
-        "text-[var(--foreground)] max-w-[480px] mx-auto min-h-screen",
+        "text-[var(--foreground)] mx-auto min-h-screen",
         "h-[100dvh] w-full",
+        wide ? "max-w-[480px] lg:max-w-[1040px]" : "max-w-[480px]",
         className
       )}
     >
@@ -48,58 +50,41 @@ export const Row = forwardRef(({ children, className, ...props }, ref) => {
 });
 Row.displayName = "Row";
 
-export const Levels = ({ children, className }) => {
+export const Levels = ({ children, className, ...props }) => {
   return (
-    <div className={cn("flex flex-wrap gap-2", className)}>
+    <div className={cn("flex flex-wrap gap-1", className)} {...props}>
       {children}
     </div>
   );
 };
 
-export const Note = ({ children, type, className }) => {
+export const Note = ({ children, className }) => {
   return (
-    <div
-      className={cn(
-        "rounded-2xl p-5 m-4",
-        "shadow-[var(--shadow-soft)]",
-        "bg-[var(--surface)]",
-        type === "primary" &&
-          "bg-gradient-to-br from-[var(--primary)] to-[#ff5252] [&>p]:text-[var(--primary-foreground)] [&>p]:m-0",
-        className
-      )}
-    >
+    <div className={cn("px-4 text-sm text-[var(--muted-foreground)] [&>p]:m-0", className)}>
       {children}
     </div>
   );
 };
 
+/**
+ * Word length / level button. Neutral by default; colour only says something:
+ * selected (violet), won (green), lost (red outline).
+ */
 export const Level = forwardRef(
   ({ children, won, lost, active, wide, className, ...props }, ref) => {
     return (
       <a
         ref={ref}
         className={cn(
-          // Base styling - Soft, friendly level badge
-          "font-bold text-sm text-white no-underline",
-          "inline-flex items-center justify-center",
-          "h-10 w-10 p-0",
-          "border-none rounded-xl",
-          "shadow-[var(--shadow-soft-sm)]",
-          "transition-all duration-200 ease-out",
-          // Default state - soft purple gradient
-          "bg-gradient-to-br from-[var(--color-level)] to-[var(--accent)]",
-          // Hover state - lift up
-          "hover:shadow-[var(--shadow-soft)] hover:-translate-y-1 hover:scale-105",
-          // Active state (pressed)
-          "active:shadow-[var(--shadow-soft-sm)] active:translate-y-0 active:scale-95",
-          // Won state - happy green
-          won && "bg-gradient-to-br from-[var(--color-good)] to-[var(--color-good-dark)]",
-          // Lost state - soft rose
-          lost && "bg-gradient-to-br from-[#f9a8d4] to-[#f472b6]",
-          // Active/selected state - playful purple
-          active && "bg-gradient-to-br from-[var(--color-level-active)] to-[#7c3aed] shadow-[var(--shadow-soft),_0_0_16px_rgba(139,92,246,0.5)] scale-110",
-          // Wide variant
-          wide && "w-auto px-4",
+          "inline-flex items-center justify-center h-10 min-w-9 px-1.5",
+          "rounded-lg border text-sm font-bold no-underline tabular-nums",
+          "transition-colors duration-150",
+          "bg-[var(--surface)] border-[var(--border)] text-[var(--foreground)]",
+          "hover:border-[var(--border-strong)] hover:bg-[var(--muted)]",
+          won && "bg-[var(--color-good)] border-transparent text-white hover:bg-[var(--color-good-dark)] hover:border-transparent",
+          lost && "border-[var(--color-lost)] text-[var(--color-lost)]",
+          active && "bg-[var(--primary)] border-transparent text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)] hover:border-transparent",
+          wide && "px-4",
           className
         )}
         {...props}

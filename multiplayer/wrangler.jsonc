@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "woordje-multiplayer",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+  "durable_objects": {
+    "bindings": [
+      { "name": "ROOM", "class_name": "Room" },
+      { "name": "MATCHMAKER", "class_name": "Matchmaker" },
+      { "name": "DIRECTORY", "class_name": "Directory" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["Room", "Matchmaker"] },
+    { "tag": "v2", "new_sqlite_classes": ["Directory"] }
+  ],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://woordje.be,https://www.woordje.be,https://woordol.nl,https://www.woordol.nl"
+  },
+  "observability": { "enabled": true }
+}
